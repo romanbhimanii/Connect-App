@@ -24,7 +24,7 @@ class FundPayinResponse {
 class FundPayinData {
   final String clientCode;
   final String segment;
-  final int txnAmt;
+  final String txnAmt;
   final String accountNo;
   final String txnDate;
 
@@ -38,11 +38,11 @@ class FundPayinData {
 
   factory FundPayinData.fromJson(Map<String, dynamic> json) {
     return FundPayinData(
-      clientCode: json['client_code'],
-      segment: json['segment'],
-      txnAmt: json['txn_amt'],
-      accountNo: json['account_no'],
-      txnDate: json['txn_date'],
+      clientCode: json['client_code'].toString(),
+      segment: json['segment'].toString(),
+      txnAmt: json['txn_amt'].toString(),
+      accountNo: json['account_no'].toString(),
+      txnDate: json['txn_date'].toString(),
     );
   }
 }

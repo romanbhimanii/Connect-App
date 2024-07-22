@@ -148,7 +148,7 @@ class _GlobaldetailsreportscreenState extends State<Globaldetailsreportscreen> {
       if(total != null && i < total.length){
         var item = total[i];
         rows.add([
-          i + 1,
+          "Total",
           item.totalBqty,
           item.totalSqty,
           item.totalNetqty,

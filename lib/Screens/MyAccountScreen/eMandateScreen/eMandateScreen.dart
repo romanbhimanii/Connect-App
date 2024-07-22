@@ -71,11 +71,13 @@ class _eMandateScreenState extends State<eMandateScreen> {
         isLoading = false;
       });
     } catch (error) {
-      setState(() {
-        hasError = true;
-        errorMessage = error.toString();
-        isLoading = false;
-      });
+      if(mounted){
+        setState(() {
+          hasError = true;
+          errorMessage = error.toString();
+          isLoading = false;
+        });
+      }
     }
   }
 

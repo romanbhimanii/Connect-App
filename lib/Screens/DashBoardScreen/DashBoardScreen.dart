@@ -41,7 +41,7 @@ class _DashBoardScreenState extends State<DashBoardScreen>
   Future<IpoDetailsResponse>? upcomingIPO;
   Future<IpoDetailsResponse>? openIPO;
   Future<TotalBalanceModel>? holdingReport;
-  String equity = "0";
+  String equity = "";
   DateTime now = DateTime.now();
   String datePickedValue = "";
   String year = "";

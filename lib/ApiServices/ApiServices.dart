@@ -9,6 +9,7 @@ import 'package:connect/Models/ContractBillReportModel/ContractBillReportModel.d
 import 'package:connect/Models/EPledgeModel/EPledgeModel.dart';
 import 'package:connect/Models/EddpiDpProcessModel/EddpiDpProcessModel.dart';
 import 'package:connect/Models/FundPayInModel/FundPayInModel.dart';
+import 'package:connect/Models/FundPayOutModel/FundPayOutModel.dart';
 import 'package:connect/Models/GlobalDetailsModel/GlobalDetailsModel.dart';
 import 'package:connect/Models/GlobalSummaryReportModel/GlobalSummaryReportModel.dart';
 import 'package:connect/Models/HoldingReportModel/HoldingReportModel.dart';
@@ -492,14 +493,15 @@ class ApiServices {
   }
 
   Future<FundPayinResponse> fetchFundPayin(
-      {String? authToken, String? typeOfFund}) async {
+      {String? authToken}) async {
     try {
       const String baseUrl = 'http://192.168.130.43:1818/v1';
 
       final response = await http.get(
         Uri.parse(
-            '$baseUrl/account_profile/list_of_funds_payout_payin?type=$typeOfFund'),
+            '$baseUrl/account_profile/list_of_funds_payout_payin?type=fund_payin'),
         headers: {
+          'Content-Type': 'application/json',
           'accept': 'application/json',
           'authToken': authToken ?? "",
         },
@@ -507,6 +509,31 @@ class ApiServices {
 
       if (response.statusCode == 200) {
         return FundPayinResponse.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception('Failed to load fund payin data');
+      }
+    } catch (e) {
+      throw Exception('Failed to load fund payin data');
+    }
+  }
+
+  Future<PayOutModel> fetchFundPayOut(
+      {String? authToken}) async {
+    try {
+      const String baseUrl = 'http://192.168.130.43:1818/v1';
+
+      final response = await http.get(
+        Uri.parse(
+            '$baseUrl/account_profile/list_of_funds_payout_payin?type=fund_payout'),
+        headers: {
+          'Content-Type': 'application/json',
+          'accept': 'application/json',
+          'authToken': authToken ?? "",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return PayOutModel.fromJson(jsonDecode(response.body));
       } else {
         throw Exception('Failed to load fund payin data');
       }
@@ -527,7 +554,7 @@ class ApiServices {
     }
 
     if (permissionStatus) {
-      String downloadsFolderPath = await _getDownloadsFolderPath();
+      String downloadsFolderPath = await getDownloadsFolderPath();
       Directory directory = Directory(downloadsFolderPath);
 
       const url =
@@ -576,7 +603,7 @@ class ApiServices {
     }
 
     if (permissionStatus) {
-      String downloadsFolderPath = await _getDownloadsFolderPath();
+      String downloadsFolderPath = await getDownloadsFolderPath();
       Directory directory = Directory(downloadsFolderPath);
 
       const url = 'http://192.168.130.43:1818/v1/account_profile/download_holdings';
@@ -620,7 +647,7 @@ class ApiServices {
     }
 
     if (permissionStatus) {
-      String downloadsFolderPath = await _getDownloadsFolderPath();
+      String downloadsFolderPath = await getDownloadsFolderPath();
       Directory directory = Directory(downloadsFolderPath);
 
       const url =
@@ -665,7 +692,7 @@ class ApiServices {
     }
 
     if (permissionStatus) {
-      String downloadsFolderPath = await _getDownloadsFolderPath();
+      String downloadsFolderPath = await getDownloadsFolderPath();
       Directory directory = Directory(downloadsFolderPath);
 
       const url = 'http://192.168.130.43:1818/v1/excel/download_income_tax';
@@ -709,7 +736,7 @@ class ApiServices {
     }
 
     if (permissionStatus) {
-      String downloadsFolderPath = await _getDownloadsFolderPath();
+      String downloadsFolderPath = await getDownloadsFolderPath();
       Directory directory = Directory(downloadsFolderPath);
 
       const url = 'http://192.168.130.43:1818/v1/excel/download_global_details';
@@ -752,7 +779,7 @@ class ApiServices {
     }
 
     if (permissionStatus) {
-      String downloadsFolderPath = await _getDownloadsFolderPath();
+      String downloadsFolderPath = await getDownloadsFolderPath();
       Directory directory = Directory(downloadsFolderPath);
 
       const url = 'http://192.168.130.43:1818/v1/user/report/pnl?source=connect';
@@ -955,7 +982,7 @@ class ApiServices {
     }
 
     if (permissionStatus) {
-      String downloadsFolderPath = await _getDownloadsFolderPath();
+      String downloadsFolderPath = await getDownloadsFolderPath();
       Directory directory = Directory(downloadsFolderPath);
 
       const url =
@@ -1077,7 +1104,7 @@ class ApiServices {
     }
 
     if (permissionStatus) {
-      String downloadsFolderPath = await _getDownloadsFolderPath();
+      String downloadsFolderPath = await getDownloadsFolderPath();
       Directory directory = Directory(downloadsFolderPath);
       File file = File('${directory.path}/$pdfFileName');
 
@@ -1221,7 +1248,7 @@ class ApiServices {
     }
   }
 
-  Future<String> _getDownloadsFolderPath() async {
+  Future<String> getDownloadsFolderPath() async {
     if (Platform.isAndroid) {
       return '/storage/emulated/0/Download/';
     } else if (Platform.isIOS) {

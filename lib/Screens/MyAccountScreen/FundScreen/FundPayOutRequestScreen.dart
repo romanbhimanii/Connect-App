@@ -1,6 +1,7 @@
 import 'dart:io';
+
 import 'package:connect/ApiServices/ApiServices.dart';
-import 'package:connect/Models/FundPayInModel/FundPayInModel.dart';
+import 'package:connect/Models/FundPayOutModel/FundPayOutModel.dart';
 import 'package:connect/Utils/AppVariables.dart';
 import 'package:connect/Utils/ConnectivityService.dart';
 import 'package:connect/Utils/Constant.dart';
@@ -14,24 +15,25 @@ import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class Fundpayinrequestscreen extends StatefulWidget {
-  const Fundpayinrequestscreen({super.key});
+class FundPayOutRequestScreen extends StatefulWidget {
+  const FundPayOutRequestScreen({super.key});
 
   @override
-  State<Fundpayinrequestscreen> createState() => _FundpayinrequestscreenState();
+  State<FundPayOutRequestScreen> createState() => _FundPayOutRequestScreenState();
 }
 
-class _FundpayinrequestscreenState extends State<Fundpayinrequestscreen> {
+class _FundPayOutRequestScreenState extends State<FundPayOutRequestScreen> {
+
   final ConnectivityService connectivityService = ConnectivityService();
-  Future<FundPayinResponse>? futureFundPayin;
-  String selectedColumn = 'Date';
+  Future<PayOutModel>? futureFundPayin;
+  String selectedColumn = 'Entry Date';
   String selectedOperator = 'contains';
   String filterValue = '';
 
-  final List<String> columns = ['ID', 'Client Code', 'Account No', 'Segment', 'Amount', 'Date'];
+  final List<String> columns = ['ID', 'Amount', 'Account No', 'UCC', 'Entry Date'];
   final List<String> operators = ['contains', 'equals', 'starts with', 'ends with', 'is empty', 'is not empty', 'is any of'];
-  List<FundPayinData> filteredData = [];
-  List<FundPayinData> originalData = [];
+  List<Data>? filteredData = [];
+  List<Data>? originalData = [];
 
   @override
   void initState() {
@@ -41,11 +43,11 @@ class _FundpayinrequestscreenState extends State<Fundpayinrequestscreen> {
         connectivityService.showNoInternetDialog(context);
       }
     });
-    fetchFundPayIn();
+    fetchFundPayOut();
   }
 
-  Future<void> fetchFundPayIn() async {
-    futureFundPayin = ApiServices().fetchFundPayin(authToken: Appvariables.token);
+  Future<void> fetchFundPayOut() async {
+    futureFundPayin = ApiServices().fetchFundPayOut(authToken: Appvariables.token);
     futureFundPayin?.then((response) {
       setState(() {
         filteredData = response.data;
@@ -56,21 +58,19 @@ class _FundpayinrequestscreenState extends State<Fundpayinrequestscreen> {
 
   void applyFilter() {
     setState(() {
-      filteredData = originalData.where((item) {
-        int index = originalData.indexOf(item) + 1;
+      filteredData = originalData?.where((item) {
+        int index = (originalData?.indexOf(item) ?? 0) + 1;
         switch (selectedColumn) {
           case 'ID':
             return applyOperator(index.toString());
-          case 'Client Code':
-            return applyOperator(item.clientCode);
-          case 'Account No':
-            return applyOperator(item.accountNo);
-          case 'Segment':
-            return applyOperator(item.segment);
           case 'Amount':
-            return applyOperator(item.txnAmt.toString());
-          case 'Date':
-            return applyOperator(item.txnDate);
+            return applyOperator(item.amount ?? "");
+          case 'Account No':
+            return applyOperator(item.bankAccNo ?? "");
+          case 'UCC':
+            return applyOperator(item.uCC ?? "");
+          case 'Entry Date':
+            return applyOperator(item.entryDate.toString());
           default:
             return false;
         }
@@ -100,19 +100,18 @@ class _FundpayinrequestscreenState extends State<Fundpayinrequestscreen> {
     }
   }
 
-  Future<void> exportToCSV(List<FundPayinData> data) async {
+  Future<void> exportToCSV(List<Data>? data) async {
     List<List<dynamic>> rows = [];
-    rows.add(["ID", "Client Code", "Account No", "Segment", "Amount", "Date"]);
+    rows.add(["ID", "Amount", "Account No", "UCC", "Entry Date"]);
 
-    for (int i = 0; i < data.length; i++) {
+    for (int i = 0; i < data!.length; i++) {
       var item = data[i];
       rows.add([
         i + 1,
-        item.clientCode,
-        item.accountNo,
-        item.segment,
-        item.txnAmt,
-        item.txnDate,
+        item.amount,
+        item.bankAccNo,
+        item.uCC,
+        item.entryDate,
       ]);
     }
 
@@ -127,14 +126,10 @@ class _FundpayinrequestscreenState extends State<Fundpayinrequestscreen> {
     }
 
     if (permissionStatus) {
-      Directory? directory;
-      if (Platform.isAndroid) {
-        directory = await getExternalStorageDirectory();
-      } else {
-        directory = await getApplicationDocumentsDirectory();
-      }
+      String downloadsFolderPath = await ApiServices().getDownloadsFolderPath();
+      Directory directory = Directory(downloadsFolderPath);
 
-      String path = "${directory?.path}/fund_payin.csv";
+      String path = "${directory.path}/fund_payout.csv";
       File file = File(path);
 
       await file.writeAsString(csv);
@@ -147,10 +142,10 @@ class _FundpayinrequestscreenState extends State<Fundpayinrequestscreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.white,
       appBar: AppBar(
         scrolledUnderElevation: 0.0,
-        backgroundColor: Colors.grey[200],
+        backgroundColor: Colors.white,
         actions: [
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert, color: kBlackColor),
@@ -159,7 +154,7 @@ class _FundpayinrequestscreenState extends State<Fundpayinrequestscreen> {
               if (result == 'Export') {
                 if (await futureFundPayin != null) {
                   futureFundPayin?.then((response) {
-                    if (response.data.isNotEmpty) {
+                    if (response.data!.isNotEmpty) {
                       exportToCSV(response.data);
                     }
                   });
@@ -189,7 +184,7 @@ class _FundpayinrequestscreenState extends State<Fundpayinrequestscreen> {
                                 const Spacer(),
                                 TextButton(onPressed: () {
                                   setState(() {
-                                    fetchFundPayIn();
+                                    fetchFundPayOut();
                                     Get.back();
                                   });
                                 }, child: Utils.text(
@@ -217,8 +212,8 @@ class _FundpayinrequestscreenState extends State<Fundpayinrequestscreen> {
                                       return DropdownMenuItem(
                                         value: column,
                                         child: Utils.text(
-                                          text: column,
-                                          color: kBlackColor
+                                            text: column,
+                                            color: kBlackColor
                                         ),
                                       );
                                     }).toList(),
@@ -242,8 +237,8 @@ class _FundpayinrequestscreenState extends State<Fundpayinrequestscreen> {
                                       return DropdownMenuItem(
                                         value: operator,
                                         child: Utils.text(
-                                          text: operator,
-                                          color: kBlackColor
+                                            text: operator,
+                                            color: kBlackColor
                                         ),
                                       );
                                     }).toList(),
@@ -270,19 +265,15 @@ class _FundpayinrequestscreenState extends State<Fundpayinrequestscreen> {
                               ),
                             ),
                             const SizedBox(height: 20),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color.fromRGBO(27, 82, 52, 1.0),
-                              ),
-                              onPressed: () {
+                            InkWell(
+                              onTap: () {
                                 applyFilter();
                                 Get.back();
                               },
-                              child: Utils.text(
-                                text: 'Apply Filter',
-                                color: Colors.white
+                              child: Utils.gradientButton(
+                                message: "Apply Filter"
                               ),
-                            ),
+                            )
                           ],
                         ),
                       ),
@@ -358,13 +349,13 @@ class _FundpayinrequestscreenState extends State<Fundpayinrequestscreen> {
           ),
         ),
         title: Utils.text(
-          text: "Fund Pay-In Requests",
+            text: "Fund Pay-Out Requests",
             color: const Color(0xFF00A9FF),
             fontSize: 20,
             fontWeight: FontWeight.bold
         ),
       ),
-      body: FutureBuilder<FundPayinResponse>(
+      body: FutureBuilder<PayOutModel>(
         future: futureFundPayin,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -376,7 +367,7 @@ class _FundpayinrequestscreenState extends State<Fundpayinrequestscreen> {
               color: kBlackColor,
               fontSize: 13,
             ),);
-          } else if (!snapshot.hasData || snapshot.data!.data.isEmpty) {
+          } else if (!snapshot.hasData || snapshot.data!.data!.isEmpty) {
             return Center(child: Utils.text(
               text: "No data found",
               color: kBlackColor,
@@ -384,83 +375,95 @@ class _FundpayinrequestscreenState extends State<Fundpayinrequestscreen> {
             ),);
           } else {
             return ListView.builder(
-              itemCount: filteredData.length,
+              itemCount: filteredData!.length,
               itemBuilder: (context, index) {
-                final item = filteredData[index];
+                final item = filteredData![index];
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: filteredData.isNotEmpty ? InkWell(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 05),
+                  child: filteredData!.isNotEmpty ? InkWell(
                     onTap: () {},
-                    child: Card(
-                      color: Colors.white,
-                      child: Container(
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Column(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                height: 35,
-                                                width: 35,
-                                                decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(10),
-                                                    border: Border.all(color: Colors.grey.shade800.withOpacity(0.1))),
-                                                child: Center(
-                                                  child: Utils.text(
-                                                    text: "${index + 1}",
-                                                    color: kBlackColor,
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(width: 10),
-                                          Column(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Utils.text(text: "Client Code : ${item.clientCode}", color: kBlackColor),
-                                              const SizedBox(height: 5),
-                                              Utils.text(text: "Account No : ${item.accountNo}", color: kBlackColor),
-                                              const SizedBox(height: 5),
-                                              Utils.text(text: "Segment : ${item.segment}", color: kBlackColor),
-                                              const SizedBox(height: 5),
-                                              Utils.text(text: "Amount : ${item.txnAmt}", color: kBlackColor),
-                                              const SizedBox(height: 5),
-                                              Utils.text(text: "Date : ${item.txnDate}", color: kBlackColor),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                       color: const Color(0xFFEAF9FF),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Utils.text(
+                                    text: "Account No",
+                                    fontSize: 10,
+                                    color: const Color(0xFF4A5568)),
+                                Utils.text(
+                                    text: "Amount",
+                                    fontSize: 10,
+                                    color: const Color(0xFF4A5568)),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 03,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Utils.text(
+                                    text: item.bankAccNo,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFF0F3F62)),
+                                Utils.text(
+                                    text: item.amount,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFF0F3F62)),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Utils.text(
+                                    text: "Entry Date",
+                                    fontSize: 10,
+                                    color: const Color(0xFF4A5568)),
+                                Utils.text(
+                                    text: "UCC",
+                                    fontSize: 10,
+                                    color: const Color(0xFF4A5568)),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 03,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Utils.text(
+                                    text: item.entryDate,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFF0F3F62)),
+                                Utils.text(
+                                    text: item.uCC,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFF0F3F62)),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   ) : Center(
                     child: Utils.text(
-                      text: "No data Found!",
-                      color: kBlackColor,
-                      fontSize: 13
+                        text: "No data Found!",
+                        color: kBlackColor,
+                        fontSize: 13
                     ),
                   ),
                 );
