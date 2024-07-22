@@ -93,11 +93,16 @@ class _DashBoardScreenState extends State<DashBoardScreen>
       appBar: AppBar(
         scrolledUnderElevation: 0.0,
         centerTitle: true,
-        title: Utils.text(
-            text: "Dashboard",
-            color: const Color(0xFF00A9FF),
-            fontSize: 20,
-            fontWeight: FontWeight.bold),
+        title: InkWell(
+          onTap: () {
+            print(Appvariables.token);
+          },
+          child: Utils.text(
+              text: "Dashboard",
+              color: const Color(0xFF00A9FF),
+              fontSize: 20,
+              fontWeight: FontWeight.bold),
+        ),
         bottom: TabBar(
           dividerHeight: 0.0,
           isScrollable: true,

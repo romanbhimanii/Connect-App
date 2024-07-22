@@ -13,7 +13,6 @@ import 'package:connect/Models/FundPayOutModel/FundPayOutModel.dart';
 import 'package:connect/Models/GlobalDetailsModel/GlobalDetailsModel.dart';
 import 'package:connect/Models/GlobalSummaryReportModel/GlobalSummaryReportModel.dart';
 import 'package:connect/Models/HoldingReportModel/HoldingReportModel.dart';
-import 'package:connect/Models/HoldingsModel/HoldingsModel.dart';
 import 'package:connect/Models/IncomeTaxReportModel/IncomeTaxReportModel.dart';
 import 'package:connect/Models/IpoModels/IpoModel.dart';
 import 'package:connect/Models/LedgerReportModel/LedgerReportModel.dart';

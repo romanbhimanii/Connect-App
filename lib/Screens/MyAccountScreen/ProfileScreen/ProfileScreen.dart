@@ -101,7 +101,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: const Color(0xFF007AFF).withOpacity(0.15),
+                    color: const Color(0xFFD9D9D9).withOpacity(0.40)
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
@@ -615,7 +615,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: const Color(0xFF007AFF).withOpacity(0.15),
+                    color: const Color(0xFFD9D9D9).withOpacity(0.40)
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
@@ -1000,7 +1000,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: const Color(0xFF007AFF).withOpacity(0.15),
+                    color: const Color(0xFFD9D9D9).withOpacity(0.40)
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),

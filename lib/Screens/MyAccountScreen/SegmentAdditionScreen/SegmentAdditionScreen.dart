@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:connect/ApiServices/ApiServices.dart';
@@ -128,41 +129,9 @@ class _SegmentAdditionScreenState extends State<SegmentAdditionScreen> {
       future: futureAccountProfile,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          // return Center(
-          //     child: Lottie.asset('assets/lottie/loading.json',
-          //         height: 100, width: 100));
-          return Skeletonizer(
-            enabled: _loading,
-            child: ListView.builder(
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Utils.text(
-                            text: "Cash", color: Colors.black, fontSize: 15),
-                        const SizedBox(
-                          width: 05,
-                        ),
-                        Switch(
-                          activeColor: const Color(0xFF00A9FF),
-                          value: cashValue,
-                          onChanged: (value) {
-                            setState(() {
-                              cashValue = value;
-                              cashValue1 = value;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-              },
-            ),
-          );
+          return Center(
+              child: Lottie.asset('assets/lottie/loading.json',
+                  height: 100, width: 100));
         } else if (snapshot.hasError) {
           return Utils.text(
               text: "Error: ${snapshot.error}",

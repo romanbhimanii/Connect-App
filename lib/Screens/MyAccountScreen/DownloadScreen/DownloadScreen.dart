@@ -94,7 +94,7 @@ class _DownloadscreenState extends State<Downloadscreen> {
             child: Row(
               children: [
                 Utils.text(
-                    text: "Download Reports",
+                    text: "Reports",
                     color: const Color(0xFF0F3F62),
                     fontSize: 15,
                     fontWeight: FontWeight.bold

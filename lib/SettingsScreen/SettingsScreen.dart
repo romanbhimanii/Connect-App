@@ -172,23 +172,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const SizedBox(
               height: 13,
             ),
-            SizedBox(
-              height: 40,
-              child: Row(
-                children: [
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  const Image(image: AssetImage("assets/SettingIcons/ShareIcon.png"),height: 23,width: 23,),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Utils.text(
-                    text: "Share App",
-                  ),
-                  const Spacer(),
-                  const Icon(Icons.arrow_forward_ios,size: 20,),
-                ],
+            InkWell(
+              onTap: () {
+                // Share.share('check Out This App on Play Store! https://play.google.com/store/apps/details?id=in.amazon.mShop.android.shopping&hl=en');
+              },
+              child: SizedBox(
+                height: 40,
+                child: Row(
+                  children: [
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    const Image(image: AssetImage("assets/SettingIcons/ShareIcon.png"),height: 23,width: 23,),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Utils.text(
+                      text: "Share App",
+                    ),
+                    const Spacer(),
+                    const Icon(Icons.arrow_forward_ios,size: 20,),
+                  ],
+                ),
               ),
             ),
             const SizedBox(

@@ -2,6 +2,7 @@ import 'package:connect/Screens/DashBoardScreen/DashBoardScreen.dart';
 import 'package:connect/Screens/DpProcessScreen/DpProcessScreen.dart';
 import 'package:connect/Screens/IPOScreen/IPOScreen.dart';
 import 'package:connect/Screens/MyAccountScreen/MyAccountScreen.dart';
+import 'package:connect/Screens/ReportScreens/ReportScreen.dart';
 import 'package:connect/SettingsScreen/SettingsScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -48,8 +49,8 @@ class _AppDrawerState extends State<AppDrawer> {
       PersistentTabConfig(
         item: ItemConfig(
           icon: tab == 3 ? SvgPicture.asset("assets/icons/SettingIcon.svg",height: 22,width: 22,) : SvgPicture.asset("assets/icons/DeSelectSettingIcon.svg"),
-          title: ("Settings"),
-        ), screen: const SettingsScreen(),
+          title: ("Reports"),
+        ), screen: const ReportScreen(),
       ),
     ];
   }
