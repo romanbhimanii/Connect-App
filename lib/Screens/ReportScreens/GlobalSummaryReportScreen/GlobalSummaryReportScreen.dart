@@ -196,7 +196,7 @@ class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.white,
       appBar: AppBar(
         leadingWidth: 50,
         centerTitle: true,
@@ -226,7 +226,7 @@ class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
           ),
         ),
         scrolledUnderElevation: 0.0,
-        backgroundColor: Colors.grey[200],
+        backgroundColor: Colors.white,
         title: Utils.text(
             text: "Global Summary",
             color: const Color(0xFF00A9FF),
@@ -247,13 +247,13 @@ class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
                       iconStyleData: const IconStyleData(
                         icon: Icon(
                           Icons.arrow_drop_down_rounded,
-                          color: Color(0xFF0066F6),
+                          color: Color(0xFF00A9FF),
                         ),
                         iconSize: 25,
                       ),
                       hint: Utils.text(
                           text: "Exchange Code",
-                          color: const Color(0xFF0066F6),
+                          color: const Color(0xFF00A9FF),
                           fontSize: 12,
                           fontWeight: FontWeight.w500),
                       items: items
@@ -261,7 +261,7 @@ class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
                                 value: item,
                                 child: Utils.text(
                                     text: item,
-                                    color: const Color(0xFF0066F6),
+                                    color: const Color(0xFF00A9FF),
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500),
                               ))
@@ -278,7 +278,7 @@ class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
                         height: 40,
                         width: 140,
                         decoration: BoxDecoration(
-                          border: Border.all(color: const Color(0xFF0066F6)),
+                          border: Border.all(color: const Color(0xFF00A9FF)),
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
@@ -293,7 +293,7 @@ class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xFF0066F6)),
+                        border: Border.all(color: const Color(0xFF00A9FF)),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
@@ -302,7 +302,7 @@ class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
                         child: Center(
                           child: Utils.text(
                               text: datePickedValue,
-                              color: const Color(0xFF0066F6),
+                              color: const Color(0xFF00A9FF),
                               fontSize: 12,
                               fontWeight: FontWeight.w500),
                         ),
@@ -318,13 +318,13 @@ class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
                       iconStyleData: const IconStyleData(
                         icon: Icon(
                           Icons.arrow_drop_down_rounded,
-                          color: Color(0xFF0066F6),
+                          color: Color(0xFF00A9FF),
                         ),
                         iconSize: 25,
                       ),
                       hint: Utils.text(
                           text: "Open Balance",
-                          color: const Color(0xFF0066F6),
+                          color: const Color(0xFF00A9FF),
                           fontSize: 12,
                           fontWeight: FontWeight.w500),
                       items: items1
@@ -333,7 +333,7 @@ class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
                               value: item,
                               child: Utils.text(
                                   text: item,
-                                  color: const Color(0xFF0066F6),
+                                  color: const Color(0xFF00A9FF),
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500),
                             ),
@@ -354,7 +354,7 @@ class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
                         width: 95,
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: const Color(0xFF0066F6),
+                            color: const Color(0xFF00A9FF),
                           ),
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -403,8 +403,8 @@ class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
                     } else if (result == "Excel") {
                       if (await globalSummary != null) {
                         globalSummary?.then((response) {
-                          if (response?.data?.filteredDf != null) {
-                            exportToCSV(response?.data?.filteredDf);
+                          if (response.data?.filteredDf != null) {
+                            exportToCSV(response.data?.filteredDf);
                           }
                         });
                       }
@@ -461,958 +461,975 @@ class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
         onRefresh: _fetchGlobalSummaryReport,
         child: Stack(
           children: [
-            Column(
-              children: [
-                Expanded(
-                  child: FutureBuilder<GlobalSummary?>(
-                    future: globalSummary,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                            child: Lottie.asset('assets/lottie/loading.json',
-                                height: 100, width: 100));
-                      } else if (snapshot.hasError) {
-                        return Center(
-                            child: Utils.text(
-                                text: 'Error: ${snapshot.error}',
-                                color: Colors.black));
-                      } else if (snapshot.hasData) {
-                        final data = snapshot.data;
-                        if (snapshot.data?.data?.totalsDf?.last.netAmount !=
-                                totalsDf?.netAmount ||
-                            totalsDf.isNull) {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            setState(() {
-                              totalsDf = snapshot.data?.data?.totalsDf?.last;
-                            });
-                          });
-                        }
-                        return data == null
-                            ? Center(
-                                child: Utils.text(
-                                    text: 'No data available',
-                                    color: Colors.black))
-                            : ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: data.data?.filteredDf?.length,
-                                physics: const BouncingScrollPhysics(),
-                                padding: const EdgeInsets.all(0),
-                                itemBuilder: (context, index) {
-                                  final globalSummaryReport =
-                                      data.data?.filteredDf?[index];
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10.0, vertical: 05),
-                                    child: InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          isShow?[index] =
-                                              !(isShow?[index] ?? false);
-                                        });
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: Colors.white,
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10.0, vertical: 10),
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  SizedBox(
-                                                    width: 220,
-                                                    child: Utils.text(
-                                                      text: globalSummaryReport
-                                                          ?.scripSymbol1,
-                                                      color: const Color(
-                                                          0xFF37474F),
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      textOverFlow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(0.0),
+                    child: Column(
+                      children: [
+                        FutureBuilder<GlobalSummary?>(
+                          future: globalSummary,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return Center(
+                                  child: Lottie.asset('assets/lottie/loading.json',
+                                      height: 100, width: 100));
+                            } else if (snapshot.hasError) {
+                              return Center(
+                                  child: Utils.text(
+                                      text: 'Error: ${snapshot.error}',
+                                      color: Colors.black));
+                            } else if (snapshot.hasData) {
+                              final data = snapshot.data;
+                              if (snapshot.data?.data?.totalsDf?.last.netAmount !=
+                                      totalsDf?.netAmount ||
+                                  totalsDf.isNull) {
+                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                                  setState(() {
+                                    totalsDf = snapshot.data?.data?.totalsDf?.last;
+                                  });
+                                });
+                              }
+                              return data == null
+                                  ? Center(
+                                      child: Utils.text(
+                                          text: 'No data available',
+                                          color: Colors.black))
+                                  : Column(
+                                    children: [
+                                      ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount: data.data?.filteredDf?.length,
+                                          physics: const BouncingScrollPhysics(),
+                                          padding: const EdgeInsets.all(0),
+                                          itemBuilder: (context, index) {
+                                            final globalSummaryReport =
+                                                data.data?.filteredDf?[index];
+                                            return Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  horizontal: 10.0, vertical: 05),
+                                              child: InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    isShow?[index] =
+                                                        !(isShow?[index] ?? false);
+                                                  });
+                                                },
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(10),
+                                                    color: const Color(0xFFEAF9FF),
                                                   ),
-                                                  const Spacer(),
-                                                  Column(
-                                                    children: [
-                                                      Utils.text(
-                                                        text: "Amount ",
-                                                        color: const Color(
-                                                                0xFF4A5568)
-                                                            .withOpacity(0.70),
-                                                        fontSize: 10,
-                                                      ),
-                                                      Utils.text(
-                                                        text: "${globalSummaryReport?.netAmount}" ==
-                                                                ""
-                                                            ? "-"
-                                                            : "${globalSummaryReport?.netAmount}",
-                                                        color:
-                                                            Color(0xFF37474F),
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        textOverFlow:
-                                                            TextOverflow
-                                                                .ellipsis,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(
-                                                height: 10,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Utils.text(
-                                                          text: "Trade Qty",
-                                                          fontSize: 10,
-                                                          color: const Color(
-                                                              0xFF4A5568)),
-                                                      Utils.text(
-                                                          text:
-                                                              "${globalSummaryReport?.tradingQuantity}",
-                                                          color: Colors.black,
-                                                          fontSize: 13,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    ],
-                                                  ),
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Utils.text(
-                                                          text: "Trade Amt",
-                                                          fontSize: 10,
-                                                          color: const Color(
-                                                              0xFF4A5568)),
-                                                      Utils.text(
-                                                          text:
-                                                              "${globalSummaryReport?.tradingAmount}",
-                                                          color: Colors.black,
-                                                          fontSize: 13,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    ],
-                                                  ),
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment.end,
-                                                    children: [
-                                                      Utils.text(
-                                                          text: "Buy Qty",
-                                                          fontSize: 10,
-                                                          color: const Color(
-                                                              0xFF4A5568)),
-                                                      Utils.text(
-                                                          text:
-                                                              "${globalSummaryReport?.buyQuantity}",
-                                                          color: Colors.black,
-                                                          fontSize: 13,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    ],
-                                                  ),
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment.end,
-                                                    children: [
-                                                      Utils.text(
-                                                          text: "Buy Rate",
-                                                          fontSize: 10,
-                                                          color: const Color(
-                                                              0xFF4A5568)),
-                                                      Utils.text(
-                                                          text:
-                                                              "${globalSummaryReport?.buyRate}",
-                                                          color: Colors.black,
-                                                          fontSize: 13,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    ],
-                                                  ),
-                                                  // Utils.text(
-                                                  //   text: "Scrip Name: ",
-                                                  //   color: Colors.black,
-                                                  //   fontSize: 12,
-                                                  //   fontWeight: FontWeight.bold,
-                                                  // ),
-                                                  // Utils.text(
-                                                  //   text: (globalSummaryReport
-                                                  //                   ?.scripSymbol1
-                                                  //                   ?.length ??
-                                                  //               0) >
-                                                  //           10
-                                                  //       ? "${globalSummaryReport?.scripSymbol1?.substring(0, 10)}..."
-                                                  //       : globalSummaryReport
-                                                  //           ?.scripSymbol1,
-                                                  //   color: Colors.black,
-                                                  //   fontSize: 12,
-                                                  //   textOverFlow: TextOverflow.ellipsis,
-                                                  // ),
-                                                  // const Spacer(),
-                                                  // Utils.text(
-                                                  //   text: "Net Profit : ",
-                                                  //   color: Colors.black,
-                                                  //   fontSize: 12,
-                                                  //   fontWeight: FontWeight.bold,
-                                                  // ),
-                                                  // Utils.text(
-                                                  //   text: "${globalSummaryReport?.notProfit}" ==
-                                                  //           ""
-                                                  //       ? "-"
-                                                  //       : "${globalSummaryReport?.notProfit?.toStringAsFixed(2)}",
-                                                  //   color:
-                                                  //       "${globalSummaryReport?.notProfit}"
-                                                  //               .startsWith("-")
-                                                  //           ? Colors.red
-                                                  //           : Colors.green,
-                                                  //   fontSize: 12,
-                                                  //   textOverFlow: TextOverflow.ellipsis,
-                                                  // ),
-                                                ],
-                                              ),
-                                              const SizedBox(
-                                                height: 10,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Utils.text(
-                                                          text: "Sale Qty",
-                                                          fontSize: 10,
-                                                          color: const Color(
-                                                              0xFF4A5568)),
-                                                      Utils.text(
-                                                          text:
-                                                              "${globalSummaryReport?.saleQuantity}",
-                                                          color: Colors.black,
-                                                          fontSize: 13,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    ],
-                                                  ),
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Utils.text(
-                                                          text: "Sale Rate",
-                                                          fontSize: 10,
-                                                          color: const Color(
-                                                              0xFF4A5568)),
-                                                      Utils.text(
-                                                          text:
-                                                              "${globalSummaryReport?.saleRate}",
-                                                          color: Colors.black,
-                                                          fontSize: 13,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    ],
-                                                  ),
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment.end,
-                                                    children: [
-                                                      Utils.text(
-                                                          text: "Net Qty",
-                                                          fontSize: 10,
-                                                          color: const Color(
-                                                              0xFF4A5568)),
-                                                      Utils.text(
-                                                          text:
-                                                              "${globalSummaryReport?.netQuantity}",
-                                                          color: Colors.black,
-                                                          fontSize: 13,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    ],
-                                                  ),
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment.end,
-                                                    children: [
-                                                      Utils.text(
-                                                          text: "Net Rate",
-                                                          fontSize: 10,
-                                                          color: const Color(
-                                                              0xFF4A5568)),
-                                                      Utils.text(
-                                                          text:
-                                                              "${globalSummaryReport?.netRate}",
-                                                          color: Colors.black,
-                                                          fontSize: 13,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(
-                                                height: 10,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Utils.text(
-                                                          text: "Closing Price",
-                                                          fontSize: 10,
-                                                          color: const Color(
-                                                              0xFF4A5568)),
-                                                      Utils.text(
-                                                          text:
-                                                              "${globalSummaryReport?.closingPrice}",
-                                                          color: Colors.black,
-                                                          fontSize: 13,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    ],
-                                                  ),
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Utils.text(
-                                                          text: "National P/L",
-                                                          fontSize: 10,
-                                                          color: const Color(
-                                                              0xFF4A5568)),
-                                                      Utils.text(
-                                                          text:
-                                                              "${globalSummaryReport?.fullScripSymbol}",
-                                                          color: Colors.black,
-                                                          fontSize: 13,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    ],
-                                                  ),
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment.end,
-                                                    children: [
-                                                      Utils.text(
-                                                          text: "Net Amt",
-                                                          fontSize: 10,
-                                                          color: const Color(
-                                                              0xFF4A5568)),
-                                                      Utils.text(
-                                                          text:
-                                                              "${globalSummaryReport?.netAmount}",
-                                                          color:
-                                                              "${globalSummaryReport?.netAmount}"
-                                                                      .startsWith(
-                                                                          "-")
-                                                                  ? Colors.red
-                                                                  : Colors
-                                                                      .green,
-                                                          fontSize: 13,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                              Visibility(
-                                                visible:
-                                                    (isShow?[index] ?? false),
-                                                child: Column(
-                                                  children: [
-                                                    SizedBox(
-                                                      width: double.infinity,
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(05.0),
-                                                        child: Column(
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.symmetric(
+                                                        horizontal: 10.0, vertical: 10),
+                                                    child: Column(
+                                                      children: [
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment.start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment.start,
                                                           children: [
-                                                            Divider(
-                                                              color: Colors
-                                                                  .grey.shade800
-                                                                  .withOpacity(
-                                                                      0.2),
-                                                            ),
-                                                            const SizedBox(
-                                                              height: 05,
-                                                            ),
-                                                            Visibility(
-                                                              visible:
-                                                                  globalSummaryReport
-                                                                          ?.scripSymbol1 !=
-                                                                      "",
-                                                              child: Row(
-                                                                children: [
-                                                                  Utils.text(
-                                                                    text: (globalSummaryReport?.scripSymbol1?.length ??
-                                                                                0) >
-                                                                            10
-                                                                        ? "${globalSummaryReport?.scripSymbol1?.substring(0, 10)}..."
-                                                                        : globalSummaryReport
-                                                                            ?.scripSymbol1,
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .start,
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    width: 05,
-                                                                  ),
-                                                                  GestureDetector(
-                                                                      onTap:
-                                                                          () {
-                                                                        showDialog(
-                                                                          context:
-                                                                              context,
-                                                                          builder:
-                                                                              (context) {
-                                                                            return AlertDialog(
-                                                                              contentPadding: const EdgeInsets.all(10),
-                                                                              content: Column(
-                                                                                mainAxisSize: MainAxisSize.min,
-                                                                                children: [
-                                                                                  Utils.text(
-                                                                                    text: globalSummaryReport?.scripSymbol1,
-                                                                                    color: Colors.black,
-                                                                                    fontSize: 16,
-                                                                                    fontWeight: FontWeight.w600,
-                                                                                    textAlign: TextAlign.start,
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                            );
-                                                                          },
-                                                                        );
-                                                                      },
-                                                                      child:
-                                                                          const Icon(
-                                                                        Icons
-                                                                            .info,
-                                                                        color: Colors
-                                                                            .grey,
-                                                                        size:
-                                                                            20,
-                                                                      )),
-                                                                  const Spacer(),
-                                                                  Visibility(
-                                                                    visible:
-                                                                        globalSummaryReport?.companyCode !=
-                                                                            "",
-                                                                    child: Row(
-                                                                      children: [
-                                                                        Container(
-                                                                          height:
-                                                                              15,
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(05),
-                                                                            color:
-                                                                                Colors.deepPurpleAccent.shade700.withOpacity(0.1),
-                                                                          ),
-                                                                          child:
-                                                                              Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.symmetric(horizontal: 5.0),
-                                                                            child:
-                                                                                Utils.text(
-                                                                              text: globalSummaryReport?.companyCode,
-                                                                              color: Colors.deepPurple,
-                                                                              fontSize: 09,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                        const SizedBox(
-                                                                          width:
-                                                                              7,
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                ],
+                                                            SizedBox(
+                                                              width: 220,
+                                                              child: Utils.text(
+                                                                text: globalSummaryReport
+                                                                    ?.scripSymbol1,
+                                                                color: const Color(
+                                                                    0xFF37474F),
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight.w600,
+                                                                textOverFlow:
+                                                                    TextOverflow.ellipsis,
                                                               ),
                                                             ),
-                                                            const SizedBox(
-                                                              height: 10,
-                                                            ),
-                                                            Container(
-                                                              width: double
-                                                                  .infinity,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            05),
-                                                                border: Border.all(
-                                                                    color: Colors
-                                                                        .grey
-                                                                        .shade800
-                                                                        .withOpacity(
-                                                                            0.2)),
-                                                              ),
-                                                              child: Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .all(
-                                                                        10.0),
-                                                                child: Column(
-                                                                  children: [
-                                                                    const SizedBox(
-                                                                      height:
-                                                                          10,
-                                                                    ),
-                                                                    Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceBetween,
-                                                                      children: [
-                                                                        Utils
-                                                                            .text(
-                                                                          text:
-                                                                              "Trade Qty",
-                                                                          color:
-                                                                              Colors.black87,
-                                                                          fontSize:
-                                                                              11,
-                                                                        ),
-                                                                        Utils
-                                                                            .text(
-                                                                          text:
-                                                                              "Trade Amt",
-                                                                          color:
-                                                                              Colors.black87,
-                                                                          fontSize:
-                                                                              11,
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      height:
-                                                                          05,
-                                                                    ),
-                                                                    Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceBetween,
-                                                                      children: [
-                                                                        Utils
-                                                                            .text(
-                                                                          text: "${globalSummaryReport?.tradingQuantity}" == ""
-                                                                              ? "-"
-                                                                              : "${globalSummaryReport?.tradingQuantity}",
-                                                                          color:
-                                                                              Colors.black87,
-                                                                          fontSize:
-                                                                              13,
-                                                                          fontWeight:
-                                                                              FontWeight.w600,
-                                                                        ),
-                                                                        Utils
-                                                                            .text(
-                                                                          text: "${globalSummaryReport?.tradingAmount}" == ""
-                                                                              ? "-"
-                                                                              : "${globalSummaryReport?.tradingAmount}",
-                                                                          color:
-                                                                              Colors.black87,
-                                                                          fontSize:
-                                                                              13,
-                                                                          fontWeight:
-                                                                              FontWeight.w600,
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      height:
-                                                                          15,
-                                                                    ),
-                                                                    Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceBetween,
-                                                                      children: [
-                                                                        Utils
-                                                                            .text(
-                                                                          text:
-                                                                              "Buy Qty",
-                                                                          color:
-                                                                              Colors.black87,
-                                                                          fontSize:
-                                                                              11,
-                                                                        ),
-                                                                        Utils
-                                                                            .text(
-                                                                          text:
-                                                                              "Buy Rate",
-                                                                          color:
-                                                                              Colors.black87,
-                                                                          fontSize:
-                                                                              11,
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      height:
-                                                                          05,
-                                                                    ),
-                                                                    Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceBetween,
-                                                                      children: [
-                                                                        Utils
-                                                                            .text(
-                                                                          text: "${globalSummaryReport?.buyQuantity}" == ""
-                                                                              ? "-"
-                                                                              : "${globalSummaryReport?.buyQuantity}",
-                                                                          color:
-                                                                              Colors.black87,
-                                                                          fontSize:
-                                                                              13,
-                                                                          fontWeight:
-                                                                              FontWeight.w600,
-                                                                        ),
-                                                                        Utils
-                                                                            .text(
-                                                                          text: "${globalSummaryReport?.buyRate}" == ""
-                                                                              ? "-"
-                                                                              : "${globalSummaryReport?.buyRate}",
-                                                                          color:
-                                                                              Colors.black87,
-                                                                          fontSize:
-                                                                              13,
-                                                                          fontWeight:
-                                                                              FontWeight.w600,
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      height:
-                                                                          15,
-                                                                    ),
-                                                                    Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceBetween,
-                                                                      children: [
-                                                                        Utils
-                                                                            .text(
-                                                                          text:
-                                                                              "Sale Qty",
-                                                                          color:
-                                                                              Colors.black87,
-                                                                          fontSize:
-                                                                              11,
-                                                                        ),
-                                                                        Utils
-                                                                            .text(
-                                                                          text:
-                                                                              "Sale Rate",
-                                                                          color:
-                                                                              Colors.black87,
-                                                                          fontSize:
-                                                                              11,
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      height:
-                                                                          05,
-                                                                    ),
-                                                                    Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceBetween,
-                                                                      children: [
-                                                                        Utils
-                                                                            .text(
-                                                                          text: "${globalSummaryReport?.saleQuantity}" == ""
-                                                                              ? "-"
-                                                                              : "${globalSummaryReport?.saleQuantity}",
-                                                                          color:
-                                                                              Colors.black87,
-                                                                          fontSize:
-                                                                              13,
-                                                                          fontWeight:
-                                                                              FontWeight.w600,
-                                                                        ),
-                                                                        Utils
-                                                                            .text(
-                                                                          text: "${globalSummaryReport?.saleRate}" == ""
-                                                                              ? "-"
-                                                                              : "${globalSummaryReport?.saleRate}",
-                                                                          color:
-                                                                              Colors.black87,
-                                                                          fontSize:
-                                                                              13,
-                                                                          fontWeight:
-                                                                              FontWeight.w600,
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      height:
-                                                                          15,
-                                                                    ),
-                                                                    Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceBetween,
-                                                                      children: [
-                                                                        Utils
-                                                                            .text(
-                                                                          text:
-                                                                              "Net Qty",
-                                                                          color:
-                                                                              Colors.black87,
-                                                                          fontSize:
-                                                                              11,
-                                                                        ),
-                                                                        Utils
-                                                                            .text(
-                                                                          text:
-                                                                              "Net Rate",
-                                                                          color:
-                                                                              Colors.black87,
-                                                                          fontSize:
-                                                                              11,
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      height:
-                                                                          05,
-                                                                    ),
-                                                                    Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceBetween,
-                                                                      children: [
-                                                                        Utils
-                                                                            .text(
-                                                                          text: "${globalSummaryReport?.netQuantity}" == ""
-                                                                              ? "-"
-                                                                              : "${globalSummaryReport?.netQuantity}",
-                                                                          color:
-                                                                              Colors.black87,
-                                                                          fontSize:
-                                                                              13,
-                                                                          fontWeight:
-                                                                              FontWeight.w600,
-                                                                        ),
-                                                                        Utils
-                                                                            .text(
-                                                                          text: "${globalSummaryReport?.netRate}" == ""
-                                                                              ? "-"
-                                                                              : "${globalSummaryReport?.netRate}",
-                                                                          color:
-                                                                              Colors.black87,
-                                                                          fontSize:
-                                                                              13,
-                                                                          fontWeight:
-                                                                              FontWeight.w600,
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      height:
-                                                                          15,
-                                                                    ),
-                                                                    Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceBetween,
-                                                                      children: [
-                                                                        Utils
-                                                                            .text(
-                                                                          text:
-                                                                              "Net Amt",
-                                                                          color:
-                                                                              Colors.black87,
-                                                                          fontSize:
-                                                                              11,
-                                                                        ),
-                                                                        Utils
-                                                                            .text(
-                                                                          text:
-                                                                              "Closing Price",
-                                                                          color:
-                                                                              Colors.black87,
-                                                                          fontSize:
-                                                                              11,
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      height:
-                                                                          05,
-                                                                    ),
-                                                                    Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceBetween,
-                                                                      children: [
-                                                                        Utils
-                                                                            .text(
-                                                                          text: "${globalSummaryReport?.netAmount}" == ""
-                                                                              ? "-"
-                                                                              : "${globalSummaryReport?.netAmount}",
-                                                                          color:
-                                                                              Colors.black87,
-                                                                          fontSize:
-                                                                              13,
-                                                                          fontWeight:
-                                                                              FontWeight.w600,
-                                                                        ),
-                                                                        Utils
-                                                                            .text(
-                                                                          text: "${globalSummaryReport?.closingPrice}" == ""
-                                                                              ? "-"
-                                                                              : "${globalSummaryReport?.closingPrice}",
-                                                                          color:
-                                                                              Colors.black87,
-                                                                          fontSize:
-                                                                              13,
-                                                                          fontWeight:
-                                                                              FontWeight.w600,
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      height:
-                                                                          05,
-                                                                    ),
-                                                                    Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        Utils
-                                                                            .text(
-                                                                          text:
-                                                                              "National P/L",
-                                                                          color:
-                                                                              Colors.black87,
-                                                                          fontSize:
-                                                                              11,
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      height:
-                                                                          05,
-                                                                    ),
-                                                                    Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        Utils
-                                                                            .text(
-                                                                          text:
-                                                                              "${globalSummaryReport?.fullScripSymbol}",
-                                                                          color: "${globalSummaryReport?.fullScripSymbol}".startsWith("-")
-                                                                              ? Colors.red
-                                                                              : Colors.green,
-                                                                          fontSize:
-                                                                              13,
-                                                                          fontWeight:
-                                                                              FontWeight.w600,
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ],
+                                                            const Spacer(),
+                                                            Column(
+                                                              children: [
+                                                                Utils.text(
+                                                                  text: "Amount ",
+                                                                  color: const Color(
+                                                                          0xFF4A5568)
+                                                                      .withOpacity(0.70),
+                                                                  fontSize: 10,
                                                                 ),
-                                                              ),
+                                                                Utils.text(
+                                                                  text: "${globalSummaryReport?.netAmount}" ==
+                                                                          ""
+                                                                      ? "-"
+                                                                      : "${globalSummaryReport?.netAmount}",
+                                                                  color:
+                                                                      const Color(0xFF37474F),
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight.w600,
+                                                                  textOverFlow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                              ],
                                                             ),
                                                           ],
                                                         ),
-                                                      ),
+                                                        const SizedBox(
+                                                          height: 10,
+                                                        ),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment.start,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Utils.text(
+                                                                    text: "Trade Qty",
+                                                                    fontSize: 10,
+                                                                    color: const Color(
+                                                                        0xFF4A5568)),
+                                                                Utils.text(
+                                                                    text:
+                                                                        "${globalSummaryReport?.tradingQuantity}",
+                                                                    color: Colors.black,
+                                                                    fontSize: 13,
+                                                                    fontWeight:
+                                                                        FontWeight.w600),
+                                                              ],
+                                                            ),
+                                                            Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment.start,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Utils.text(
+                                                                    text: "Trade Amt",
+                                                                    fontSize: 10,
+                                                                    color: const Color(
+                                                                        0xFF4A5568)),
+                                                                Utils.text(
+                                                                    text:
+                                                                        "${globalSummaryReport?.tradingAmount}",
+                                                                    color: Colors.black,
+                                                                    fontSize: 13,
+                                                                    fontWeight:
+                                                                        FontWeight.w600),
+                                                              ],
+                                                            ),
+                                                            Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment.end,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment.end,
+                                                              children: [
+                                                                Utils.text(
+                                                                    text: "Buy Qty",
+                                                                    fontSize: 10,
+                                                                    color: const Color(
+                                                                        0xFF4A5568)),
+                                                                Utils.text(
+                                                                    text:
+                                                                        "${globalSummaryReport?.buyQuantity}",
+                                                                    color: Colors.black,
+                                                                    fontSize: 13,
+                                                                    fontWeight:
+                                                                        FontWeight.w600),
+                                                              ],
+                                                            ),
+                                                            Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment.end,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment.end,
+                                                              children: [
+                                                                Utils.text(
+                                                                    text: "Buy Rate",
+                                                                    fontSize: 10,
+                                                                    color: const Color(
+                                                                        0xFF4A5568)),
+                                                                Utils.text(
+                                                                    text:
+                                                                        "${globalSummaryReport?.buyRate}",
+                                                                    color: Colors.black,
+                                                                    fontSize: 13,
+                                                                    fontWeight:
+                                                                        FontWeight.w600),
+                                                              ],
+                                                            ),
+                                                            // Utils.text(
+                                                            //   text: "Scrip Name: ",
+                                                            //   color: Colors.black,
+                                                            //   fontSize: 12,
+                                                            //   fontWeight: FontWeight.bold,
+                                                            // ),
+                                                            // Utils.text(
+                                                            //   text: (globalSummaryReport
+                                                            //                   ?.scripSymbol1
+                                                            //                   ?.length ??
+                                                            //               0) >
+                                                            //           10
+                                                            //       ? "${globalSummaryReport?.scripSymbol1?.substring(0, 10)}..."
+                                                            //       : globalSummaryReport
+                                                            //           ?.scripSymbol1,
+                                                            //   color: Colors.black,
+                                                            //   fontSize: 12,
+                                                            //   textOverFlow: TextOverflow.ellipsis,
+                                                            // ),
+                                                            // const Spacer(),
+                                                            // Utils.text(
+                                                            //   text: "Net Profit : ",
+                                                            //   color: Colors.black,
+                                                            //   fontSize: 12,
+                                                            //   fontWeight: FontWeight.bold,
+                                                            // ),
+                                                            // Utils.text(
+                                                            //   text: "${globalSummaryReport?.notProfit}" ==
+                                                            //           ""
+                                                            //       ? "-"
+                                                            //       : "${globalSummaryReport?.notProfit?.toStringAsFixed(2)}",
+                                                            //   color:
+                                                            //       "${globalSummaryReport?.notProfit}"
+                                                            //               .startsWith("-")
+                                                            //           ? Colors.red
+                                                            //           : Colors.green,
+                                                            //   fontSize: 12,
+                                                            //   textOverFlow: TextOverflow.ellipsis,
+                                                            // ),
+                                                          ],
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 10,
+                                                        ),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment.start,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Utils.text(
+                                                                    text: "Sale Qty",
+                                                                    fontSize: 10,
+                                                                    color: const Color(
+                                                                        0xFF4A5568)),
+                                                                Utils.text(
+                                                                    text:
+                                                                        "${globalSummaryReport?.saleQuantity}",
+                                                                    color: Colors.black,
+                                                                    fontSize: 13,
+                                                                    fontWeight:
+                                                                        FontWeight.w600),
+                                                              ],
+                                                            ),
+                                                            Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment.start,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Utils.text(
+                                                                    text: "Sale Rate",
+                                                                    fontSize: 10,
+                                                                    color: const Color(
+                                                                        0xFF4A5568)),
+                                                                Utils.text(
+                                                                    text:
+                                                                        "${globalSummaryReport?.saleRate}",
+                                                                    color: Colors.black,
+                                                                    fontSize: 13,
+                                                                    fontWeight:
+                                                                        FontWeight.w600),
+                                                              ],
+                                                            ),
+                                                            Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment.end,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment.end,
+                                                              children: [
+                                                                Utils.text(
+                                                                    text: "Net Qty",
+                                                                    fontSize: 10,
+                                                                    color: const Color(
+                                                                        0xFF4A5568)),
+                                                                Utils.text(
+                                                                    text:
+                                                                        "${globalSummaryReport?.netQuantity}",
+                                                                    color: Colors.black,
+                                                                    fontSize: 13,
+                                                                    fontWeight:
+                                                                        FontWeight.w600),
+                                                              ],
+                                                            ),
+                                                            Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment.end,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment.end,
+                                                              children: [
+                                                                Utils.text(
+                                                                    text: "Net Rate",
+                                                                    fontSize: 10,
+                                                                    color: const Color(
+                                                                        0xFF4A5568)),
+                                                                Utils.text(
+                                                                    text:
+                                                                        "${globalSummaryReport?.netRate}",
+                                                                    color: Colors.black,
+                                                                    fontSize: 13,
+                                                                    fontWeight:
+                                                                        FontWeight.w600),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 10,
+                                                        ),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment.start,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Utils.text(
+                                                                    text: "Closing Price",
+                                                                    fontSize: 10,
+                                                                    color: const Color(
+                                                                        0xFF4A5568)),
+                                                                Utils.text(
+                                                                    text:
+                                                                        "${globalSummaryReport?.closingPrice}",
+                                                                    color: Colors.black,
+                                                                    fontSize: 13,
+                                                                    fontWeight:
+                                                                        FontWeight.w600),
+                                                              ],
+                                                            ),
+                                                            Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment.start,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Utils.text(
+                                                                    text: "National P/L",
+                                                                    fontSize: 10,
+                                                                    color: const Color(
+                                                                        0xFF4A5568)),
+                                                                Utils.text(
+                                                                    text:
+                                                                        "${globalSummaryReport?.fullScripSymbol}",
+                                                                    color: Colors.black,
+                                                                    fontSize: 13,
+                                                                    fontWeight:
+                                                                        FontWeight.w600),
+                                                              ],
+                                                            ),
+                                                            Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment.end,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment.end,
+                                                              children: [
+                                                                Utils.text(
+                                                                    text: "Net Amt",
+                                                                    fontSize: 10,
+                                                                    color: const Color(
+                                                                        0xFF4A5568)),
+                                                                Utils.text(
+                                                                    text:
+                                                                        "${globalSummaryReport?.netAmount}",
+                                                                    color:
+                                                                        "${globalSummaryReport?.netAmount}"
+                                                                                .startsWith(
+                                                                                    "-")
+                                                                            ? Colors.red
+                                                                            : Colors
+                                                                                .green,
+                                                                    fontSize: 13,
+                                                                    fontWeight:
+                                                                        FontWeight.w600),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Visibility(
+                                                          visible:
+                                                              (isShow?[index] ?? false),
+                                                          child: Column(
+                                                            children: [
+                                                              SizedBox(
+                                                                width: double.infinity,
+                                                                child: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .all(05.0),
+                                                                  child: Column(
+                                                                    children: [
+                                                                      Divider(
+                                                                        color: Colors
+                                                                            .grey.shade800
+                                                                            .withOpacity(
+                                                                                0.2),
+                                                                      ),
+                                                                      const SizedBox(
+                                                                        height: 05,
+                                                                      ),
+                                                                      Visibility(
+                                                                        visible:
+                                                                            globalSummaryReport
+                                                                                    ?.scripSymbol1 !=
+                                                                                "",
+                                                                        child: Row(
+                                                                          children: [
+                                                                            Utils.text(
+                                                                              text: (globalSummaryReport?.scripSymbol1?.length ??
+                                                                                          0) >
+                                                                                      10
+                                                                                  ? "${globalSummaryReport?.scripSymbol1?.substring(0, 10)}..."
+                                                                                  : globalSummaryReport
+                                                                                      ?.scripSymbol1,
+                                                                              color: Colors
+                                                                                  .black,
+                                                                              fontSize:
+                                                                                  16,
+                                                                              fontWeight:
+                                                                                  FontWeight
+                                                                                      .w600,
+                                                                              textAlign:
+                                                                                  TextAlign
+                                                                                      .start,
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              width: 05,
+                                                                            ),
+                                                                            GestureDetector(
+                                                                                onTap:
+                                                                                    () {
+                                                                                  showDialog(
+                                                                                    context:
+                                                                                        context,
+                                                                                    builder:
+                                                                                        (context) {
+                                                                                      return AlertDialog(
+                                                                                        contentPadding: const EdgeInsets.all(10),
+                                                                                        content: Column(
+                                                                                          mainAxisSize: MainAxisSize.min,
+                                                                                          children: [
+                                                                                            Utils.text(
+                                                                                              text: globalSummaryReport?.scripSymbol1,
+                                                                                              color: Colors.black,
+                                                                                              fontSize: 16,
+                                                                                              fontWeight: FontWeight.w600,
+                                                                                              textAlign: TextAlign.start,
+                                                                                            ),
+                                                                                          ],
+                                                                                        ),
+                                                                                      );
+                                                                                    },
+                                                                                  );
+                                                                                },
+                                                                                child:
+                                                                                    const Icon(
+                                                                                  Icons
+                                                                                      .info,
+                                                                                  color: Colors
+                                                                                      .grey,
+                                                                                  size:
+                                                                                      20,
+                                                                                )),
+                                                                            const Spacer(),
+                                                                            Visibility(
+                                                                              visible:
+                                                                                  globalSummaryReport?.companyCode !=
+                                                                                      "",
+                                                                              child: Row(
+                                                                                children: [
+                                                                                  Container(
+                                                                                    height:
+                                                                                        15,
+                                                                                    decoration:
+                                                                                        BoxDecoration(
+                                                                                      borderRadius:
+                                                                                          BorderRadius.circular(05),
+                                                                                      color:
+                                                                                          Colors.deepPurpleAccent.shade700.withOpacity(0.1),
+                                                                                    ),
+                                                                                    child:
+                                                                                        Padding(
+                                                                                      padding:
+                                                                                          const EdgeInsets.symmetric(horizontal: 5.0),
+                                                                                      child:
+                                                                                          Utils.text(
+                                                                                        text: globalSummaryReport?.companyCode,
+                                                                                        color: Colors.deepPurple,
+                                                                                        fontSize: 09,
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                  const SizedBox(
+                                                                                    width:
+                                                                                        7,
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                      const SizedBox(
+                                                                        height: 10,
+                                                                      ),
+                                                                      Container(
+                                                                        width: double
+                                                                            .infinity,
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          borderRadius:
+                                                                              BorderRadius
+                                                                                  .circular(
+                                                                                      05),
+                                                                          border: Border.all(
+                                                                              color: Colors
+                                                                                  .grey
+                                                                                  .shade800
+                                                                                  .withOpacity(
+                                                                                      0.2)),
+                                                                        ),
+                                                                        child: Padding(
+                                                                          padding:
+                                                                              const EdgeInsets
+                                                                                  .all(
+                                                                                  10.0),
+                                                                          child: Column(
+                                                                            children: [
+                                                                              const SizedBox(
+                                                                                height:
+                                                                                    10,
+                                                                              ),
+                                                                              Row(
+                                                                                mainAxisAlignment:
+                                                                                    MainAxisAlignment
+                                                                                        .spaceBetween,
+                                                                                children: [
+                                                                                  Utils
+                                                                                      .text(
+                                                                                    text:
+                                                                                        "Trade Qty",
+                                                                                    color:
+                                                                                        Colors.black87,
+                                                                                    fontSize:
+                                                                                        11,
+                                                                                  ),
+                                                                                  Utils
+                                                                                      .text(
+                                                                                    text:
+                                                                                        "Trade Amt",
+                                                                                    color:
+                                                                                        Colors.black87,
+                                                                                    fontSize:
+                                                                                        11,
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                              const SizedBox(
+                                                                                height:
+                                                                                    05,
+                                                                              ),
+                                                                              Row(
+                                                                                mainAxisAlignment:
+                                                                                    MainAxisAlignment
+                                                                                        .spaceBetween,
+                                                                                children: [
+                                                                                  Utils
+                                                                                      .text(
+                                                                                    text: "${globalSummaryReport?.tradingQuantity}" == ""
+                                                                                        ? "-"
+                                                                                        : "${globalSummaryReport?.tradingQuantity}",
+                                                                                    color:
+                                                                                        Colors.black87,
+                                                                                    fontSize:
+                                                                                        13,
+                                                                                    fontWeight:
+                                                                                        FontWeight.w600,
+                                                                                  ),
+                                                                                  Utils
+                                                                                      .text(
+                                                                                    text: "${globalSummaryReport?.tradingAmount}" == ""
+                                                                                        ? "-"
+                                                                                        : "${globalSummaryReport?.tradingAmount}",
+                                                                                    color:
+                                                                                        Colors.black87,
+                                                                                    fontSize:
+                                                                                        13,
+                                                                                    fontWeight:
+                                                                                        FontWeight.w600,
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                              const SizedBox(
+                                                                                height:
+                                                                                    15,
+                                                                              ),
+                                                                              Row(
+                                                                                mainAxisAlignment:
+                                                                                    MainAxisAlignment
+                                                                                        .spaceBetween,
+                                                                                children: [
+                                                                                  Utils
+                                                                                      .text(
+                                                                                    text:
+                                                                                        "Buy Qty",
+                                                                                    color:
+                                                                                        Colors.black87,
+                                                                                    fontSize:
+                                                                                        11,
+                                                                                  ),
+                                                                                  Utils
+                                                                                      .text(
+                                                                                    text:
+                                                                                        "Buy Rate",
+                                                                                    color:
+                                                                                        Colors.black87,
+                                                                                    fontSize:
+                                                                                        11,
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                              const SizedBox(
+                                                                                height:
+                                                                                    05,
+                                                                              ),
+                                                                              Row(
+                                                                                mainAxisAlignment:
+                                                                                    MainAxisAlignment
+                                                                                        .spaceBetween,
+                                                                                children: [
+                                                                                  Utils
+                                                                                      .text(
+                                                                                    text: "${globalSummaryReport?.buyQuantity}" == ""
+                                                                                        ? "-"
+                                                                                        : "${globalSummaryReport?.buyQuantity}",
+                                                                                    color:
+                                                                                        Colors.black87,
+                                                                                    fontSize:
+                                                                                        13,
+                                                                                    fontWeight:
+                                                                                        FontWeight.w600,
+                                                                                  ),
+                                                                                  Utils
+                                                                                      .text(
+                                                                                    text: "${globalSummaryReport?.buyRate}" == ""
+                                                                                        ? "-"
+                                                                                        : "${globalSummaryReport?.buyRate}",
+                                                                                    color:
+                                                                                        Colors.black87,
+                                                                                    fontSize:
+                                                                                        13,
+                                                                                    fontWeight:
+                                                                                        FontWeight.w600,
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                              const SizedBox(
+                                                                                height:
+                                                                                    15,
+                                                                              ),
+                                                                              Row(
+                                                                                mainAxisAlignment:
+                                                                                    MainAxisAlignment
+                                                                                        .spaceBetween,
+                                                                                children: [
+                                                                                  Utils
+                                                                                      .text(
+                                                                                    text:
+                                                                                        "Sale Qty",
+                                                                                    color:
+                                                                                        Colors.black87,
+                                                                                    fontSize:
+                                                                                        11,
+                                                                                  ),
+                                                                                  Utils
+                                                                                      .text(
+                                                                                    text:
+                                                                                        "Sale Rate",
+                                                                                    color:
+                                                                                        Colors.black87,
+                                                                                    fontSize:
+                                                                                        11,
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                              const SizedBox(
+                                                                                height:
+                                                                                    05,
+                                                                              ),
+                                                                              Row(
+                                                                                mainAxisAlignment:
+                                                                                    MainAxisAlignment
+                                                                                        .spaceBetween,
+                                                                                children: [
+                                                                                  Utils
+                                                                                      .text(
+                                                                                    text: "${globalSummaryReport?.saleQuantity}" == ""
+                                                                                        ? "-"
+                                                                                        : "${globalSummaryReport?.saleQuantity}",
+                                                                                    color:
+                                                                                        Colors.black87,
+                                                                                    fontSize:
+                                                                                        13,
+                                                                                    fontWeight:
+                                                                                        FontWeight.w600,
+                                                                                  ),
+                                                                                  Utils
+                                                                                      .text(
+                                                                                    text: "${globalSummaryReport?.saleRate}" == ""
+                                                                                        ? "-"
+                                                                                        : "${globalSummaryReport?.saleRate}",
+                                                                                    color:
+                                                                                        Colors.black87,
+                                                                                    fontSize:
+                                                                                        13,
+                                                                                    fontWeight:
+                                                                                        FontWeight.w600,
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                              const SizedBox(
+                                                                                height:
+                                                                                    15,
+                                                                              ),
+                                                                              Row(
+                                                                                mainAxisAlignment:
+                                                                                    MainAxisAlignment
+                                                                                        .spaceBetween,
+                                                                                children: [
+                                                                                  Utils
+                                                                                      .text(
+                                                                                    text:
+                                                                                        "Net Qty",
+                                                                                    color:
+                                                                                        Colors.black87,
+                                                                                    fontSize:
+                                                                                        11,
+                                                                                  ),
+                                                                                  Utils
+                                                                                      .text(
+                                                                                    text:
+                                                                                        "Net Rate",
+                                                                                    color:
+                                                                                        Colors.black87,
+                                                                                    fontSize:
+                                                                                        11,
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                              const SizedBox(
+                                                                                height:
+                                                                                    05,
+                                                                              ),
+                                                                              Row(
+                                                                                mainAxisAlignment:
+                                                                                    MainAxisAlignment
+                                                                                        .spaceBetween,
+                                                                                children: [
+                                                                                  Utils
+                                                                                      .text(
+                                                                                    text: "${globalSummaryReport?.netQuantity}" == ""
+                                                                                        ? "-"
+                                                                                        : "${globalSummaryReport?.netQuantity}",
+                                                                                    color:
+                                                                                        Colors.black87,
+                                                                                    fontSize:
+                                                                                        13,
+                                                                                    fontWeight:
+                                                                                        FontWeight.w600,
+                                                                                  ),
+                                                                                  Utils
+                                                                                      .text(
+                                                                                    text: "${globalSummaryReport?.netRate}" == ""
+                                                                                        ? "-"
+                                                                                        : "${globalSummaryReport?.netRate}",
+                                                                                    color:
+                                                                                        Colors.black87,
+                                                                                    fontSize:
+                                                                                        13,
+                                                                                    fontWeight:
+                                                                                        FontWeight.w600,
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                              const SizedBox(
+                                                                                height:
+                                                                                    15,
+                                                                              ),
+                                                                              Row(
+                                                                                mainAxisAlignment:
+                                                                                    MainAxisAlignment
+                                                                                        .spaceBetween,
+                                                                                children: [
+                                                                                  Utils
+                                                                                      .text(
+                                                                                    text:
+                                                                                        "Net Amt",
+                                                                                    color:
+                                                                                        Colors.black87,
+                                                                                    fontSize:
+                                                                                        11,
+                                                                                  ),
+                                                                                  Utils
+                                                                                      .text(
+                                                                                    text:
+                                                                                        "Closing Price",
+                                                                                    color:
+                                                                                        Colors.black87,
+                                                                                    fontSize:
+                                                                                        11,
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                              const SizedBox(
+                                                                                height:
+                                                                                    05,
+                                                                              ),
+                                                                              Row(
+                                                                                mainAxisAlignment:
+                                                                                    MainAxisAlignment
+                                                                                        .spaceBetween,
+                                                                                children: [
+                                                                                  Utils
+                                                                                      .text(
+                                                                                    text: "${globalSummaryReport?.netAmount}" == ""
+                                                                                        ? "-"
+                                                                                        : "${globalSummaryReport?.netAmount}",
+                                                                                    color:
+                                                                                        Colors.black87,
+                                                                                    fontSize:
+                                                                                        13,
+                                                                                    fontWeight:
+                                                                                        FontWeight.w600,
+                                                                                  ),
+                                                                                  Utils
+                                                                                      .text(
+                                                                                    text: "${globalSummaryReport?.closingPrice}" == ""
+                                                                                        ? "-"
+                                                                                        : "${globalSummaryReport?.closingPrice}",
+                                                                                    color:
+                                                                                        Colors.black87,
+                                                                                    fontSize:
+                                                                                        13,
+                                                                                    fontWeight:
+                                                                                        FontWeight.w600,
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                              const SizedBox(
+                                                                                height:
+                                                                                    05,
+                                                                              ),
+                                                                              Row(
+                                                                                mainAxisAlignment:
+                                                                                    MainAxisAlignment
+                                                                                        .center,
+                                                                                children: [
+                                                                                  Utils
+                                                                                      .text(
+                                                                                    text:
+                                                                                        "National P/L",
+                                                                                    color:
+                                                                                        Colors.black87,
+                                                                                    fontSize:
+                                                                                        11,
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                              const SizedBox(
+                                                                                height:
+                                                                                    05,
+                                                                              ),
+                                                                              Row(
+                                                                                mainAxisAlignment:
+                                                                                    MainAxisAlignment
+                                                                                        .center,
+                                                                                children: [
+                                                                                  Utils
+                                                                                      .text(
+                                                                                    text:
+                                                                                        "${globalSummaryReport?.fullScripSymbol}",
+                                                                                    color: "${globalSummaryReport?.fullScripSymbol}".startsWith("-")
+                                                                                        ? Colors.red
+                                                                                        : Colors.green,
+                                                                                    fontSize:
+                                                                                        13,
+                                                                                    fontWeight:
+                                                                                        FontWeight.w600,
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ],
+                                                  ),
                                                 ),
                                               ),
-                                            ],
-                                          ),
+                                            );
+                                          },
                                         ),
+                                      const SizedBox(
+                                        height: 150,
                                       ),
-                                    ),
+                                    ],
                                   );
-                                },
-                              );
-                      } else {
-                        return Center(
-                            child: Utils.text(
-                                text: 'No data available',
-                                color: Colors.black,
-                                fontSize: 15));
-                      }
-                    },
+                            } else {
+                              return Center(
+                                  child: Utils.text(
+                                      text: 'No data available',
+                                      color: Colors.black,
+                                      fontSize: 15));
+                            }
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             Visibility(
               visible: !totalsDf.isNull,

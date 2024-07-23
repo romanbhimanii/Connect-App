@@ -147,10 +147,10 @@ class _FundpayinrequestscreenState extends State<Fundpayinrequestscreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.white,
       appBar: AppBar(
         scrolledUnderElevation: 0.0,
-        backgroundColor: Colors.grey[200],
+        backgroundColor: Colors.white,
         actions: [
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_vert, color: kBlackColor),

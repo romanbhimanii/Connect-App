@@ -206,7 +206,7 @@ class _GlobaldetailsreportscreenState extends State<Globaldetailsreportscreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.white,
       appBar: AppBar(
         leadingWidth: 50,
         centerTitle: true,
@@ -250,7 +250,7 @@ class _GlobaldetailsreportscreenState extends State<Globaldetailsreportscreen> {
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      border: Border.all(color: const Color(0xFF0066F6)),
+                      border: Border.all(color: const Color(0xFF00A9FF)),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Padding(
@@ -259,7 +259,7 @@ class _GlobaldetailsreportscreenState extends State<Globaldetailsreportscreen> {
                       child: Center(
                         child: Utils.text(
                             text: fromDate == "" ? "From Date" : fromDate,
-                            color: const Color(0xFF0066F6),
+                            color: const Color(0xFF00A9FF),
                             fontSize: 12,
                             fontWeight: FontWeight.w500),
                       ),
@@ -275,7 +275,7 @@ class _GlobaldetailsreportscreenState extends State<Globaldetailsreportscreen> {
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      border: Border.all(color: const Color(0xFF0066F6)),
+                      border: Border.all(color: const Color(0xFF00A9FF)),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Padding(
@@ -284,7 +284,7 @@ class _GlobaldetailsreportscreenState extends State<Globaldetailsreportscreen> {
                       child: Center(
                         child: Utils.text(
                             text: toDate == "" ? "To Date" : toDate,
-                            color: const Color(0xFF0066F6),
+                            color: const Color(0xFF00A9FF),
                             fontSize: 12,
                             fontWeight: FontWeight.w500),
                       ),
@@ -417,7 +417,7 @@ class _GlobaldetailsreportscreenState extends State<Globaldetailsreportscreen> {
                                       child: Container(
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(10),
-                                          color: Colors.white,
+                                          color: const Color(0xFFEAF9FF),
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),

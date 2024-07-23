@@ -1,6 +1,6 @@
 class LoginResponse {
   final String status;
-  final int message;
+  final String message;
   final Data data;
 
   LoginResponse({
@@ -12,7 +12,7 @@ class LoginResponse {
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
     return LoginResponse(
       status: json['status'],
-      message: json['message'],
+      message: json['message'].toString(),
       data: Data.fromJson(json['data']),
     );
   }

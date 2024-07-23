@@ -7,7 +7,6 @@ import 'package:connect/Utils/Utils.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 class HoldingReportScreen extends StatefulWidget {
@@ -97,7 +96,7 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.white,
       appBar: AppBar(
         leadingWidth: 50,
         centerTitle: true,
@@ -142,12 +141,12 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                   child: DropdownButton2<String>(
                     isExpanded: true,
                     iconStyleData: const IconStyleData(
-                      icon: Icon(Icons.arrow_drop_down_rounded,color: Color(0xFF0066F6),),
+                      icon: Icon(Icons.arrow_drop_down_rounded,color: Color(0xFF00A9FF),),
                       iconSize: 25,
                     ),
                     hint: Utils.text(
                         text: "2024-2025",
-                        color: const Color(0xFF0066F6),
+                        color: const Color(0xFF00A9FF),
                         fontSize: 12,
                         fontWeight: FontWeight.w500),
                     items: items
@@ -155,7 +154,7 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                               value: item,
                               child: Utils.text(
                                   text: item,
-                                  color: const Color(0xFF0066F6),
+                                  color: const Color(0xFF00A9FF),
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500),
                             ))
@@ -190,7 +189,7 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                       height: 40,
                       width: 140,
                       decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xFF0066F6)),
+                        border: Border.all(color: const Color(0xFF00A9FF)),
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
@@ -202,7 +201,7 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      border: Border.all(color: const Color(0xFF0066F6)),
+                      border: Border.all(color: const Color(0xFF00A9FF)),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Padding(
@@ -211,7 +210,7 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                       child: Center(
                         child: Utils.text(
                             text: datePickedValue,
-                            color: const Color(0xFF0066F6),
+                            color: const Color(0xFF00A9FF),
                             fontSize: 12,
                             fontWeight: FontWeight.w500),
                       ),
@@ -231,7 +230,7 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      border: Border.all(color: const Color(0xFF0066F6)),
+                      border: Border.all(color: const Color(0xFF00A9FF)),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Padding(
@@ -240,7 +239,7 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                       child: Center(
                         child: Utils.text(
                             text: "Download",
-                            color: const Color(0xFF0066F6),
+                            color: const Color(0xFF00A9FF),
                             fontSize: 12,
                             fontWeight: FontWeight.w500),
                       ),
@@ -256,1066 +255,686 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
         onRefresh: fetchHoldingReport,
         child: Stack(
           children: [
-            Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                Expanded(
-                  child: FutureBuilder<HoldingReportModel>(
-                    future: futureReport,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                            child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100));
-                      } else if (snapshot.hasError) {
-                        return Center(
-                            child: Utils.text(
-                          text: 'Error: ${snapshot.error}',
-                          color: Colors.black,
-                        ));
-                      }
-                      else if (snapshot.hasData) {
-                        final report = snapshot.data!;
-                        totalsDF = snapshot.data?.data?.totalsDf;
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          setState(() {});
-                        });
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: report.data!.filteredDf!.length,
-                          physics: const BouncingScrollPhysics(),
-                          padding: const EdgeInsets.all(0),
-                          itemBuilder: (context, index) {
-                            final data = report.data!.filteredDf![index];
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 05),
-                              child: InkWell(
-                                onTap: () {
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(0.0),
+                    child: Column(
+                      children: [
+                        FutureBuilder<HoldingReportModel>(
+                          future: futureReport,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return Center(
+                                  child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100));
+                            } else if (snapshot.hasError) {
+                              return Center(
+                                  child: Utils.text(
+                                text: 'Error: ${snapshot.error}',
+                                color: Colors.black,
+                              ));
+                            }
+                            else if (snapshot.hasData) {
+                              final report = snapshot.data!;
+                              if(totalsDF == null || totalsDF != snapshot.data?.data?.totalsDf){
+                                WidgetsBinding.instance.addPostFrameCallback((_) {
                                   setState(() {
-                                    isShow?[index] = !(isShow?[index] ?? false);
+                                    totalsDF = snapshot.data?.data?.totalsDf;
                                   });
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white,
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10.0, vertical: 10),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              width: 180,
-                                              child: Utils.text(
-                                                text: "${data.scripName}" == ""
-                                                    ? "-"
-                                                    : "${data.scripName}",
-                                                color: const Color(0xFF37474F),
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w700,
-                                                textOverFlow: TextOverflow.ellipsis
-                                              ),
+                                });
+                              }
+                              return Column(
+                                children: [
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: report.data!.filteredDf!.length,
+                                    physics: const BouncingScrollPhysics(),
+                                    padding: const EdgeInsets.all(0),
+                                    itemBuilder: (context, index) {
+                                      final data = report.data!.filteredDf![index];
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 05),
+                                        child: InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              isShow?[index] = !(isShow?[index] ?? false);
+                                            });
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(10),
+                                              color: const Color(0xFFEAF9FF),
                                             ),
-                                            const Spacer(),
-                                            Column(
-                                              children: [
-                                                Utils.text(
-                                                  text: "Amount",
-                                                  color: const Color(0xFF4A5568).withOpacity(0.70),
-                                                  fontSize: 10,
-                                                ),
-                                                Utils.text(
-                                                  text: "${data.amount}" == ""
-                                                      ? "-"
-                                                      : "${data.amount}",
-                                                  color: const Color(0xFF37474F),
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w600
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Utils.text(
-                                                  text: "ISIN",
-                                                  fontSize: 10,
-                                                  color: const Color(0xFF4A5568)
-                                                ),
-                                                Utils.text(
-                                                    text: data.isin,
-                                                    color: Colors.black,
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600
-                                                ),
-                                              ],
-                                            ),
-                                            Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Utils.text(
-                                                    text: "Col Qty",
-                                                    fontSize: 10,
-                                                    color: const Color(0xFF4A5568)
-                                                ),
-                                                Utils.text(
-                                                    text: data.colqty,
-                                                    color: Colors.black,
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600
-                                                ),
-                                              ],
-                                            ),
-                                            Column(
-                                              mainAxisAlignment: MainAxisAlignment.end,
-                                              crossAxisAlignment: CrossAxisAlignment.end,
-                                              children: [
-                                                Utils.text(
-                                                    text: "Lock In",
-                                                    fontSize: 10,
-                                                    color: const Color(0xFF4A5568)
-                                                ),
-                                                Utils.text(
-                                                    text: data.lockinqty,
-                                                    color: Colors.black,
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600
-                                                ),
-                                              ],
-                                            ),
-                                            Column(
-                                              mainAxisAlignment: MainAxisAlignment.end,
-                                              crossAxisAlignment: CrossAxisAlignment.end,
-                                              children: [
-                                                Utils.text(
-                                                    text: "Closing Price",
-                                                    fontSize: 10,
-                                                    color: const Color(0xFF4A5568)
-                                                ),
-                                                Utils.text(
-                                                    text: data.scripValue,
-                                                    color: Colors.black,
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Utils.text(
-                                                    text: "Net Total",
-                                                    fontSize: 10,
-                                                    color: const Color(0xFF4A5568)
-                                                ),
-                                                Utils.text(
-                                                    text: data.netTotal,
-                                                    color: Colors.black,
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600
-                                                ),
-                                              ],
-                                            ),
-                                            Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Utils.text(
-                                                    text: "In Short",
-                                                    fontSize: 10,
-                                                    color: const Color(0xFF4A5568)
-                                                ),
-                                                Utils.text(
-                                                    text: data.inshort,
-                                                    color: Colors.black,
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600
-                                                ),
-                                              ],
-                                            ),
-                                            Column(
-                                              mainAxisAlignment: MainAxisAlignment.end,
-                                              crossAxisAlignment: CrossAxisAlignment.end,
-                                              children: [
-                                                Utils.text(
-                                                    text: "Out Short",
-                                                    fontSize: 10,
-                                                    color: const Color(0xFF4A5568)
-                                                ),
-                                                Utils.text(
-                                                    text: data.outshort,
-                                                    color: Colors.black,
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600
-                                                ),
-                                              ],
-                                            ),
-                                            Column(
-                                              mainAxisAlignment: MainAxisAlignment.end,
-                                              crossAxisAlignment: CrossAxisAlignment.end,
-                                              children: [
-                                                Utils.text(
-                                                    text: "Free Qty",
-                                                    fontSize: 10,
-                                                    color: const Color(0xFF4A5568)
-                                                ),
-                                                Utils.text(
-                                                    text: data.freeqty,
-                                                    color: Colors.black,
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        // Row(
-                                        //   children: [
-                                        //     Utils.text(
-                                        //       text: "ISIN",
-                                        //       color: Color(0xFF4A5568),
-                                        //       fontSize: 10,
-                                        //     ),
-                                        //     Utils.text(
-                                        //       text: data.isin,
-                                        //       color: Colors.black,
-                                        //       fontSize: 10,
-                                        //       fontWeight: FontWeight.w600
-                                        //     ),
-                                        //     const Spacer(),
-                                        //     Utils.text(
-                                        //       text: "Amount : ",
-                                        //       color: Colors.black,
-                                        //       fontSize: 12,
-                                        //       fontWeight: FontWeight.bold,
-                                        //     ),
-                                        //     Utils.text(
-                                        //       text: "${data.amount}" == ""
-                                        //           ? "-"
-                                        //           : "${data.amount}",
-                                        //       color:
-                                        //           "${data.amount}".startsWith("-")
-                                        //               ? Colors.red
-                                        //               : Colors.green,
-                                        //       fontSize: 12,
-                                        //       textOverFlow: TextOverflow.ellipsis,
-                                        //     ),
-                                        //   ],
-                                        // ),
-                                        Visibility(
-                                          visible: (isShow?[index] ?? false),
-                                          child: Column(
-                                            children: [
-                                              SizedBox(
-                                                width: double.infinity,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(05.0),
-                                                  child: Column(
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  horizontal: 10.0, vertical: 10),
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
-                                                      Divider(
-                                                        color: Colors
-                                                            .grey.shade800
-                                                            .withOpacity(0.2),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 05,
-                                                      ),
-                                                      Visibility(
-                                                        visible:
-                                                            data.scripName != "",
-                                                        child: Row(
-                                                          children: [
-                                                            Utils.text(
-                                                              text: (data.scripName
-                                                                              ?.length ??
-                                                                          0) >
-                                                                      10
-                                                                  ? "${data.scripName?.substring(0, 10)}..."
-                                                                  : data
-                                                                      .scripName,
-                                                              color: Colors.black,
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight.w600,
-                                                              textAlign:
-                                                                  TextAlign.start,
-                                                            ),
-                                                            const SizedBox(
-                                                              width: 05,
-                                                            ),
-                                                            GestureDetector(
-                                                                onTap: () {
-                                                                  showDialog(
-                                                                    context:
-                                                                        context,
-                                                                    builder:
-                                                                        (context) {
-                                                                      return AlertDialog(
-                                                                        contentPadding:
-                                                                            const EdgeInsets
-                                                                                .all(
-                                                                                10),
-                                                                        content:
-                                                                            Column(
-                                                                          mainAxisSize:
-                                                                              MainAxisSize.min,
-                                                                          children: [
-                                                                            Utils
-                                                                                .text(
-                                                                              text:
-                                                                                  data.scripName,
-                                                                              color:
-                                                                                  Colors.black,
-                                                                              fontSize:
-                                                                                  16,
-                                                                              fontWeight:
-                                                                                  FontWeight.w600,
-                                                                              textAlign:
-                                                                                  TextAlign.start,
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      );
-                                                                    },
-                                                                  );
-                                                                },
-                                                                child: const Icon(
-                                                                  Icons.info,
-                                                                  color:
-                                                                      Colors.grey,
-                                                                  size: 20,
-                                                                )),
-                                                            const Spacer(),
-                                                            Visibility(
-                                                              visible:
-                                                                  data.isin != "",
-                                                              child: Row(
-                                                                children: [
-                                                                  Container(
-                                                                    height: 15,
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              05),
-                                                                      color: Colors
-                                                                          .deepPurpleAccent
-                                                                          .shade700
-                                                                          .withOpacity(
-                                                                              0.1),
-                                                                    ),
-                                                                    child:
-                                                                        Padding(
-                                                                      padding: const EdgeInsets
-                                                                          .symmetric(
-                                                                          horizontal:
-                                                                              5.0),
-                                                                      child: Utils
-                                                                          .text(
-                                                                        text: data
-                                                                            .isin,
-                                                                        color: Colors
-                                                                            .deepPurple,
-                                                                        fontSize:
-                                                                            09,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    width: 7,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ],
+                                                      SizedBox(
+                                                        width: 180,
+                                                        child: Utils.text(
+                                                          text: "${data.scripName}" == ""
+                                                              ? "-"
+                                                              : "${data.scripName}",
+                                                          color: const Color(0xFF37474F),
+                                                          fontSize: 12,
+                                                          fontWeight: FontWeight.w700,
+                                                          textOverFlow: TextOverflow.ellipsis,
                                                         ),
                                                       ),
-                                                      const SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      Container(
-                                                        width: double.infinity,
-                                                        decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(05),
-                                                          border: Border.all(
-                                                              color: Colors
-                                                                  .grey.shade800
-                                                                  .withOpacity(
-                                                                      0.2)),
-                                                        ),
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(10.0),
-                                                          child: Column(
-                                                            children: [
-                                                              const SizedBox(
-                                                                height: 10,
-                                                              ),
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: [
-                                                                  Utils.text(
-                                                                    text:
-                                                                        "Pledge Qty",
-                                                                    color:
-                                                                        kBlackColor87,
-                                                                    fontSize: 11,
-                                                                  ),
-                                                                  Utils.text(
-                                                                    text:
-                                                                        "Free Qty",
-                                                                    color:
-                                                                        kBlackColor87,
-                                                                    fontSize: 11,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              const SizedBox(
-                                                                height: 05,
-                                                              ),
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: [
-                                                                  Utils.text(
-                                                                    text: "${data.pledgeqty}" ==
-                                                                            ""
-                                                                        ? "-"
-                                                                        : "${data.pledgeqty}",
-                                                                    color:
-                                                                        kBlackColor87,
-                                                                    fontSize: 13,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                  ),
-                                                                  Utils.text(
-                                                                    text: "${data.freeqty}" ==
-                                                                            ""
-                                                                        ? "-"
-                                                                        : "${data.freeqty}",
-                                                                    color:
-                                                                        kBlackColor87,
-                                                                    fontSize: 13,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              const SizedBox(
-                                                                height: 15,
-                                                              ),
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: [
-                                                                  Utils.text(
-                                                                    text:
-                                                                        "COL Qty",
-                                                                    color:
-                                                                        kBlackColor87,
-                                                                    fontSize: 11,
-                                                                  ),
-                                                                  Utils.text(
-                                                                    text:
-                                                                        "Net Total",
-                                                                    color:
-                                                                        kBlackColor87,
-                                                                    fontSize: 11,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              const SizedBox(
-                                                                height: 05,
-                                                              ),
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: [
-                                                                  Utils.text(
-                                                                    text: "${data.colqty}" ==
-                                                                            ""
-                                                                        ? "-"
-                                                                        : "${data.colqty}",
-                                                                    color:
-                                                                        kBlackColor87,
-                                                                    fontSize: 13,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                  ),
-                                                                  Utils.text(
-                                                                    text: "${data.netTotal}" ==
-                                                                            ""
-                                                                        ? "-"
-                                                                        : "${data.netTotal}",
-                                                                    color:
-                                                                        kBlackColor87,
-                                                                    fontSize: 13,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              const SizedBox(
-                                                                height: 15,
-                                                              ),
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: [
-                                                                  Utils.text(
-                                                                    text:
-                                                                        "Out Short",
-                                                                    color:
-                                                                        kBlackColor87,
-                                                                    fontSize: 11,
-                                                                  ),
-                                                                  Utils.text(
-                                                                    text:
-                                                                        "In Short",
-                                                                    color:
-                                                                        kBlackColor87,
-                                                                    fontSize: 11,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              const SizedBox(
-                                                                height: 05,
-                                                              ),
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: [
-                                                                  Utils.text(
-                                                                    text: "${data.inshort}" ==
-                                                                            ""
-                                                                        ? "-"
-                                                                        : "${data.inshort}",
-                                                                    color:
-                                                                        kBlackColor87,
-                                                                    fontSize: 13,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                  ),
-                                                                  Utils.text(
-                                                                    text: "${data.outshort}" ==
-                                                                            ""
-                                                                        ? "-"
-                                                                        : "${data.outshort}",
-                                                                    color:
-                                                                        kBlackColor87,
-                                                                    fontSize: 13,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              const SizedBox(
-                                                                height: 05,
-                                                              ),
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                children: [
-                                                                  Utils.text(
-                                                                    text:
-                                                                        "Amount",
-                                                                    color:
-                                                                        kBlackColor87,
-                                                                    fontSize: 11,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              const SizedBox(
-                                                                height: 05,
-                                                              ),
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                children: [
-                                                                  Utils.text(
-                                                                    text:
-                                                                        "${data.amount}",
-                                                                    color: "${data.amount}"
-                                                                            .startsWith(
-                                                                                "-")
-                                                                        ? Colors
-                                                                            .red
-                                                                        : Colors
-                                                                            .green,
-                                                                    fontSize: 13,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ],
+                                                      const Spacer(),
+                                                      Column(
+                                                        children: [
+                                                          Utils.text(
+                                                            text: "Amount",
+                                                            color: const Color(0xFF4A5568).withOpacity(0.70),
+                                                            fontSize: 10,
                                                           ),
-                                                        ),
+                                                          Utils.text(
+                                                            text: "${data.amount}" == ""
+                                                                ? "-"
+                                                                : "${data.amount}",
+                                                            color: const Color(0xFF37474F),
+                                                            fontSize: 13,
+                                                            fontWeight: FontWeight.w600
+                                                          ),
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Column(
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Utils.text(
+                                                            text: "ISIN",
+                                                            fontSize: 10,
+                                                            color: const Color(0xFF4A5568)
+                                                          ),
+                                                          Utils.text(
+                                                              text: data.isin,
+                                                              color: Colors.black,
+                                                              fontSize: 13,
+                                                              fontWeight: FontWeight.w600
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Column(
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Utils.text(
+                                                              text: "Col Qty",
+                                                              fontSize: 10,
+                                                              color: const Color(0xFF4A5568)
+                                                          ),
+                                                          Utils.text(
+                                                              text: data.colqty,
+                                                              color: Colors.black,
+                                                              fontSize: 13,
+                                                              fontWeight: FontWeight.w600
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Column(
+                                                        mainAxisAlignment: MainAxisAlignment.end,
+                                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                                        children: [
+                                                          Utils.text(
+                                                              text: "Lock In",
+                                                              fontSize: 10,
+                                                              color: const Color(0xFF4A5568)
+                                                          ),
+                                                          Utils.text(
+                                                              text: data.lockinqty,
+                                                              color: Colors.black,
+                                                              fontSize: 13,
+                                                              fontWeight: FontWeight.w600
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Column(
+                                                        mainAxisAlignment: MainAxisAlignment.end,
+                                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                                        children: [
+                                                          Utils.text(
+                                                              text: "Closing Price",
+                                                              fontSize: 10,
+                                                              color: const Color(0xFF4A5568)
+                                                          ),
+                                                          Utils.text(
+                                                              text: data.scripValue,
+                                                              color: Colors.black,
+                                                              fontSize: 13,
+                                                              fontWeight: FontWeight.w600
+                                                          ),
+                                                        ],
                                                       ),
                                                     ],
                                                   ),
-                                                ),
+                                                  const SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Column(
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Utils.text(
+                                                              text: "Net Total",
+                                                              fontSize: 10,
+                                                              color: const Color(0xFF4A5568)
+                                                          ),
+                                                          Utils.text(
+                                                              text: data.netTotal,
+                                                              color: Colors.black,
+                                                              fontSize: 13,
+                                                              fontWeight: FontWeight.w600
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Column(
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Utils.text(
+                                                              text: "In Short",
+                                                              fontSize: 10,
+                                                              color: const Color(0xFF4A5568)
+                                                          ),
+                                                          Utils.text(
+                                                              text: data.inshort,
+                                                              color: Colors.black,
+                                                              fontSize: 13,
+                                                              fontWeight: FontWeight.w600
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Column(
+                                                        mainAxisAlignment: MainAxisAlignment.end,
+                                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                                        children: [
+                                                          Utils.text(
+                                                              text: "Out Short",
+                                                              fontSize: 10,
+                                                              color: const Color(0xFF4A5568)
+                                                          ),
+                                                          Utils.text(
+                                                              text: data.outshort,
+                                                              color: Colors.black,
+                                                              fontSize: 13,
+                                                              fontWeight: FontWeight.w600
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Column(
+                                                        mainAxisAlignment: MainAxisAlignment.end,
+                                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                                        children: [
+                                                          Utils.text(
+                                                              text: "Free Qty",
+                                                              fontSize: 10,
+                                                              color: const Color(0xFF4A5568)
+                                                          ),
+                                                          Utils.text(
+                                                              text: data.freeqty,
+                                                              color: Colors.black,
+                                                              fontSize: 13,
+                                                              fontWeight: FontWeight.w600
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  // Row(
+                                                  //   children: [
+                                                  //     Utils.text(
+                                                  //       text: "ISIN",
+                                                  //       color: Color(0xFF4A5568),
+                                                  //       fontSize: 10,
+                                                  //     ),
+                                                  //     Utils.text(
+                                                  //       text: data.isin,
+                                                  //       color: Colors.black,
+                                                  //       fontSize: 10,
+                                                  //       fontWeight: FontWeight.w600
+                                                  //     ),
+                                                  //     const Spacer(),
+                                                  //     Utils.text(
+                                                  //       text: "Amount : ",
+                                                  //       color: Colors.black,
+                                                  //       fontSize: 12,
+                                                  //       fontWeight: FontWeight.bold,
+                                                  //     ),
+                                                  //     Utils.text(
+                                                  //       text: "${data.amount}" == ""
+                                                  //           ? "-"
+                                                  //           : "${data.amount}",
+                                                  //       color:
+                                                  //           "${data.amount}".startsWith("-")
+                                                  //               ? Colors.red
+                                                  //               : Colors.green,
+                                                  //       fontSize: 12,
+                                                  //       textOverFlow: TextOverflow.ellipsis,
+                                                  //     ),
+                                                  //   ],
+                                                  // ),
+                                                  Visibility(
+                                                    visible: (isShow?[index] ?? false),
+                                                    child: Column(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: double.infinity,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets.all(05.0),
+                                                            child: Column(
+                                                              children: [
+                                                                Divider(
+                                                                  color: Colors
+                                                                      .grey.shade800
+                                                                      .withOpacity(0.2),
+                                                                ),
+                                                                const SizedBox(
+                                                                  height: 05,
+                                                                ),
+                                                                Visibility(
+                                                                  visible:
+                                                                      data.scripName != "",
+                                                                  child: Row(
+                                                                    children: [
+                                                                      Utils.text(
+                                                                        text: (data.scripName
+                                                                                        ?.length ??
+                                                                                    0) >
+                                                                                10
+                                                                            ? "${data.scripName?.substring(0, 10)}..."
+                                                                            : data
+                                                                                .scripName,
+                                                                        color: Colors.black,
+                                                                        fontSize: 16,
+                                                                        fontWeight:
+                                                                            FontWeight.w600,
+                                                                        textAlign:
+                                                                            TextAlign.start,
+                                                                      ),
+                                                                      const SizedBox(
+                                                                        width: 05,
+                                                                      ),
+                                                                      GestureDetector(
+                                                                          onTap: () {
+                                                                            showDialog(
+                                                                              context:
+                                                                                  context,
+                                                                              builder:
+                                                                                  (context) {
+                                                                                return AlertDialog(
+                                                                                  contentPadding:
+                                                                                      const EdgeInsets
+                                                                                          .all(
+                                                                                          10),
+                                                                                  content:
+                                                                                      Column(
+                                                                                    mainAxisSize:
+                                                                                        MainAxisSize.min,
+                                                                                    children: [
+                                                                                      Utils
+                                                                                          .text(
+                                                                                        text:
+                                                                                            data.scripName,
+                                                                                        color:
+                                                                                            Colors.black,
+                                                                                        fontSize:
+                                                                                            16,
+                                                                                        fontWeight:
+                                                                                            FontWeight.w600,
+                                                                                        textAlign:
+                                                                                            TextAlign.start,
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                );
+                                                                              },
+                                                                            );
+                                                                          },
+                                                                          child: const Icon(
+                                                                            Icons.info,
+                                                                            color:
+                                                                                Colors.grey,
+                                                                            size: 20,
+                                                                          )),
+                                                                      const Spacer(),
+                                                                      Visibility(
+                                                                        visible:
+                                                                            data.isin != "",
+                                                                        child: Row(
+                                                                          children: [
+                                                                            Container(
+                                                                              height: 15,
+                                                                              decoration:
+                                                                                  BoxDecoration(
+                                                                                borderRadius:
+                                                                                    BorderRadius.circular(
+                                                                                        05),
+                                                                                color: Colors
+                                                                                    .deepPurpleAccent
+                                                                                    .shade700
+                                                                                    .withOpacity(
+                                                                                        0.1),
+                                                                              ),
+                                                                              child:
+                                                                                  Padding(
+                                                                                padding: const EdgeInsets
+                                                                                    .symmetric(
+                                                                                    horizontal:
+                                                                                        5.0),
+                                                                                child: Utils
+                                                                                    .text(
+                                                                                  text: data
+                                                                                      .isin,
+                                                                                  color: Colors
+                                                                                      .deepPurple,
+                                                                                  fontSize:
+                                                                                      09,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              width: 7,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                const SizedBox(
+                                                                  height: 10,
+                                                                ),
+                                                                Container(
+                                                                  width: double.infinity,
+                                                                  decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(05),
+                                                                    border: Border.all(
+                                                                        color: Colors
+                                                                            .grey.shade800
+                                                                            .withOpacity(
+                                                                                0.2)),
+                                                                  ),
+                                                                  child: Padding(
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .all(10.0),
+                                                                    child: Column(
+                                                                      children: [
+                                                                        const SizedBox(
+                                                                          height: 10,
+                                                                        ),
+                                                                        Row(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment
+                                                                                  .spaceBetween,
+                                                                          children: [
+                                                                            Utils.text(
+                                                                              text:
+                                                                                  "Pledge Qty",
+                                                                              color:
+                                                                                  kBlackColor87,
+                                                                              fontSize: 11,
+                                                                            ),
+                                                                            Utils.text(
+                                                                              text:
+                                                                                  "Free Qty",
+                                                                              color:
+                                                                                  kBlackColor87,
+                                                                              fontSize: 11,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          height: 05,
+                                                                        ),
+                                                                        Row(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment
+                                                                                  .spaceBetween,
+                                                                          children: [
+                                                                            Utils.text(
+                                                                              text: "${data.pledgeqty}" ==
+                                                                                      ""
+                                                                                  ? "-"
+                                                                                  : "${data.pledgeqty}",
+                                                                              color:
+                                                                                  kBlackColor87,
+                                                                              fontSize: 13,
+                                                                              fontWeight:
+                                                                                  FontWeight
+                                                                                      .w600,
+                                                                            ),
+                                                                            Utils.text(
+                                                                              text: "${data.freeqty}" ==
+                                                                                      ""
+                                                                                  ? "-"
+                                                                                  : "${data.freeqty}",
+                                                                              color:
+                                                                                  kBlackColor87,
+                                                                              fontSize: 13,
+                                                                              fontWeight:
+                                                                                  FontWeight
+                                                                                      .w600,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          height: 15,
+                                                                        ),
+                                                                        Row(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment
+                                                                                  .spaceBetween,
+                                                                          children: [
+                                                                            Utils.text(
+                                                                              text:
+                                                                                  "COL Qty",
+                                                                              color:
+                                                                                  kBlackColor87,
+                                                                              fontSize: 11,
+                                                                            ),
+                                                                            Utils.text(
+                                                                              text:
+                                                                                  "Net Total",
+                                                                              color:
+                                                                                  kBlackColor87,
+                                                                              fontSize: 11,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          height: 05,
+                                                                        ),
+                                                                        Row(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment
+                                                                                  .spaceBetween,
+                                                                          children: [
+                                                                            Utils.text(
+                                                                              text: "${data.colqty}" ==
+                                                                                      ""
+                                                                                  ? "-"
+                                                                                  : "${data.colqty}",
+                                                                              color:
+                                                                                  kBlackColor87,
+                                                                              fontSize: 13,
+                                                                              fontWeight:
+                                                                                  FontWeight
+                                                                                      .w600,
+                                                                            ),
+                                                                            Utils.text(
+                                                                              text: "${data.netTotal}" ==
+                                                                                      ""
+                                                                                  ? "-"
+                                                                                  : "${data.netTotal}",
+                                                                              color:
+                                                                                  kBlackColor87,
+                                                                              fontSize: 13,
+                                                                              fontWeight:
+                                                                                  FontWeight
+                                                                                      .w600,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          height: 15,
+                                                                        ),
+                                                                        Row(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment
+                                                                                  .spaceBetween,
+                                                                          children: [
+                                                                            Utils.text(
+                                                                              text:
+                                                                                  "Out Short",
+                                                                              color:
+                                                                                  kBlackColor87,
+                                                                              fontSize: 11,
+                                                                            ),
+                                                                            Utils.text(
+                                                                              text:
+                                                                                  "In Short",
+                                                                              color:
+                                                                                  kBlackColor87,
+                                                                              fontSize: 11,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          height: 05,
+                                                                        ),
+                                                                        Row(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment
+                                                                                  .spaceBetween,
+                                                                          children: [
+                                                                            Utils.text(
+                                                                              text: "${data.inshort}" ==
+                                                                                      ""
+                                                                                  ? "-"
+                                                                                  : "${data.inshort}",
+                                                                              color:
+                                                                                  kBlackColor87,
+                                                                              fontSize: 13,
+                                                                              fontWeight:
+                                                                                  FontWeight
+                                                                                      .w600,
+                                                                            ),
+                                                                            Utils.text(
+                                                                              text: "${data.outshort}" ==
+                                                                                      ""
+                                                                                  ? "-"
+                                                                                  : "${data.outshort}",
+                                                                              color:
+                                                                                  kBlackColor87,
+                                                                              fontSize: 13,
+                                                                              fontWeight:
+                                                                                  FontWeight
+                                                                                      .w600,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          height: 05,
+                                                                        ),
+                                                                        Row(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment
+                                                                                  .center,
+                                                                          children: [
+                                                                            Utils.text(
+                                                                              text:
+                                                                                  "Amount",
+                                                                              color:
+                                                                                  kBlackColor87,
+                                                                              fontSize: 11,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          height: 05,
+                                                                        ),
+                                                                        Row(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment
+                                                                                  .center,
+                                                                          children: [
+                                                                            Utils.text(
+                                                                              text:
+                                                                                  "${data.amount}",
+                                                                              color: "${data.amount}"
+                                                                                      .startsWith(
+                                                                                          "-")
+                                                                                  ? Colors
+                                                                                      .red
+                                                                                  : Colors
+                                                                                      .green,
+                                                                              fontSize: 13,
+                                                                              fontWeight:
+                                                                                  FontWeight
+                                                                                      .w600,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
+                                            ),
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      );
+                                    },
                                   ),
-                                ),
-                              ),
-                            );
+                                  const SizedBox(
+                                    height: 150,
+                                  ),
+                                ],
+                              );
+                            } else {
+                              return const Center(child: Text('No data found'));
+                            }
                           },
-                        );
-                        // return ListView.builder(
-                        //   itemCount: report.data!.filteredDf!.length,
-                        //   itemBuilder: (context, index) {
-                        //     final data = report.data!.filteredDf![index];
-                        //     return Padding(
-                        //       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        //       child: Card(
-                        //          color: Colors.white,
-                        //         child: Container(
-                        //           decoration: BoxDecoration(
-                        //             borderRadius: BorderRadius.circular(10),
-                        //           ),
-                        //           child: Padding(
-                        //             padding: const EdgeInsets.symmetric(
-                        //                 horizontal: 10.0, vertical: 10),
-                        //             child: Column(
-                        //               children: [
-                        //                 Row(
-                        //                   mainAxisAlignment: MainAxisAlignment.start,
-                        //                   children: [
-                        //                     Column(
-                        //                       mainAxisAlignment: MainAxisAlignment.start,
-                        //                       crossAxisAlignment: CrossAxisAlignment.start,
-                        //                       children: [
-                        //                         Row(
-                        //                           children: [
-                        //                             Column(
-                        //                               mainAxisAlignment:
-                        //                               MainAxisAlignment.start,
-                        //                               crossAxisAlignment:
-                        //                               CrossAxisAlignment.start,
-                        //                               children: [
-                        //                                 Container(
-                        //                                   height: 35,
-                        //                                   width: 35,
-                        //                                   decoration: BoxDecoration(
-                        //                                     borderRadius:
-                        //                                     BorderRadius.circular(10),
-                        //                                     border: Border.all(
-                        //                                       color: Colors.grey.shade800
-                        //                                           .withOpacity(0.1),
-                        //                                     ),
-                        //                                   ),
-                        //                                   child: Center(
-                        //                                     child: Utils.text(
-                        //                                       text: "${index + 1}",
-                        //                                       color: Colors.black,
-                        //                                       fontSize: 14,
-                        //                                       fontWeight: FontWeight.bold,
-                        //                                     ),
-                        //                                   ),
-                        //                                 ),
-                        //                               ],
-                        //                             ),
-                        //                             const SizedBox(
-                        //                               width: 10,
-                        //                             ),
-                        //                             Column(
-                        //                               mainAxisAlignment: MainAxisAlignment.start,
-                        //                               crossAxisAlignment: CrossAxisAlignment.start,
-                        //                               children: [
-                        //                                 Row(
-                        //                                   children: [
-                        //                                     Utils.text(
-                        //                                       text: "ISIN : ",
-                        //                                       color: Colors.black,
-                        //                                       fontSize: 10,
-                        //                                       fontWeight: FontWeight.bold,
-                        //                                     ),
-                        //                                     Utils.text(
-                        //                                       text: data.isin,
-                        //                                       color: Colors.black,
-                        //                                       fontSize: 10,
-                        //                                     ),
-                        //                                   ],
-                        //                                 ),
-                        //                                 Row(
-                        //                                   children: [
-                        //                                     Utils.text(
-                        //                                       text: "Script Name : ",
-                        //                                       color: Colors.black,
-                        //                                       fontSize: 10,
-                        //                                       fontWeight: FontWeight.bold,
-                        //                                     ),
-                        //                                     Utils.text(
-                        //                                       text: data.scripName,
-                        //                                       color: Colors.black,
-                        //                                       fontSize: 10,
-                        //                                     ),
-                        //                                   ],
-                        //                                 ),
-                        //                                 // Row(
-                        //                                 //   children: [
-                        //                                 //     Utils.text(
-                        //                                 //       text: "Free Qty : ",
-                        //                                 //       color: Colors.black,
-                        //                                 //       fontSize: 10,
-                        //                                 //     ),
-                        //                                 //     Utils.text(
-                        //                                 //       text: "${data.freeqty}",
-                        //                                 //       color: Colors.black,
-                        //                                 //       fontSize: 10,
-                        //                                 //     ),
-                        //                                 //   ],
-                        //                                 // ),
-                        //                                 // Row(
-                        //                                 //   children: [
-                        //                                 //     Utils.text(
-                        //                                 //       text: "Col Qty : ",
-                        //                                 //       color: Colors.black,
-                        //                                 //       fontSize: 10,
-                        //                                 //     ),
-                        //                                 //     Utils.text(
-                        //                                 //       text: "${data.colqty}",
-                        //                                 //       color: Colors.black,
-                        //                                 //       fontSize: 10,
-                        //                                 //     ),
-                        //                                 //   ],
-                        //                                 // ),
-                        //                                 // Row(
-                        //                                 //   children: [
-                        //                                 //     Utils.text(
-                        //                                 //       text: "In Short : ",
-                        //                                 //       color: Colors.black,
-                        //                                 //       fontSize: 10,
-                        //                                 //     ),
-                        //                                 //     Utils.text(
-                        //                                 //       text: "${data.inshort}",
-                        //                                 //       color: Colors.black,
-                        //                                 //       fontSize: 10,
-                        //                                 //     ),
-                        //                                 //   ],
-                        //                                 // ),
-                        //                                 // Row(
-                        //                                 //   children: [
-                        //                                 //     Utils.text(
-                        //                                 //       text: "Out Short : ",
-                        //                                 //       color: Colors.black,
-                        //                                 //       fontSize: 10,
-                        //                                 //     ),
-                        //                                 //     Utils.text(
-                        //                                 //       text: "${data.outshort}",
-                        //                                 //       color: Colors.black,
-                        //                                 //       fontSize: 10,
-                        //                                 //     ),
-                        //                                 //   ],
-                        //                                 // ),
-                        //                                 // Row(
-                        //                                 //   children: [
-                        //                                 //     Utils.text(
-                        //                                 //       text: "Lockin : ",
-                        //                                 //       color: Colors.black,
-                        //                                 //       fontSize: 10,
-                        //                                 //     ),
-                        //                                 //     Utils.text(
-                        //                                 //       text: "${data.lockinqty}",
-                        //                                 //       color: Colors.black,
-                        //                                 //       fontSize: 10,
-                        //                                 //     ),
-                        //                                 //   ],
-                        //                                 // ),
-                        //                                 // Row(
-                        //                                 //   children: [
-                        //                                 //     Utils.text(
-                        //                                 //       text: "Net Total : ",
-                        //                                 //       color: Colors.black,
-                        //                                 //       fontSize: 10,
-                        //                                 //     ),
-                        //                                 //     Utils.text(
-                        //                                 //       text: "${data.netTotal}",
-                        //                                 //       color: Colors.black,
-                        //                                 //       fontSize: 10,
-                        //                                 //     ),
-                        //                                 //   ],
-                        //                                 // ),
-                        //                                 // Row(
-                        //                                 //   children: [
-                        //                                 //     Utils.text(
-                        //                                 //       text: "Closing Price : ",
-                        //                                 //       color: Colors.black,
-                        //                                 //       fontSize: 10,
-                        //                                 //     ),
-                        //                                 //     Utils.text(
-                        //                                 //       text: "${data.scripValue}",
-                        //                                 //       color: Colors.black,
-                        //                                 //       fontSize: 10,
-                        //                                 //     ),
-                        //                                 //   ],
-                        //                                 // ),
-                        //                                 Row(
-                        //                                   children: [
-                        //                                     Utils.text(
-                        //                                       text: "Amount : ",
-                        //                                       color: Colors.black,
-                        //                                       fontSize: 10,
-                        //                                       fontWeight: FontWeight.bold,
-                        //                                     ),
-                        //                                     Utils.text(
-                        //                                       text: "${data.amount}",
-                        //                                       color: Colors.black,
-                        //                                       fontSize: 10,
-                        //                                     ),
-                        //                                   ],
-                        //                                 ),
-                        //                               ],
-                        //                             ),
-                        //                           ],
-                        //                         ),
-                        //                       ],
-                        //                     ),
-                        //                   ],
-                        //                 ),
-                        //               ],
-                        //             ),
-                        //           ),
-                        //         ),
-                        //       ),
-                        //       // child: Card(
-                        //       //   color: Colors.white,
-                        //       //   child: Padding(
-                        //       //     padding: const EdgeInsets.all(10.0),
-                        //       //     child: Column(
-                        //       //       children: [
-                        //       //         Row(
-                        //       //           children: [
-                        //       //             Utils.text(
-                        //       //               text: "SR NO : ",
-                        //       //               color: Colors.black,
-                        //       //               fontSize: 10,
-                        //       //             ),
-                        //       //             Utils.text(
-                        //       //               text: "${index + 1}",
-                        //       //               color: Colors.black,
-                        //       //               fontSize: 10,
-                        //       //             ),
-                        //       //           ],
-                        //       //         ),
-                        //       //         Row(
-                        //       //           children: [
-                        //       //             Utils.text(
-                        //       //               text: "ISIN : ",
-                        //       //               color: Colors.black,
-                        //       //               fontSize: 10,
-                        //       //             ),
-                        //       //             Utils.text(
-                        //       //               text: data.isin,
-                        //       //               color: Colors.black,
-                        //       //               fontSize: 10,
-                        //       //             ),
-                        //       //           ],
-                        //       //         ),
-                        //       //         Row(
-                        //       //           children: [
-                        //       //             Utils.text(
-                        //       //               text: "Script Name : ",
-                        //       //               color: Colors.black,
-                        //       //               fontSize: 10,
-                        //       //             ),
-                        //       //             Utils.text(
-                        //       //               text: data.scripName,
-                        //       //               color: Colors.black,
-                        //       //               fontSize: 10,
-                        //       //             ),
-                        //       //           ],
-                        //       //         ),
-                        //       //         Row(
-                        //       //           children: [
-                        //       //             Utils.text(
-                        //       //               text: "Free Qty : ",
-                        //       //               color: Colors.black,
-                        //       //               fontSize: 10,
-                        //       //             ),
-                        //       //             Utils.text(
-                        //       //               text: "${data.freeqty}",
-                        //       //               color: Colors.black,
-                        //       //               fontSize: 10,
-                        //       //             ),
-                        //       //           ],
-                        //       //         ),
-                        //       //         Row(
-                        //       //           children: [
-                        //       //             Utils.text(
-                        //       //               text: "Col Qty : ",
-                        //       //               color: Colors.black,
-                        //       //               fontSize: 10,
-                        //       //             ),
-                        //       //             Utils.text(
-                        //       //               text: "${data.colqty}",
-                        //       //               color: Colors.black,
-                        //       //               fontSize: 10,
-                        //       //             ),
-                        //       //           ],
-                        //       //         ),
-                        //       //         Row(
-                        //       //           children: [
-                        //       //             Utils.text(
-                        //       //               text: "In Short : ",
-                        //       //               color: Colors.black,
-                        //       //               fontSize: 10,
-                        //       //             ),
-                        //       //             Utils.text(
-                        //       //               text: "${data.inshort}",
-                        //       //               color: Colors.black,
-                        //       //               fontSize: 10,
-                        //       //             ),
-                        //       //           ],
-                        //       //         ),
-                        //       //         Row(
-                        //       //           children: [
-                        //       //             Utils.text(
-                        //       //               text: "Out Short : ",
-                        //       //               color: Colors.black,
-                        //       //               fontSize: 10,
-                        //       //             ),
-                        //       //             Utils.text(
-                        //       //               text: "${data.outshort}",
-                        //       //               color: Colors.black,
-                        //       //               fontSize: 10,
-                        //       //             ),
-                        //       //           ],
-                        //       //         ),
-                        //       //         Row(
-                        //       //           children: [
-                        //       //             Utils.text(
-                        //       //               text: "Out Short : ",
-                        //       //               color: Colors.black,
-                        //       //               fontSize: 10,
-                        //       //             ),
-                        //       //             Utils.text(
-                        //       //               text: "${data.outshort}",
-                        //       //               color: Colors.black,
-                        //       //               fontSize: 10,
-                        //       //             ),
-                        //       //           ],
-                        //       //         ),
-                        //       //         Row(
-                        //       //           children: [
-                        //       //             Utils.text(
-                        //       //               text: "Lockin : ",
-                        //       //               color: Colors.black,
-                        //       //               fontSize: 10,
-                        //       //             ),
-                        //       //             Utils.text(
-                        //       //               text: "${data.lockinqty}",
-                        //       //               color: Colors.black,
-                        //       //               fontSize: 10,
-                        //       //             ),
-                        //       //           ],
-                        //       //         ),
-                        //       //         Row(
-                        //       //           children: [
-                        //       //             Utils.text(
-                        //       //               text: "Net Total : ",
-                        //       //               color: Colors.black,
-                        //       //               fontSize: 10,
-                        //       //             ),
-                        //       //             Utils.text(
-                        //       //               text: "${data.netTotal}",
-                        //       //               color: Colors.black,
-                        //       //               fontSize: 10,
-                        //       //             ),
-                        //       //           ],
-                        //       //         ),
-                        //       //         Row(
-                        //       //           children: [
-                        //       //             Utils.text(
-                        //       //               text: "Closing Price : ",
-                        //       //               color: Colors.black,
-                        //       //               fontSize: 10,
-                        //       //             ),
-                        //       //             Utils.text(
-                        //       //               text: "${data.scripValue}",
-                        //       //               color: Colors.black,
-                        //       //               fontSize: 10,
-                        //       //             ),
-                        //       //           ],
-                        //       //         ),
-                        //       //         Row(
-                        //       //           children: [
-                        //       //             Utils.text(
-                        //       //               text: "Amount : ",
-                        //       //               color: Colors.black,
-                        //       //               fontSize: 10,
-                        //       //             ),
-                        //       //             Utils.text(
-                        //       //               text: "${data.amount}",
-                        //       //               color: Colors.black,
-                        //       //               fontSize: 10,
-                        //       //             ),
-                        //       //           ],
-                        //       //         ),
-                        //       //       ],
-                        //       //     ),
-                        //       //   ),
-                        //       // ),
-                        //     );
-                        // },);
-                      } else {
-                        return const Center(child: Text('No data found'));
-                      }
-                    },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             Visibility(
               visible: totalsDF != null && totalsDF!.isNotEmpty,

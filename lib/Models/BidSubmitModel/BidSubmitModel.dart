@@ -55,7 +55,7 @@ class BidResponse {
 class Data {
   String message;
   String applicationNo;
-  int bidReferenceNo;
+  String bidReferenceNo;
   String exchange;
 
   Data({
@@ -67,10 +67,10 @@ class Data {
 
   factory Data.fromJson(Map<String, dynamic> json) {
     return Data(
-      message: json['message'],
-      applicationNo: json['application_no'],
-      bidReferenceNo: json['bid_reference_no'],
-      exchange: json['exchange'],
+      message: json['message'].toString(),
+      applicationNo: json['application_no'].toString(),
+      bidReferenceNo: json['bid_reference_no'].toString(),
+      exchange: json['exchange'].toString(),
     );
   }
 }

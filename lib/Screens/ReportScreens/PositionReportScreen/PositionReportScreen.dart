@@ -132,7 +132,7 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xFF0066F6)),
+                        border: Border.all(color: const Color(0xFF00A9FF)),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
@@ -141,7 +141,7 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                         child: Center(
                           child: Utils.text(
                               text: "All",
-                              color: const Color(0xFF0066F6),
+                              color: const Color(0xFF00A9FF),
                               fontSize: 12,
                               fontWeight: FontWeight.w500),
                         ),
@@ -157,7 +157,7 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xFF0066F6)),
+                        border: Border.all(color: const Color(0xFF00A9FF)),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
@@ -166,7 +166,7 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                         child: Center(
                           child: Utils.text(
                               text: "NSE FNO",
-                              color: const Color(0xFF0066F6),
+                              color: const Color(0xFF00A9FF),
                               fontSize: 12,
                               fontWeight: FontWeight.w500),
                         ),
@@ -182,7 +182,7 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xFF0066F6)),
+                        border: Border.all(color: const Color(0xFF00A9FF)),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
@@ -191,7 +191,7 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                         child: Center(
                           child: Utils.text(
                               text: "CD NSE",
-                              color: const Color(0xFF0066F6),
+                              color: const Color(0xFF00A9FF),
                               fontSize: 12,
                               fontWeight: FontWeight.w500),
                         ),
@@ -207,7 +207,7 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xFF0066F6)),
+                        border: Border.all(color: const Color(0xFF00A9FF)),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
@@ -216,7 +216,7 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                         child: Center(
                           child: Utils.text(
                               text: "MCX",
-                              color: const Color(0xFF0066F6),
+                              color: const Color(0xFF00A9FF),
                               fontSize: 12,
                               fontWeight: FontWeight.w500),
                         ),
@@ -232,7 +232,7 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xFF0066F6)),
+                        border: Border.all(color: const Color(0xFF00A9FF)),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
@@ -241,7 +241,7 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                         child: Center(
                           child: Utils.text(
                               text: datePickedValue,
-                              color: const Color(0xFF0066F6),
+                              color: const Color(0xFF00A9FF),
                               fontSize: 12,
                               fontWeight: FontWeight.w500),
                         ),
@@ -356,7 +356,7 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                                                                   textOverFlow: TextOverflow.ellipsis
                                                               ),
                                                               Utils.text(
-                                                                  text: dfFilter.amount.toStringAsFixed(2),
+                                                                  text: dfFilter.amount,
                                                                   fontSize: 12,
                                                                   fontWeight: FontWeight.w400,
                                                                   color: "${dfFilter.amount}".startsWith("-") ? const Color(0xFFFF2E2E) : const Color(0xFF008710)
@@ -376,13 +376,13 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                                                                 color: Color(0xFF4A5568)
                                                               ),
                                                               Utils.text(
-                                                                  text: "RATE: -${dfFilter.osrate.toStringAsFixed(2)}",
+                                                                  text: "RATE: -${dfFilter.osrate}",
                                                                   fontSize: 10,
                                                                   fontWeight: FontWeight.w400,
                                                                   color: Color(0xFF4A5568)
                                                               ),
                                                               Utils.text(
-                                                                  text: "Closing Price: -${dfFilter.closingPrice.toStringAsFixed(2)}",
+                                                                  text: "Closing Price: -${dfFilter.closingPrice}",
                                                                   fontSize: 10,
                                                                   fontWeight: FontWeight.w400,
                                                                   color: Color(0xFF4A5568)

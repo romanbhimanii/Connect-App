@@ -590,12 +590,40 @@ class _WebViewScreenState extends State<WebViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.grey[200],
+        backgroundColor: Colors.white,
         scrolledUnderElevation: 0.0,
+        leadingWidth: 50,
+        centerTitle: true,
+        leading: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 11.0),
+          child: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Container(
+              height: 20,
+              width: 20,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: const Color(0xFF292D32))),
+              child: const Center(
+                child: Icon(
+                  Icons.arrow_back_ios_new_outlined,
+                  color: Color(0xFF292D32),
+                  size: 18,
+                ),
+              ),
+            ),
+          ),
+        ),
         title: Utils.text(
-            text: "Verify your Otp", color: Colors.black, fontSize: 18),
+            text: "Verify your Otp",
+            color: const Color(0xFF00A9FF),
+            fontSize: 20,
+            fontWeight: FontWeight.bold
+        ),
       ),
       body: WebViewWidget(
         controller: controller,

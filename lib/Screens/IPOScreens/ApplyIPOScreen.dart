@@ -79,10 +79,10 @@ class _ApplyiposcreenState extends State<Applyiposcreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.white,
       appBar: AppBar(
         scrolledUnderElevation: 0.0,
-        backgroundColor: Colors.grey[200],
+        backgroundColor: Colors.white,
         title: Utils.text(
             text: name,
             color: const Color(0xFF00A9FF),
@@ -259,7 +259,7 @@ class _ApplyiposcreenState extends State<Applyiposcreen> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
+                  color: const Color(0xFFEAF9FF),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -347,7 +347,7 @@ class _ApplyiposcreenState extends State<Applyiposcreen> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
+                  color: const Color(0xFFEAF9FF),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -531,7 +531,7 @@ class _ApplyiposcreenState extends State<Applyiposcreen> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
+                  color: const Color(0xFFEAF9FF),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -601,7 +601,7 @@ class _ApplyiposcreenState extends State<Applyiposcreen> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
+                  color: const Color(0xFFEAF9FF),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),

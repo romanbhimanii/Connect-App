@@ -28,9 +28,9 @@ class ReportData {
   final String cocd;
   final String narration;
   final String chqNo;
-  final double drAmt;
-  final double crAmt;
-  final double balance;
+  final String drAmt;
+  final String crAmt;
+  final String balance;
 
   ReportData({
     required this.billDate,
@@ -46,15 +46,15 @@ class ReportData {
 
   factory ReportData.fromJson(Map<String, dynamic> json) {
     return ReportData(
-      billDate: json['bill_date'],
-      voucherDate: json['voucherdate'],
-      voucherNo: json['voucherno'],
-      cocd: json['cocd'],
-      narration: json['narration'],
+      billDate: json['bill_date'].toString(),
+      voucherDate: json['voucherdate'].toString(),
+      voucherNo: json['voucherno'].toString(),
+      cocd: json['cocd'].toString(),
+      narration: json['narration'].toString(),
       chqNo: json['chqno'].toString(),
-      drAmt: json['dr_amt'],
-      crAmt: json['cr_amt'],
-      balance: json['balance'],
+      drAmt: json['dr_amt'].toString(),
+      crAmt: json['cr_amt'].toString(),
+      balance: json['balance'].toString(),
     );
   }
 }

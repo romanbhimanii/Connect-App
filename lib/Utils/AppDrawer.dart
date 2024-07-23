@@ -48,7 +48,7 @@ class _AppDrawerState extends State<AppDrawer> {
       ),
       PersistentTabConfig(
         item: ItemConfig(
-          icon: tab == 3 ? SvgPicture.asset("assets/icons/SettingIcon.svg",height: 22,width: 22,) : SvgPicture.asset("assets/icons/DeSelectSettingIcon.svg"),
+          icon: tab == 3 ? const Image(image: AssetImage("assets/icons/SelectedReportIcon.png"),height: 24,width: 24,) : const Image(image: AssetImage("assets/icons/ReportIcon.png"),height: 23,width: 23,),
           title: ("Reports"),
         ), screen: const ReportScreen(),
       ),

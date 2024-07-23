@@ -268,7 +268,7 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.white,
       appBar: AppBar(
         leadingWidth: 50,
         centerTitle: true,
@@ -291,7 +291,7 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
             ),
           ),
         ),
-        backgroundColor: Colors.grey[200],
+        backgroundColor: Colors.white,
         scrolledUnderElevation: 0.0,
         title: Utils.text(text: "Ledger Report", color: const Color(0xFF00A9FF), fontSize: 20,fontWeight: FontWeight.bold),
         bottom: PreferredSize(
@@ -306,12 +306,12 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                     child: DropdownButton2<String>(
                       isExpanded: true,
                       iconStyleData: const IconStyleData(
-                        icon: Icon(Icons.arrow_drop_down_rounded,color: Color(0xFF0066F6),),
+                        icon: Icon(Icons.arrow_drop_down_rounded,color: Color(0xFF00A9FF),),
                         iconSize: 25,
                       ),
                       hint: Utils.text(
                           text: "Exchange Code",
-                          color: const Color(0xFF0066F6),
+                          color: const Color(0xFF00A9FF),
                           fontSize: 12,
                           fontWeight: FontWeight.w500),
                       items: items
@@ -319,7 +319,7 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                         value: item,
                         child: Utils.text(
                             text: item,
-                            color: const Color(0xFF0066F6),
+                            color: const Color(0xFF00A9FF),
                             fontSize: 12,
                             fontWeight: FontWeight.w500),
                       ))
@@ -353,7 +353,7 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                         height: 40,
                         width: 130,
                         decoration: BoxDecoration(
-                          border: Border.all(color: const Color(0xFF0066F6)),
+                          border: Border.all(color: const Color(0xFF00A9FF)),
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
@@ -368,7 +368,7 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xFF0066F6)),
+                        border: Border.all(color: const Color(0xFF00A9FF)),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
@@ -377,7 +377,7 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                         child: Center(
                           child: Utils.text(
                               text: fromDate == "" ? "From Date" : fromDate,
-                              color: const Color(0xFF0066F6),
+                              color: const Color(0xFF00A9FF),
                               fontSize: 12,
                               fontWeight: FontWeight.w500),
                         ),
@@ -393,7 +393,7 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xFF0066F6)),
+                        border: Border.all(color: const Color(0xFF00A9FF)),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
@@ -402,7 +402,7 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                         child: Center(
                           child: Utils.text(
                               text: toDate == "" ? "To Date" : toDate,
-                              color: const Color(0xFF0066F6),
+                              color: const Color(0xFF00A9FF),
                               fontSize: 12,
                               fontWeight: FontWeight.w500),
                         ),
@@ -416,12 +416,12 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                     child: DropdownButton2<String>(
                       isExpanded: true,
                       iconStyleData: const IconStyleData(
-                        icon: Icon(Icons.arrow_drop_down_rounded,color: Color(0xFF0066F6),),
+                        icon: Icon(Icons.arrow_drop_down_rounded,color: Color(0xFF00A9FF),),
                         iconSize: 25,
                       ),
                       hint: Utils.text(
                           text: "Margin",
-                          color: const Color(0xFF0066F6),
+                          color: const Color(0xFF00A9FF),
                           fontSize: 12,
                           fontWeight: FontWeight.w500),
                       items: margin
@@ -429,7 +429,7 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                         value: item,
                         child: Utils.text(
                             text: item,
-                            color: const Color(0xFF0066F6),
+                            color: const Color(0xFF00A9FF),
                             fontSize: 12,
                             fontWeight: FontWeight.w500),
                       ))
@@ -446,7 +446,7 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                         height: 40,
                         width: 85,
                         decoration: BoxDecoration(
-                          border: Border.all(color: const Color(0xFF0066F6)),
+                          border: Border.all(color: const Color(0xFF00A9FF)),
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
@@ -722,476 +722,488 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
         onRefresh: _fetchLedgerReport,
         child: Stack(
           children: [
-            Column(
-              children: [
-                Expanded(
-                  child: FutureBuilder<LedgerReport>(
-                    future: ledgerReport,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                            child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100));
-                      } else if (snapshot.hasError) {
-                        return Center(child: Text('Error: ${snapshot.error}'));
-                      } else if (snapshot.hasData) {
-                        if(totalData.isNull){
-                          WidgetsBinding.instance.addPostFrameCallback((_){
-                            setState(() {
-                              totalData = snapshot.data!.data.last;
-                              print(totalData);
-                            });
-                          });
-                        }
-                        return filteredData.isNotEmpty ? ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: filteredData.length,
-                          physics: const BouncingScrollPhysics(),
-                          padding: const EdgeInsets.all(0),
-                          itemBuilder: (context, index) {
-                            final ledgerReport = filteredData[index];
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 05),
-                              child: InkWell(
-                                onTap: () {
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(0.0),
+                    child: Column(
+                      children: [
+                        FutureBuilder<LedgerReport>(
+                          future: ledgerReport,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return Center(
+                                  child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100));
+                            } else if (snapshot.hasError) {
+                              return Center(child: Text('Error: ${snapshot.error}'));
+                            } else if (snapshot.hasData) {
+                              if(totalData.isNull || totalData != snapshot.data!.data.last){
+                                WidgetsBinding.instance.addPostFrameCallback((_){
                                   setState(() {
-                                    isShow?[index] = !(isShow?[index] ?? false);
+                                    totalData = snapshot.data!.data.last;
+                                    print(totalData);
                                   });
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white,
-                                    // boxShadow: [BoxShadow(
-                                    //     color: const Color(0xFF000000).withOpacity(0.2),
-                                    //     blurRadius: 1.0,
-                                    //     spreadRadius: 1.0,
-                                    // ),],
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              width: 180,
-                                              child: Utils.text(
-                                                  text: "${ledgerReport.narration}" == ""
-                                                      ? "-"
-                                                      : "${ledgerReport.narration}",
-                                                  color: const Color(0xFF37474F),
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w700,
-                                                  textOverFlow: TextOverflow.ellipsis
-                                              ),
+                                });
+                              }
+                              return filteredData.isNotEmpty ? Column(
+                                children: [
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: filteredData.length,
+                                    physics: const BouncingScrollPhysics(),
+                                    padding: const EdgeInsets.all(0),
+                                    itemBuilder: (context, index) {
+                                      final ledgerReport = filteredData[index];
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 05),
+                                        child: InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              isShow?[index] = !(isShow?[index] ?? false);
+                                            });
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(10),
+                                              color: const Color(0xFFEAF9FF),
                                             ),
-                                            const Spacer(),
-                                            Column(
-                                              children: [
-                                                Utils.text(
-                                                  text: "Balance",
-                                                  color: const Color(0xFF4A5568).withOpacity(0.70),
-                                                  fontSize: 10,
-                                                ),
-                                                Utils.text(
-                                                    text: "${ledgerReport.balance}" == ""
-                                                        ? "-"
-                                                        : "${ledgerReport.balance}",
-                                                    color: "${ledgerReport.balance}".startsWith("-") ? const Color(0xFFFF2E2E) : const Color(0xFF61A735),
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Utils.text(
-                                                    text: "Bill Date",
-                                                    fontSize: 10,
-                                                    color: const Color(0xFF4A5568)
-                                                ),
-                                                Utils.text(
-                                                    text: ledgerReport.billDate == "" ? "-" : ledgerReport.billDate,
-                                                    color: Colors.black,
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600
-                                                ),
-                                              ],
-                                            ),
-                                            Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                Utils.text(
-                                                    text: "Voucher Date",
-                                                    fontSize: 10,
-                                                    color: const Color(0xFF4A5568)
-                                                ),
-                                                Utils.text(
-                                                    text: ledgerReport.voucherDate == "" ? "-" : ledgerReport.voucherDate,
-                                                    color: Colors.black,
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600
-                                                ),
-                                              ],
-                                            ),
-                                            Column(
-                                              mainAxisAlignment: MainAxisAlignment.end,
-                                              crossAxisAlignment: CrossAxisAlignment.end,
-                                              children: [
-                                                Utils.text(
-                                                    text: "Voucher No",
-                                                    fontSize: 10,
-                                                    color: const Color(0xFF4A5568)
-                                                ),
-                                                Utils.text(
-                                                    text: ledgerReport.voucherNo,
-                                                    color: Colors.black,
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Utils.text(
-                                                    text: "COCD",
-                                                    fontSize: 10,
-                                                    color: const Color(0xFF4A5568)
-                                                ),
-                                                Utils.text(
-                                                    text: ledgerReport.cocd,
-                                                    color: Colors.black,
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600
-                                                ),
-                                              ],
-                                            ),
-                                            Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Utils.text(
-                                                    text: "Dr Amount",
-                                                    fontSize: 10,
-                                                    color: const Color(0xFF4A5568)
-                                                ),
-                                                Utils.text(
-                                                    text: "${ledgerReport.drAmt}",
-                                                    color: Colors.black,
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600
-                                                ),
-                                              ],
-                                            ),
-                                            Column(
-                                              mainAxisAlignment: MainAxisAlignment.end,
-                                              crossAxisAlignment: CrossAxisAlignment.end,
-                                              children: [
-                                                Utils.text(
-                                                    text: "Cr Amount",
-                                                    fontSize: 10,
-                                                    color: const Color(0xFF4A5568)
-                                                ),
-                                                Utils.text(
-                                                    text: "${ledgerReport.crAmt}",
-                                                    color: Colors.black,
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w600
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        Visibility(
-                                          visible: (isShow?[index] ?? false),
-                                          child: Column(
-                                            children: [
-                                              SizedBox(
-                                                width: double.infinity,
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(05.0),
-                                                  child: Column(
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
-                                                      Divider(
-                                                        color: Colors.grey.shade800.withOpacity(0.2),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 05,
-                                                      ),
-                                                      Visibility(
-                                                        visible: ledgerReport.narration != "",
-                                                        child: Row(
-                                                          children: [
-                                                            Utils.text(
-                                                              text: ledgerReport.narration.length > 10 ? "${ledgerReport.narration.substring(0,10)}..." : ledgerReport.narration,
-                                                              color: kBlackColor,
-                                                              fontSize: 16,
-                                                              fontWeight: FontWeight.w600,
-                                                              textAlign: TextAlign.start,
-                                                            ),
-                                                            const SizedBox(
-                                                              width: 05,
-                                                            ),
-                                                            GestureDetector(
-                                                                onTap: () {
-                                                                  showDialog(
-                                                                    context: context, builder: (context) {
-                                                                    return AlertDialog(
-                                                                      contentPadding: const EdgeInsets.all(10),
-                                                                      content: Column(
-                                                                        mainAxisSize: MainAxisSize.min,
-                                                                        children: [
-                                                                          Utils.text(
-                                                                            text: ledgerReport.narration,
-                                                                            color: kBlackColor,
-                                                                            fontSize: 16,
-                                                                            fontWeight: FontWeight.w600,
-                                                                            textAlign: TextAlign.start,
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                    );
-                                                                  },);
-                                                                },
-                                                                child: const Icon(Icons.info,color: Colors.grey,size: 20,)),
-                                                            const Spacer(),
-                                                            Visibility(
-                                                              visible: ledgerReport.cocd != "",
-                                                              child: Row(
-                                                                children: [
-                                                                  Container(
-                                                                    height: 15,
-                                                                    decoration: BoxDecoration(
-                                                                      borderRadius: BorderRadius.circular(05),
-                                                                      color: Colors.deepPurpleAccent.shade700.withOpacity(0.1),
-                                                                    ),
-                                                                    child: Padding(
-                                                                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                                                                      child: Utils.text(
-                                                                        text: ledgerReport.cocd,
-                                                                        color: Colors.deepPurple,
-                                                                        fontSize: 09,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    width: 7,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 10,
-                                                      ),
                                                       Container(
-                                                        width: double.infinity,
-                                                        decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.circular(05),
-                                                          border: Border.all(color: Colors.grey.shade800.withOpacity(0.2)),
+                                                        width: 180,
+                                                        child: Utils.text(
+                                                            text: "${ledgerReport.narration}" == ""
+                                                                ? "-"
+                                                                : "${ledgerReport.narration}",
+                                                            color: const Color(0xFF37474F),
+                                                            fontSize: 12,
+                                                            fontWeight: FontWeight.w700,
+                                                            textOverFlow: TextOverflow.ellipsis
                                                         ),
-                                                        child: Padding(
-                                                          padding: const EdgeInsets.all(10.0),
-                                                          child: Column(
-                                                            children: [
-                                                              const SizedBox(
-                                                                height: 10,
-                                                              ),
-                                                              Row(
-                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                children: [
-                                                                  Utils.text(
-                                                                    text: "Bill Date",
-                                                                    color: kBlackColor87,
-                                                                    fontSize: 11,
-                                                                  ),
-                                                                  Utils.text(
-                                                                    text: "Voucher Date",
-                                                                    color: kBlackColor87,
-                                                                    fontSize: 11,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              const SizedBox(
-                                                                height: 05,
-                                                              ),
-                                                              Row(
-                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                children: [
-                                                                  Utils.text(
-                                                                    text: ledgerReport.billDate == "" ? "-" : ledgerReport.billDate,
-                                                                    color: kBlackColor87,
-                                                                    fontSize: 13,
-                                                                    fontWeight: FontWeight.w600,
-                                                                  ),
-                                                                  Utils.text(
-                                                                    text: ledgerReport.voucherDate == "" ? "-" : ledgerReport.voucherDate,
-                                                                    color: kBlackColor87,
-                                                                    fontSize: 13,
-                                                                    fontWeight: FontWeight.w600,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              const SizedBox(
-                                                                height: 15,
-                                                              ),
-                                                              Row(
-                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                children: [
-                                                                  Utils.text(
-                                                                    text: "Voucher No",
-                                                                    color: kBlackColor87,
-                                                                    fontSize: 11,
-                                                                  ),
-                                                                  Utils.text(
-                                                                    text: "COCD",
-                                                                    color: kBlackColor87,
-                                                                    fontSize: 11,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              const SizedBox(
-                                                                height: 05,
-                                                              ),
-                                                              Row(
-                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                children: [
-                                                                  Utils.text(
-                                                                    text: ledgerReport.voucherNo == "" ? "-" : ledgerReport.voucherNo,
-                                                                    color: kBlackColor87,
-                                                                    fontSize: 13,
-                                                                    fontWeight: FontWeight.w600,
-                                                                  ),
-                                                                  Utils.text(
-                                                                    text: ledgerReport.cocd == "" ? "-" : ledgerReport.cocd,
-                                                                    color: kBlackColor87,
-                                                                    fontSize: 13,
-                                                                    fontWeight: FontWeight.w600,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              const SizedBox(
-                                                                height: 15,
-                                                              ),
-                                                              Row(
-                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                children: [
-                                                                  Utils.text(
-                                                                    text: "DR Amount",
-                                                                    color: kBlackColor87,
-                                                                    fontSize: 11,
-                                                                  ),
-                                                                  Utils.text(
-                                                                    text: "CR Amount",
-                                                                    color: kBlackColor87,
-                                                                    fontSize: 11,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              const SizedBox(
-                                                                height: 05,
-                                                              ),
-                                                              Row(
-                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                children: [
-                                                                  Utils.text(
-                                                                    text: "${ledgerReport.drAmt}" == "" ? "-" : "${ledgerReport.drAmt}",
-                                                                    color: kBlackColor87,
-                                                                    fontSize: 13,
-                                                                    fontWeight: FontWeight.w600,
-                                                                  ),
-                                                                  Utils.text(
-                                                                    text: "${ledgerReport.crAmt }" == "" ? "-" : "${ledgerReport.crAmt}",
-                                                                    color: kBlackColor87,
-                                                                    fontSize: 13,
-                                                                    fontWeight: FontWeight.w600,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              const SizedBox(
-                                                                height: 05,
-                                                              ),
-                                                              Row(
-                                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                                children: [
-                                                                  Utils.text(
-                                                                    text: "Balance",
-                                                                    color: kBlackColor87,
-                                                                    fontSize: 11,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              const SizedBox(
-                                                                height: 05,
-                                                              ),
-                                                              Row(
-                                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                                children: [
-                                                                  Utils.text(
-                                                                    text: "${ledgerReport.balance}",
-                                                                    color: "${ledgerReport.balance}".startsWith("-") ? Colors.red : Colors.green,
-                                                                    fontSize: 13,
-                                                                    fontWeight: FontWeight.w600,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ],
+                                                      ),
+                                                      const Spacer(),
+                                                      Column(
+                                                        children: [
+                                                          Utils.text(
+                                                            text: "Balance",
+                                                            color: const Color(0xFF4A5568).withOpacity(0.70),
+                                                            fontSize: 10,
                                                           ),
-                                                        ),
+                                                          Utils.text(
+                                                              text: "${ledgerReport.balance}" == ""
+                                                                  ? "-"
+                                                                  : "${ledgerReport.balance}",
+                                                              color: "${ledgerReport.balance}".startsWith("-") ? const Color(0xFFFF2E2E) : const Color(0xFF61A735),
+                                                              fontSize: 13,
+                                                              fontWeight: FontWeight.w600
+                                                          ),
+                                                        ],
                                                       ),
                                                     ],
                                                   ),
-                                                ),
+                                                  const SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Column(
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Utils.text(
+                                                              text: "Bill Date",
+                                                              fontSize: 10,
+                                                              color: const Color(0xFF4A5568)
+                                                          ),
+                                                          Utils.text(
+                                                              text: ledgerReport.billDate == "" ? "-" : ledgerReport.billDate,
+                                                              color: Colors.black,
+                                                              fontSize: 13,
+                                                              fontWeight: FontWeight.w600
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Column(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          Utils.text(
+                                                              text: "Voucher Date",
+                                                              fontSize: 10,
+                                                              color: const Color(0xFF4A5568)
+                                                          ),
+                                                          Utils.text(
+                                                              text: ledgerReport.voucherDate == "" ? "-" : ledgerReport.voucherDate,
+                                                              color: Colors.black,
+                                                              fontSize: 13,
+                                                              fontWeight: FontWeight.w600
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Column(
+                                                        mainAxisAlignment: MainAxisAlignment.end,
+                                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                                        children: [
+                                                          Utils.text(
+                                                              text: "Voucher No",
+                                                              fontSize: 10,
+                                                              color: const Color(0xFF4A5568)
+                                                          ),
+                                                          Utils.text(
+                                                              text: ledgerReport.voucherNo,
+                                                              color: Colors.black,
+                                                              fontSize: 13,
+                                                              fontWeight: FontWeight.w600
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Column(
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Utils.text(
+                                                              text: "COCD",
+                                                              fontSize: 10,
+                                                              color: const Color(0xFF4A5568)
+                                                          ),
+                                                          Utils.text(
+                                                              text: ledgerReport.cocd,
+                                                              color: Colors.black,
+                                                              fontSize: 13,
+                                                              fontWeight: FontWeight.w600
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Column(
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Utils.text(
+                                                              text: "Dr Amount",
+                                                              fontSize: 10,
+                                                              color: const Color(0xFF4A5568)
+                                                          ),
+                                                          Utils.text(
+                                                              text: "${ledgerReport.drAmt}",
+                                                              color: Colors.black,
+                                                              fontSize: 13,
+                                                              fontWeight: FontWeight.w600
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Column(
+                                                        mainAxisAlignment: MainAxisAlignment.end,
+                                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                                        children: [
+                                                          Utils.text(
+                                                              text: "Cr Amount",
+                                                              fontSize: 10,
+                                                              color: const Color(0xFF4A5568)
+                                                          ),
+                                                          Utils.text(
+                                                              text: "${ledgerReport.crAmt}",
+                                                              color: Colors.black,
+                                                              fontSize: 13,
+                                                              fontWeight: FontWeight.w600
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Visibility(
+                                                    visible: (isShow?[index] ?? false),
+                                                    child: Column(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: double.infinity,
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.all(05.0),
+                                                            child: Column(
+                                                              children: [
+                                                                Divider(
+                                                                  color: Colors.grey.shade800.withOpacity(0.2),
+                                                                ),
+                                                                const SizedBox(
+                                                                  height: 05,
+                                                                ),
+                                                                Visibility(
+                                                                  visible: ledgerReport.narration != "",
+                                                                  child: Row(
+                                                                    children: [
+                                                                      Utils.text(
+                                                                        text: ledgerReport.narration.length > 10 ? "${ledgerReport.narration.substring(0,10)}..." : ledgerReport.narration,
+                                                                        color: kBlackColor,
+                                                                        fontSize: 16,
+                                                                        fontWeight: FontWeight.w600,
+                                                                        textAlign: TextAlign.start,
+                                                                      ),
+                                                                      const SizedBox(
+                                                                        width: 05,
+                                                                      ),
+                                                                      GestureDetector(
+                                                                          onTap: () {
+                                                                            showDialog(
+                                                                              context: context, builder: (context) {
+                                                                              return AlertDialog(
+                                                                                contentPadding: const EdgeInsets.all(10),
+                                                                                content: Column(
+                                                                                  mainAxisSize: MainAxisSize.min,
+                                                                                  children: [
+                                                                                    Utils.text(
+                                                                                      text: ledgerReport.narration,
+                                                                                      color: kBlackColor,
+                                                                                      fontSize: 16,
+                                                                                      fontWeight: FontWeight.w600,
+                                                                                      textAlign: TextAlign.start,
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                              );
+                                                                            },);
+                                                                          },
+                                                                          child: const Icon(Icons.info,color: Colors.grey,size: 20,)),
+                                                                      const Spacer(),
+                                                                      Visibility(
+                                                                        visible: ledgerReport.cocd != "",
+                                                                        child: Row(
+                                                                          children: [
+                                                                            Container(
+                                                                              height: 15,
+                                                                              decoration: BoxDecoration(
+                                                                                borderRadius: BorderRadius.circular(05),
+                                                                                color: Colors.deepPurpleAccent.shade700.withOpacity(0.1),
+                                                                              ),
+                                                                              child: Padding(
+                                                                                padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                                                                child: Utils.text(
+                                                                                  text: ledgerReport.cocd,
+                                                                                  color: Colors.deepPurple,
+                                                                                  fontSize: 09,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              width: 7,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                const SizedBox(
+                                                                  height: 10,
+                                                                ),
+                                                                Container(
+                                                                  width: double.infinity,
+                                                                  decoration: BoxDecoration(
+                                                                    borderRadius: BorderRadius.circular(05),
+                                                                    border: Border.all(color: Colors.grey.shade800.withOpacity(0.2)),
+                                                                  ),
+                                                                  child: Padding(
+                                                                    padding: const EdgeInsets.all(10.0),
+                                                                    child: Column(
+                                                                      children: [
+                                                                        const SizedBox(
+                                                                          height: 10,
+                                                                        ),
+                                                                        Row(
+                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                          children: [
+                                                                            Utils.text(
+                                                                              text: "Bill Date",
+                                                                              color: kBlackColor87,
+                                                                              fontSize: 11,
+                                                                            ),
+                                                                            Utils.text(
+                                                                              text: "Voucher Date",
+                                                                              color: kBlackColor87,
+                                                                              fontSize: 11,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          height: 05,
+                                                                        ),
+                                                                        Row(
+                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                          children: [
+                                                                            Utils.text(
+                                                                              text: ledgerReport.billDate == "" ? "-" : ledgerReport.billDate,
+                                                                              color: kBlackColor87,
+                                                                              fontSize: 13,
+                                                                              fontWeight: FontWeight.w600,
+                                                                            ),
+                                                                            Utils.text(
+                                                                              text: ledgerReport.voucherDate == "" ? "-" : ledgerReport.voucherDate,
+                                                                              color: kBlackColor87,
+                                                                              fontSize: 13,
+                                                                              fontWeight: FontWeight.w600,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          height: 15,
+                                                                        ),
+                                                                        Row(
+                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                          children: [
+                                                                            Utils.text(
+                                                                              text: "Voucher No",
+                                                                              color: kBlackColor87,
+                                                                              fontSize: 11,
+                                                                            ),
+                                                                            Utils.text(
+                                                                              text: "COCD",
+                                                                              color: kBlackColor87,
+                                                                              fontSize: 11,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          height: 05,
+                                                                        ),
+                                                                        Row(
+                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                          children: [
+                                                                            Utils.text(
+                                                                              text: ledgerReport.voucherNo == "" ? "-" : ledgerReport.voucherNo,
+                                                                              color: kBlackColor87,
+                                                                              fontSize: 13,
+                                                                              fontWeight: FontWeight.w600,
+                                                                            ),
+                                                                            Utils.text(
+                                                                              text: ledgerReport.cocd == "" ? "-" : ledgerReport.cocd,
+                                                                              color: kBlackColor87,
+                                                                              fontSize: 13,
+                                                                              fontWeight: FontWeight.w600,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          height: 15,
+                                                                        ),
+                                                                        Row(
+                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                          children: [
+                                                                            Utils.text(
+                                                                              text: "DR Amount",
+                                                                              color: kBlackColor87,
+                                                                              fontSize: 11,
+                                                                            ),
+                                                                            Utils.text(
+                                                                              text: "CR Amount",
+                                                                              color: kBlackColor87,
+                                                                              fontSize: 11,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          height: 05,
+                                                                        ),
+                                                                        Row(
+                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                          children: [
+                                                                            Utils.text(
+                                                                              text: "${ledgerReport.drAmt}" == "" ? "-" : "${ledgerReport.drAmt}",
+                                                                              color: kBlackColor87,
+                                                                              fontSize: 13,
+                                                                              fontWeight: FontWeight.w600,
+                                                                            ),
+                                                                            Utils.text(
+                                                                              text: "${ledgerReport.crAmt }" == "" ? "-" : "${ledgerReport.crAmt}",
+                                                                              color: kBlackColor87,
+                                                                              fontSize: 13,
+                                                                              fontWeight: FontWeight.w600,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          height: 05,
+                                                                        ),
+                                                                        Row(
+                                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                                          children: [
+                                                                            Utils.text(
+                                                                              text: "Balance",
+                                                                              color: kBlackColor87,
+                                                                              fontSize: 11,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          height: 05,
+                                                                        ),
+                                                                        Row(
+                                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                                          children: [
+                                                                            Utils.text(
+                                                                              text: "${ledgerReport.balance}",
+                                                                              color: "${ledgerReport.balance}".startsWith("-") ? Colors.red : Colors.green,
+                                                                              fontSize: 13,
+                                                                              fontWeight: FontWeight.w600,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
+                                            ),
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      );
+                                    },
                                   ),
+                                  const SizedBox(
+                                    height: 150,
+                                  ),
+                                ],
+                              ) : Center(
+                                child: Utils.text(
+                                    text: "No data Found!",
+                                    color: kBlackColor,
+                                    fontSize: 13
                                 ),
-                              ),
-                            );
+                              );
+                            } else {
+                              return const Center(child: Text('No data found'));
+                            }
                           },
-                        ) : Center(
-                          child: Utils.text(
-                              text: "No data Found!",
-                              color: kBlackColor,
-                              fontSize: 13
-                          ),
-                        );
-                      } else {
-                        return const Center(child: Text('No data found'));
-                      }
-                    },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             Visibility(
               visible: !totalData.isNull,

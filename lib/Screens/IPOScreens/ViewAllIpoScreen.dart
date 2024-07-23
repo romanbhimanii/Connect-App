@@ -40,7 +40,7 @@ class _ViewalliposcreenState extends State<Viewalliposcreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
         leadingWidth: 50,
@@ -64,9 +64,9 @@ class _ViewalliposcreenState extends State<Viewalliposcreen> {
           ),
         ),
         scrolledUnderElevation: 0.0,
-        backgroundColor: Colors.grey[200],
+        backgroundColor: Colors.white,
         title: Utils.text(
-            text: widget.name,
+            text: widget.name == "open IPO" ? "Open Ipo" : "Upcoming Ipo",
             color: const Color(0xFF00A9FF),
             fontSize: 20,
             fontWeight: FontWeight.bold
@@ -117,7 +117,7 @@ class _ViewalliposcreenState extends State<Viewalliposcreen> {
                 child: Card(
                   child: Container(
                     decoration: BoxDecoration(
-                      color:  const Color(0xFF007AFF).withOpacity(0.15),
+                      color:  const Color(0xFFEAF9FF),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Padding(
@@ -296,7 +296,7 @@ class _ViewalliposcreenState extends State<Viewalliposcreen> {
                   color: Colors.white,
                   child: Container(
                     decoration: BoxDecoration(
-                        color:  const Color(0xFF007AFF).withOpacity(0.15),
+                        color:  const Color(0xFFEAF9FF),
                         borderRadius: BorderRadius.circular(10)),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(

@@ -57,17 +57,17 @@ class Data {
 
 class FilteredDf {
   String? scripSymbol;
-  int? tradingQuantity;
-  double? tradingAmount;
-  int? buyQuantity;
-  double? buyRate;
-  int? saleQuantity;
-  double? saleRate;
-  int? netQuantity;
-  double? netRate;
-  int? netAmount;
-  double? closingPrice;
-  int? notProfit;
+  String? tradingQuantity;
+  String? tradingAmount;
+  String? buyQuantity;
+  String? buyRate;
+  String? saleQuantity;
+  String? saleRate;
+  String? netQuantity;
+  String? netRate;
+  String? netAmount;
+  String? closingPrice;
+  String? notProfit;
   String? fullScripSymbol;
   String? scripSymbol1;
   String? companyCode;
@@ -90,21 +90,21 @@ class FilteredDf {
         this.companyCode});
 
   FilteredDf.fromJson(Map<String, dynamic> json) {
-    scripSymbol = json['scrip_symbol'];
-    tradingQuantity = json['trading_quantity'];
-    tradingAmount = json['trading_amount'];
-    buyQuantity = json['buy_quantity'];
-    buyRate = json['buy_rate'];
-    saleQuantity = json['sale_quantity'];
-    saleRate = json['sale_rate'];
-    netQuantity = json['net_quantity'];
-    netRate = json['net_rate'];
-    netAmount = json['net_amount'];
-    closingPrice = json['closing_price'];
-    notProfit = json['not_profit'];
-    fullScripSymbol = json['full_scrip_symbol'];
-    scripSymbol1 = json['scrip_symbol1'];
-    companyCode = json['company_code'];
+    scripSymbol = json['scrip_symbol'].toString();
+    tradingQuantity = json['trading_quantity'].toString();
+    tradingAmount = json['trading_amount'].toString();
+    buyQuantity = json['buy_quantity'].toString();
+    buyRate = json['buy_rate'].toString();
+    saleQuantity = json['sale_quantity'].toString();
+    saleRate = json['sale_rate'].toString();
+    netQuantity = json['net_quantity'].toString();
+    netRate = json['net_rate'].toString();
+    netAmount = json['net_amount'].toString();
+    closingPrice = json['closing_price'].toString();
+    notProfit = json['not_profit'].toString();
+    fullScripSymbol = json['full_scrip_symbol'].toString();
+    scripSymbol1 = json['scrip_symbol1'].toString();
+    companyCode = json['company_code'].toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -129,12 +129,12 @@ class FilteredDf {
 }
 
 class TotalsDf {
-  int? tradingQuantity;
-  int? buyQuantity;
-  int? saleQuantity;
-  int? netQuantity;
-  int? netAmount;
-  int? notProfit;
+  String? tradingQuantity;
+  String? buyQuantity;
+  String? saleQuantity;
+  String? netQuantity;
+  String? netAmount;
+  String? notProfit;
 
   TotalsDf(
       {this.tradingQuantity,
@@ -145,12 +145,12 @@ class TotalsDf {
         this.notProfit});
 
   TotalsDf.fromJson(Map<String, dynamic> json) {
-    tradingQuantity = json['trading_quantity'];
-    buyQuantity = json['buy_quantity'];
-    saleQuantity = json['sale_quantity'];
-    netQuantity = json['net_quantity'];
-    netAmount = json['net_amount'];
-    notProfit = json['not_profit'];
+    tradingQuantity = json['trading_quantity'].toString();
+    buyQuantity = json['buy_quantity'].toString();
+    saleQuantity = json['sale_quantity'].toString();
+    netQuantity = json['net_quantity'].toString();
+    netAmount = json['net_amount'].toString();
+    notProfit = json['not_profit'].toString();
   }
 
   Map<String, dynamic> toJson() {

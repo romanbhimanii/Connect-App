@@ -104,6 +104,7 @@ class _DpprocessscreenState extends State<Dpprocessscreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         scrolledUnderElevation: 0.0,
         backgroundColor: Colors.white,
@@ -153,11 +154,11 @@ class _DpprocessscreenState extends State<Dpprocessscreen>
             borderRadius: BorderRadius.circular(10),
             color: Colors.white,
             border: Border.all(
-              color: const Color(0xFF0066F6),
+              color: const Color(0xFF00A9FF),
               width: 1,
             ),
           ),
-          labelStyle: GoogleFonts.poppins(color: const Color(0xFF0066F6), fontSize: 15),
+          labelStyle: GoogleFonts.poppins(color: const Color(0xFF00A9FF), fontSize: 15),
           unselectedLabelStyle: GoogleFonts.poppins(color: kBlackColor, fontSize: 15),
           indicatorColor: kBlackColor,
           tabs: const [

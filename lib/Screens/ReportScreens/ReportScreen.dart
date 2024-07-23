@@ -6,9 +6,11 @@ import 'package:connect/Screens/ReportScreens/IncomeTaxReportScreen/IncomeTaxRep
 import 'package:connect/Screens/ReportScreens/LedgerReportScreen/LedgerReportScreen.dart';
 import 'package:connect/Screens/ReportScreens/PositionReportScreen/PositionReportScreen.dart';
 import 'package:connect/Screens/ReportScreens/ProfitAndLossReportScreen/ProfitAndLossReportScreen.dart';
+import 'package:connect/SettingsScreen/SettingsScreen.dart';
 import 'package:connect/Utils/Constant.dart';
 import 'package:connect/Utils/Utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class ReportScreen extends StatefulWidget {
@@ -36,29 +38,22 @@ class _ReportScreenState extends State<ReportScreen> {
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 50,
+        scrolledUnderElevation: 0.0,
         centerTitle: true,
-        leading: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 11.0),
-          child: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Container(
-              height: 20,
-              width: 20,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: const Color(0xFF292D32))),
-              child: const Center(
-                child: Icon(
-                  Icons.arrow_back_ios_new_outlined,
-                  color: Color(0xFF292D32),
-                  size: 18,
-                ),
-              ),
-            ),
-          ),
-        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: GestureDetector(
+                onTap: () {
+                  Get.to(const SettingsScreen());
+                },
+                child: SvgPicture.asset(
+                  "assets/icons/DeSelectSettingIcon.svg",
+                  height: 27,
+                  width: 27,
+                )),
+          )
+        ],
         backgroundColor: Colors.white,
         title: Utils.text(
           text: "Reports",
@@ -67,72 +62,79 @@ class _ReportScreenState extends State<ReportScreen> {
           fontWeight: FontWeight.bold,
         ),
       ),
-      body: ListView.builder(
-        itemCount: 8,
-        physics: const BouncingScrollPhysics(),
-        itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.all(08.0),
-          child: InkWell(
-            onTap: () {
-              if(index == 0){
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const HoldingReportScreen();
-                },));
-              }else if(index == 1){
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const LedgerReportScreen();
-                },));
-              }else if(index == 2){
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const PositionReportScreen();
-                },));
-              }else if(index == 3){
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const Globalsummaryreportscreen();
-                },));
-              }else if(index == 4){
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const Globaldetailsreportscreen();
-                },));
-              }else if(index == 5){
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const Profitandlossreportscreen();
-                },));
-              }else if(index == 6){
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const Incometaxreportscreen();
-                },));
-              }else if(index == 7){
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const Contractbillreportscreen();
-                },));
-              }
-            },
-            child: Container(
-              height: 50,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: const Color(0xFFF2F2F7),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: Row(
-                  children: [
-                    Utils.text(
-                      text: reportName[index],
-                      color: const Color(0xFF4A5568),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+        child: GridView.builder(
+          itemCount: 8,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+          physics: const BouncingScrollPhysics(),
+          itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.all(08.0),
+            child: InkWell(
+              onTap: () {
+                if(index == 0){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const HoldingReportScreen();
+                  },));
+                }else if(index == 1){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const LedgerReportScreen();
+                  },));
+                }else if(index == 2){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const PositionReportScreen();
+                  },));
+                }else if(index == 3){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const Globalsummaryreportscreen();
+                  },));
+                }else if(index == 4){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const Globaldetailsreportscreen();
+                  },));
+                }else if(index == 5){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const Profitandlossreportscreen();
+                  },));
+                }else if(index == 6){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const Incometaxreportscreen();
+                  },));
+                }else if(index == 7){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const Contractbillreportscreen();
+                  },));
+                }
+              },
+              child: Card(
+                child: Container(
+                  height: 50,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: const Color(0xFFEAF9FF),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Utils.text(
+                          text: reportName[index],
+                          color: const Color(0xFF4A5568),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
-          ),
-        );
-      },),
+          );
+        },),
+      ),
     );
   }
 }

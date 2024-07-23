@@ -27,6 +27,7 @@ class _PayInScreenState extends State<PayInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         elevation: 0.0,

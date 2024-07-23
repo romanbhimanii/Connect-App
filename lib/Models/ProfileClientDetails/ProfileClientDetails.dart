@@ -117,7 +117,7 @@ class DpDetails {
   String clientDpName;
   Map<String, String> companyCode;
   String activateSegment;
-  int age;
+  String age;
 
   DpDetails({
     required this.depository,
@@ -135,7 +135,7 @@ class DpDetails {
       clientDpName: json['client_dp_name'],
       companyCode: Map<String, String>.from(json['company_code']),
       activateSegment: json['activate_segment'],
-      age: json['age'],
+      age: json['age'].toString(),
     );
   }
 }

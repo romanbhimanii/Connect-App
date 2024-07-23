@@ -5,6 +5,7 @@ import 'package:connect/Screens/MyAccountScreen/FundScreen/FundScreen.dart';
 import 'package:connect/Screens/MyAccountScreen/ProfileScreen/ProfileScreen.dart';
 import 'package:connect/Screens/MyAccountScreen/SegmentAdditionScreen/SegmentAdditionScreen.dart';
 import 'package:connect/Screens/MyAccountScreen/eMandateScreen/eMandateScreen.dart';
+import 'package:connect/SettingsScreen/SettingsScreen.dart';
 import 'package:connect/Utils/AppDrawer.dart';
 import 'package:connect/Utils/AppVariables.dart';
 import 'package:connect/Utils/ConnectivityService.dart';
@@ -63,6 +64,20 @@ class _MyaccountscreenState extends State<Myaccountscreen>
             fontSize: 20,
             fontWeight: FontWeight.bold),
         elevation: 0.0,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: GestureDetector(
+                onTap: () {
+                  Get.to(const SettingsScreen());
+                },
+                child: SvgPicture.asset(
+                  "assets/icons/DeSelectSettingIcon.svg",
+                  height: 27,
+                  width: 27,
+                )),
+          )
+        ],
         bottom: TabBar(
           dividerHeight: 0.0,
           isScrollable: true,
@@ -75,11 +90,11 @@ class _MyaccountscreenState extends State<Myaccountscreen>
             borderRadius: BorderRadius.circular(10),
             color: Colors.white,
             border: Border.all(
-              color: const Color(0xFF0066F6),
+              color: const Color(0xFF00A9FF),
               width: 1,
             ),
           ),
-          labelStyle: GoogleFonts.poppins(color: const Color(0xFF0066F6), fontSize: 15),
+          labelStyle: GoogleFonts.poppins(color: const Color(0xFF00A9FF), fontSize: 15),
           unselectedLabelStyle: GoogleFonts.poppins(color: kBlackColor, fontSize: 15),
           indicatorColor: kBlackColor,
           tabs: const [

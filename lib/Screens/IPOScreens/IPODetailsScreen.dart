@@ -56,7 +56,7 @@ class _IPODetailsScreenState extends State<IPODetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.white,
       appBar: AppBar(
         scrolledUnderElevation: 0.0,
         leadingWidth: 50,
@@ -85,7 +85,7 @@ class _IPODetailsScreenState extends State<IPODetailsScreen> {
             color: const Color(0xFF00A9FF),
             fontSize: 20,
             fontWeight: FontWeight.bold),
-        backgroundColor: Colors.grey[200],
+        backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Column(

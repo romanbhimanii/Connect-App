@@ -9,7 +9,7 @@ import 'package:connect/Models/TotalBalanceModel/TotalbalanceModel.dart';
 import 'package:connect/Screens/DashBoardScreen/viewFullBidDetailsScreen.dart';
 import 'package:connect/Screens/DpProcessScreen/DpProcessScreen.dart';
 import 'package:connect/Screens/IPOScreens/ViewAllIpoScreen.dart';
-import 'package:connect/Screens/ReportScreens/ReportScreen.dart';
+import 'package:connect/SettingsScreen/SettingsScreen.dart';
 import 'package:connect/Utils/AppVariables.dart';
 import 'package:connect/Utils/ConnectivityService.dart';
 import 'package:connect/Utils/Constant.dart';
@@ -30,10 +30,8 @@ class DashBoardScreen extends StatefulWidget {
   State<DashBoardScreen> createState() => _DashBoardScreenState();
 }
 
-class _DashBoardScreenState extends State<DashBoardScreen>
-    with SingleTickerProviderStateMixin {
+class _DashBoardScreenState extends State<DashBoardScreen> {
   final ConnectivityService connectivityService = ConnectivityService();
-  TabController? _tabController;
 
   LoginResponse? loginResponse;
   final ApiServices _apiService = ApiServices();
@@ -64,13 +62,11 @@ class _DashBoardScreenState extends State<DashBoardScreen>
         connectivityService.showNoInternetDialog(context);
       }
     });
-    _tabController = TabController(length: 2, vsync: this);
     loadData();
   }
 
   @override
   void dispose() {
-    _tabController?.dispose();
     super.dispose();
   }
 
@@ -89,572 +85,424 @@ class _DashBoardScreenState extends State<DashBoardScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.white,
       appBar: AppBar(
         scrolledUnderElevation: 0.0,
         centerTitle: true,
-        title: InkWell(
-          onTap: () {
-            print(Appvariables.token);
-          },
-          child: Utils.text(
-              text: "Dashboard",
-              color: const Color(0xFF00A9FF),
-              fontSize: 20,
-              fontWeight: FontWeight.bold),
-        ),
-        bottom: TabBar(
-          dividerHeight: 0.0,
-          isScrollable: true,
-          tabAlignment: TabAlignment.center,
-          automaticIndicatorColorAdjustment: true,
-          controller: _tabController,
-          labelPadding: const EdgeInsets.symmetric(horizontal: 3),
-          padding: const EdgeInsets.all(0),
-          indicatorPadding: const EdgeInsets.all(05),
-          indicator: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.transparent,
-            border: Border.all(
-              color: const Color(0xFF0066F6),
-              width: 1,
-            ),
-          ),
-          labelStyle:
-              GoogleFonts.poppins(color: const Color(0xFF0066F6), fontSize: 15),
-          unselectedLabelStyle:
-              GoogleFonts.poppins(color: kBlackColor, fontSize: 15),
-          indicatorColor: kBlackColor,
-          tabs: const [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15.0),
-              child: Tab(text: 'IPO'),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15.0),
-              child: Tab(text: 'Bid Details'),
-            ),
-          ],
-        ),
-        backgroundColor: Colors.grey[200],
+        title: Utils.text(
+            text: "Dashboard",
+            color: const Color(0xFF00A9FF),
+            fontSize: 20,
+            fontWeight: FontWeight.bold),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: GestureDetector(
+              onTap: () {
+                Get.to(const SettingsScreen());
+              },
+                child: SvgPicture.asset(
+              "assets/icons/DeSelectSettingIcon.svg",
+              height: 27,
+              width: 27,
+            )),
+          )
+        ],
+        backgroundColor: Colors.white,
         iconTheme: const IconThemeData(color: kBlackColor),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  height: 180,
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                      image: DecorationImage(
-                          image:
-                              AssetImage("assets/images/DashBoardBanner.png"),
-                          fit: BoxFit.cover)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 05),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Utils.text(
-                                text: "Total Balance",
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              Utils.text(
-                                text: "Total Portfolio",
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: 180,
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image:
+                      AssetImage("assets/images/DashBoardBanner.png"),
+                      fit: BoxFit.cover)),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10.0, vertical: 05),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Utils.text(
+                            text: "Total Balance",
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          Utils.text(
+                            text: "Total Portfolio",
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Utils.text(
+                            text: "Equity:",
+                            color: Colors.white,
+                            fontSize: 13,
+                          ),
+                          Utils.text(
+                            text: "Holdings:",
+                            color: Colors.white,
+                            fontSize: 13,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 02,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Utils.text(
+                            text: "Rs. $equity",
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          fetchHoldingReport(),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 08,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Utils.text(
-                                text: "Equity:",
+                                text: "Commodities:",
                                 color: Colors.white,
                                 fontSize: 13,
                               ),
                               Utils.text(
-                                text: "Holdings:",
-                                color: Colors.white,
-                                fontSize: 13,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 02,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Utils.text(
-                                text: "Rs. $equity",
+                                text: "Rs. 0",
                                 color: Colors.white,
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
-                              fetchHoldingReport(),
                             ],
                           ),
-                        ),
-                        const SizedBox(
-                          height: 08,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Utils.text(
-                                    text: "Commodities:",
-                                    color: Colors.white,
-                                    fontSize: 13,
-                                  ),
-                                  Utils.text(
-                                    text: "Rs. 0",
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ],
-                              ),
-                              DropdownButtonHideUnderline(
-                                child: DropdownButton2<String>(
-                                  isExpanded: true,
-                                  iconStyleData: const IconStyleData(
-                                    icon: Icon(
-                                      Icons.arrow_drop_down_rounded,
-                                      color: Color(0xFFFFFBFB),
-                                    ),
-                                    iconSize: 25,
-                                  ),
-                                  hint: Utils.text(
-                                    text: Appvariables.year,
-                                    color: const Color(0xFFFFFBFB),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  items: items
-                                      .map((String item) =>
-                                          DropdownMenuItem<String>(
-                                            value: item,
-                                            child: Utils.text(
-                                                text: item,
-                                                color: selectedValue == item
-                                                    ? const Color(0xFFFFFBFB)
-                                                    : const Color(0xFF4A5568),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold),
-                                          ))
-                                      .toList(),
-                                  style: GoogleFonts.inter(
-                                    color: const Color(0xFFFFFBFB),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  value: selectedValue,
-                                  onChanged: (String? value) async {
-                                    selectedValue = value;
-                                    SharedPreferences prefs =
-                                        await SharedPreferences.getInstance();
-                                    if (selectedValue == "2024-2025") {
-                                      DateTime now = DateTime.now();
-                                      year = "${now.year}";
-                                      await prefs.setString('year', year);
-                                    } else if (selectedValue == "2023-2024") {
-                                      year = "2024";
-                                      await prefs.setString('year', year);
-                                    } else if (selectedValue == "2022-2023") {
-                                      year = "2023";
-                                      await prefs.setString('year', year);
-                                    } else if (selectedValue == "2021-2022") {
-                                      year = "2022";
-                                      await prefs.setString('year', year);
-                                    } else if (selectedValue == "2020-2021") {
-                                      year = "2021";
-                                      await prefs.setString('year', year);
-                                    }
-                                    ApiServices().loadYear();
-                                    setState(() {});
-                                  },
-                                  buttonStyleData: ButtonStyleData(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 08),
-                                    height: 40,
-                                    width: 140,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: const Color(0xFFFFFBFB)),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
+                          DropdownButtonHideUnderline(
+                            child: DropdownButton2<String>(
+                              isExpanded: true,
+                              iconStyleData: const IconStyleData(
+                                icon: Icon(
+                                  Icons.arrow_drop_down_rounded,
+                                  color: Color(0xFFFFFBFB),
                                 ),
+                                iconSize: 25,
                               ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 02,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Utils.text(
-                    text:
-                        "Apply for IPO and be the first in newly listed stocks",
-                    color: const Color(0xFF001533),
-                    fontSize: 15,
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) {
-                              return Viewalliposcreen(
-                                name: "open IPO",
-                              );
-                            },
-                          ));
-                        },
-                        child: Container(
-                          height: 170,
-                          width: 150,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: const Color(0xFF89CFF3).withOpacity(0.2),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                "assets/icons/OpenIPO.svg",
-                                height: 100,
-                                width: 100,
+                              hint: Utils.text(
+                                text: Appvariables.year,
+                                color: const Color(0xFFFFFBFB),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0),
-                                child: Utils.text(
-                                  text: "Open IPO",
-                                  color: const Color(0xFF4A5568),
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              items: items
+                                  .map((String item) =>
+                                  DropdownMenuItem<String>(
+                                    value: item,
+                                    child: Utils.text(
+                                        text: item,
+                                        color: selectedValue == item
+                                            ? const Color(0xFFFFFBFB)
+                                            : const Color(0xFF4A5568),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                  ))
+                                  .toList(),
+                              style: GoogleFonts.inter(
+                                color: const Color(0xFFFFFBFB),
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0),
-                                child: Utils.text(
-                                  text: "Apply Now",
-                                  color: const Color(0xFF4A5568),
-                                  fontSize: 12,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 15,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return Viewalliposcreen(
-                                  name: "Upcoming IPO",
-                                );
+                              value: selectedValue,
+                              onChanged: (String? value) async {
+                                selectedValue = value;
+                                SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                                if (selectedValue == "2024-2025") {
+                                  DateTime now = DateTime.now();
+                                  year = "${now.year}";
+                                  await prefs.setString('year', year);
+                                } else if (selectedValue == "2023-2024") {
+                                  year = "2024";
+                                  await prefs.setString('year', year);
+                                } else if (selectedValue == "2022-2023") {
+                                  year = "2023";
+                                  await prefs.setString('year', year);
+                                } else if (selectedValue == "2021-2022") {
+                                  year = "2022";
+                                  await prefs.setString('year', year);
+                                } else if (selectedValue == "2020-2021") {
+                                  year = "2021";
+                                  await prefs.setString('year', year);
+                                }
+                                ApiServices().loadYear();
+                                setState(() {});
                               },
+                              buttonStyleData: ButtonStyleData(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 08),
+                                height: 40,
+                                width: 140,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: const Color(0xFFFFFBFB)),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
                             ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 02,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Utils.text(
+                text:
+                "Apply for IPO and be the first in newly listed stocks",
+                color: const Color(0xFF001533),
+                fontSize: 15,
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return Viewalliposcreen(
+                            name: "open IPO",
                           );
                         },
-                        child: Container(
-                          height: 170,
-                          width: 150,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: const Color(0xFF89CFF3).withOpacity(0.2),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                "assets/icons/UpComingIPO.svg",
-                                height: 100,
-                                width: 100,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0),
-                                child: Utils.text(
-                                  text: "Upcoming IPO",
-                                  color: const Color(0xFF4A5568),
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0),
-                                child: Utils.text(
-                                  text: "Apply Now",
-                                  color: const Color(0xFF4A5568),
-                                  fontSize: 12,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return const Dpprocessscreen();
-                          },
-                        ),
-                      );
+                      ));
                     },
                     child: Container(
-                      height: 120,
-                      width: double.infinity,
+                      height: 170,
+                      width: 150,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: const Color(0xFF89CFF3).withOpacity(0.20),
+                        color: const Color(0xFF89CFF3).withOpacity(0.2),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Center(
-                              child: Utils.text(
-                                text: "DP Process",
-                                color: const Color(0xFF4A5568),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17,
-                              ),
-                            ),
-                            SvgPicture.asset("assets/icons/DpProcess.svg"),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return const ReportScreen();
-                          },
-                        ),
-                      );
-                    },
-                    child: Container(
-                      height: 70,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: const Color(0xFF89CFF3).withOpacity(0.20),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset("assets/icons/Download.svg"),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Utils.text(
-                              text: "Download Reports",
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            "assets/icons/OpenIPO.svg",
+                            height: 100,
+                            width: 100,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10.0),
+                            child: Utils.text(
+                              text: "Open IPO",
                               color: const Color(0xFF4A5568),
                               fontSize: 17,
                               fontWeight: FontWeight.bold,
                             ),
-                          ],
-                        ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10.0),
+                            child: Utils.text(
+                              text: "Apply Now",
+                              color: const Color(0xFF4A5568),
+                              fontSize: 12,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 100,
-                ),
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //     children: [
-                //       Utils.text(
-                //           text: "Open IPO",
-                //           color: kBlackColor,
-                //           fontSize: 16,
-                //           fontWeight: FontWeight.w700),
-                //       GestureDetector(
-                //         onTap: () {
-                //           Get.to(const Viewalliposcreen(),
-                //               arguments: ({
-                //                 "name": "open IPO",
-                //               }));
-                //         },
-                //         child: Utils.text(
-                //           text: "View All",
-                //           color: kBlackColor,
-                //           fontSize: 12,
-                //         ),
-                //       )
-                //     ],
-                //   ),
-                // ),
-                // const SizedBox(
-                //   height: 10,
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                //   child: SizedBox(
-                //     child: Column(
-                //       children: [
-                //         openIPOsList(),
-                //       ],
-                //     ),
-                //   ),
-                // ),
-                // const SizedBox(
-                //   height: 15,
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //     children: [
-                //       Utils.text(
-                //           text: "upcoming IPO",
-                //           color: kBlackColor,
-                //           fontSize: 16,
-                //           fontWeight: FontWeight.w700),
-                //       GestureDetector(
-                //         onTap: () {
-                //           Get.to(const Viewalliposcreen(),
-                //               arguments: ({
-                //                 "name": "Upcoming IPO",
-                //               }));
-                //         },
-                //         child: Utils.text(
-                //           text: "View All",
-                //           color: kBlackColor,
-                //           fontSize: 12,
-                //         ),
-                //       )
-                //     ],
-                //   ),
-                // ),
-                // const SizedBox(
-                //   height: 10,
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                //   child: Container(
-                //     child: Column(
-                //       children: [
-                //         upcomingIPOs(),
-                //       ],
-                //     ),
-                //   ),
-                // ),
-              ],
+                  const SizedBox(
+                    width: 15,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return Viewalliposcreen(
+                              name: "Upcoming IPO",
+                            );
+                          },
+                        ),
+                      );
+                    },
+                    child: Container(
+                      height: 170,
+                      width: 150,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: const Color(0xFF89CFF3).withOpacity(0.2),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            "assets/icons/UpComingIPO.svg",
+                            height: 100,
+                            width: 100,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10.0),
+                            child: Utils.text(
+                              text: "Upcoming IPO",
+                              color: const Color(0xFF4A5568),
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10.0),
+                            child: Utils.text(
+                              text: "Apply Now",
+                              color: const Color(0xFF4A5568),
+                              fontSize: 12,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: SizedBox(
-                    child: Column(
+            const SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const Dpprocessscreen();
+                      },
+                    ),
+                  );
+                },
+                child: Container(
+                  height: 120,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: const Color(0xFF89CFF3).withOpacity(0.20),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        fetchClientWiseBidReport(),
+                        Center(
+                          child: Utils.text(
+                            text: "DP Process",
+                            color: const Color(0xFF4A5568),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 17,
+                          ),
+                        ),
+                        SvgPicture.asset("assets/icons/DpProcess.svg"),
                       ],
                     ),
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ],
+            const SizedBox(
+              height: 100,
+            ),
+          ],
+        ),
       ),
+      // body: TabBarView(
+      //   controller: _tabController,
+      //   children: [
+      //
+      //     SingleChildScrollView(
+      //       child: Column(
+      //         children: [
+      //           const SizedBox(
+      //             height: 10,
+      //           ),
+      //           Padding(
+      //             padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      //             child: SizedBox(
+      //               child: Column(
+      //                 children: [
+      //                   fetchClientWiseBidReport(),
+      //                 ],
+      //               ),
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      //     ),
+      //   ],
+      // ),
     );
   }
 

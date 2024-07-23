@@ -53,7 +53,7 @@ class _ContractbillreportscreenState extends State<Contractbillreportscreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.white,
       appBar: AppBar(
         leadingWidth: 50,
         centerTitle: true,
@@ -76,7 +76,7 @@ class _ContractbillreportscreenState extends State<Contractbillreportscreen> {
             ),
           ),
         ),
-        backgroundColor: Colors.grey[200],
+        backgroundColor: Colors.white,
         scrolledUnderElevation: 0.0,
         title: Utils.text(
           text: "Bill Report",
@@ -129,7 +129,7 @@ class _ContractbillreportscreenState extends State<Contractbillreportscreen> {
                                   child: Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
-                                      color: Colors.white,
+                                      color: Color(0xFFEAF9FF),
                                     ),
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),

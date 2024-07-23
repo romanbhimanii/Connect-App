@@ -36,9 +36,9 @@ class _viewFullBidDetailsScreenState extends State<viewFullBidDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.grey[200],
+        backgroundColor: Colors.white,
         title: Utils.text(
           text: "Bid Details",
           color: const Color(0xFF00A9FF),

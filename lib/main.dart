@@ -1,9 +1,15 @@
+import 'package:connect/Screens/IPOScreen/IpoProvider.dart';
 import 'package:connect/Utils/Constant.dart';
 import 'package:connect/Screens/Welcome/WelcomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(
+      MultiProvider(providers: [
+        ChangeNotifierProvider(create: (_) => IpoProvider()),
+      ], child: const MyApp()),
+    );
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -42,4 +48,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

@@ -72,11 +72,13 @@ class _FundscreenState extends State<Fundscreen> {
         isLoading = false;
       });
     } catch (error) {
-      setState(() {
-        hasError = true;
-        errorMessage = error.toString();
-        isLoading = false;
-      });
+      if(mounted){
+        setState(() {
+          hasError = true;
+          errorMessage = error.toString();
+          isLoading = false;
+        });
+      }
     }
   }
 

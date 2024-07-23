@@ -39,10 +39,10 @@ class PositionReportData {
 class PositionData {
   String description;
   String position;
-  double osqty;
-  double osrate;
-  double closingPrice;
-  double amount;
+  String osqty;
+  String osrate;
+  String closingPrice;
+  String amount;
 
   PositionData({
     required this.description,
@@ -55,26 +55,26 @@ class PositionData {
 
   factory PositionData.fromJson(Map<String, dynamic> json) {
     return PositionData(
-      description: json['description'],
-      position: json['position'],
-      osqty: json['osqty'].toDouble(),
-      osrate: json['osrate'].toDouble(),
-      closingPrice: json['closing_price'].toDouble(),
-      amount: json['amount'].toDouble(),
+      description: json['description'].toString(),
+      position: json['position'].toString(),
+      osqty: json['osqty'].toString(),
+      osrate: json['osrate'].toString(),
+      closingPrice: json['closing_price'].toString(),
+      amount: json['amount'].toString(),
     );
   }
 }
 
 class TotalData {
-  double osqty;
-  double amount;
+  String osqty;
+  String amount;
 
   TotalData({required this.osqty, required this.amount});
 
   factory TotalData.fromJson(Map<String, dynamic> json) {
     return TotalData(
-      osqty: json['osqty'].toDouble(),
-      amount: json['amount'].toDouble(),
+      osqty: json['osqty'].toString(),
+      amount: json['amount'].toString(),
     );
   }
 }
