@@ -59,7 +59,7 @@ class _AddbankaccountscreenState extends State<Addbankaccountscreen> {
               width: 20,
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: const Color(0xFF292D32))
+                  border: Border.all(color: const Color(0xFF292D32),),
               ),
               child: const Center(
                 child: Icon(Icons.arrow_back_ios_new_outlined,color: Color(0xFF292D32),size: 18,),
@@ -253,8 +253,7 @@ class _AddbankaccountscreenState extends State<Addbankaccountscreen> {
                   DropDownValueModel(name: 'Other', value: "Other"),
                 ],
                 onChanged: (val) {
-                  print(val);
-                  // accountType = val ?? "";
+                  accountType = val ?? "";
                 },
               ),
               const SizedBox(height: 16),

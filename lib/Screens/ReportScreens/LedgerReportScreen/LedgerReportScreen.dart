@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:io';
-
 import 'package:connect/ApiServices/ApiServices.dart';
 import 'package:connect/Models/LedgerReportModel/LedgerReportModel.dart';
 import 'package:connect/Utils/AppVariables.dart';
@@ -12,7 +11,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:csv/csv.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -31,7 +29,6 @@ class LedgerReportScreen extends StatefulWidget {
 
 class _LedgerReportScreenState extends State<LedgerReportScreen> {
   final ConnectivityService connectivityService = ConnectivityService();
-  Future<LedgerReport>? ledgerReport;
   List<bool>? isShow;
   DateTime dateTime = DateTime.now();
   String datePickedValue = "";
@@ -146,15 +143,17 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
       toDate = "${time.year}-${time.month.toString().padLeft(2,'0')}-${time.day.toString().padLeft(2,'0')}";
     }
 
-    ledgerReport = ApiServices().fetchLedgerReport(
-      clientCode: Appvariables.clientCode,
-      token: Appvariables.token,
-      fromDate: fromDate,
-      toDate: toDate,
-      margin: selectedValueOfMargin ?? "Y",
-    );
+    if(Appvariables.ledgerReport.isNull || Appvariables.ledgerReport == null){
+      Appvariables.ledgerReport = ApiServices().fetchLedgerReport(
+        clientCode: Appvariables.clientCode,
+        token: Appvariables.token,
+        fromDate: fromDate,
+        toDate: toDate,
+        margin: selectedValueOfMargin ?? "Y",
+      );
+    }
 
-    ledgerReport?.then((data) {
+    Appvariables.ledgerReport?.then((data) {
       setState(() {
         isShow = List<bool>.filled(data.data.length, false);
         filteredData = data.data;
@@ -521,8 +520,8 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                           context: context
                       );
                     } else if (result == "Excel") {
-                      if (await ledgerReport != null) {
-                        ledgerReport?.then((response) {
+                      if (await Appvariables.ledgerReport != null) {
+                        Appvariables.ledgerReport?.then((response) {
                           if (response.data.isNotEmpty) {
                             exportToCSV(response.data);
                           }
@@ -719,7 +718,10 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: _fetchLedgerReport,
+        onRefresh: () {
+          Appvariables.ledgerReport = null;
+          return _fetchLedgerReport();
+        },
         child: Stack(
           children: [
             SingleChildScrollView(
@@ -733,7 +735,7 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                     child: Column(
                       children: [
                         FutureBuilder<LedgerReport>(
-                          future: ledgerReport,
+                          future: Appvariables.ledgerReport,
                           builder: (context, snapshot) {
                             if (snapshot.connectionState == ConnectionState.waiting) {
                               return Center(

@@ -2,7 +2,6 @@ import 'package:connect/ApiServices/ApiServices.dart';
 import 'package:connect/Models/IpoModels/IpoModel.dart';
 import 'package:connect/Screens/IPOScreens/IPODetailsScreen.dart';
 import 'package:connect/SettingsScreen/SettingsScreen.dart';
-import 'package:connect/Utils/AppDrawer.dart';
 import 'package:connect/Utils/ConnectivityService.dart';
 import 'package:connect/Utils/Constant.dart';
 import 'package:connect/Utils/Utils.dart';

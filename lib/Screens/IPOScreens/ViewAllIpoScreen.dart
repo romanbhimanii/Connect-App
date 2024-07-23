@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:connect/ApiServices/ApiServices.dart';
 import 'package:connect/Models/IpoModels/IpoModel.dart';
 import 'package:connect/Screens/IPOScreens/IPODetailsScreen.dart';
@@ -6,7 +8,6 @@ import 'package:connect/Utils/Constant.dart';
 import 'package:connect/Utils/Utils.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 

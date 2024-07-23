@@ -11,11 +11,8 @@ import 'package:connect/Utils/ConnectivityService.dart';
 import 'package:connect/Utils/Constant.dart';
 import 'package:connect/Utils/Utils.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
 class Fundscreen extends StatefulWidget {

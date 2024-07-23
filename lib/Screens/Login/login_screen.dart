@@ -1,7 +1,6 @@
 // ignore_for_file: use_super_parameters
 
 import 'package:connect/Screens/Login/Components/LoginForm.dart';
-import 'package:connect/Screens/Login/Components/LoginScreenTopImage.dart';
 import 'package:connect/Utils/Constant.dart';
 import 'package:connect/Utils/Utils.dart';
 import 'package:flutter/material.dart';

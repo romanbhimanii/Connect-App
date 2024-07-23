@@ -7,6 +7,7 @@ import 'package:connect/Utils/Utils.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 class HoldingReportScreen extends StatefulWidget {
@@ -18,7 +19,6 @@ class HoldingReportScreen extends StatefulWidget {
 
 class _HoldingReportScreenState extends State<HoldingReportScreen> {
   final ConnectivityService connectivityService = ConnectivityService();
-  Future<HoldingReportModel>? futureReport;
   List<TotalsDf>? totalsDF;
   List<bool>? isShow;
   DateTime dateTime = DateTime.now();
@@ -48,17 +48,19 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
   }
 
   Future<void> fetchHoldingReport() async {
-    setState(() {
-      futureReport = ApiServices().fetchHoldingsReport(
-          date: datePickedValue,
-          token: Appvariables.token,
-          clientCode: Appvariables.clientCode);
-    });
-    futureReport?.then((data) {
+    if(Appvariables.futureHoldingReport.isNull || Appvariables.futureHoldingReport == null){
       setState(() {
-        isShow = List<bool>.filled(data.data!.filteredDf!.length, false);
+        Appvariables.futureHoldingReport = ApiServices().fetchHoldingsReport(
+            date: datePickedValue,
+            token: Appvariables.token,
+            clientCode: Appvariables.clientCode);
       });
-    });
+      Appvariables.futureHoldingReport?.then((data) {
+        setState(() {
+          isShow = List<bool>.filled(data.data!.filteredDf!.length, false);
+        });
+      });
+    }
   }
 
   Future<void> _showDateTimePicker() async {
@@ -128,7 +130,7 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
           text: 'Report Holding',
             color: const Color(0xFF00A9FF),
             fontSize: 20,
-            fontWeight: FontWeight.bold
+            fontWeight: FontWeight.bold,
         ),
         bottom: PreferredSize(
           preferredSize: const Size(double.infinity, 40),
@@ -252,7 +254,10 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
         ),
       ),
       body: RefreshIndicator(
-        onRefresh: fetchHoldingReport,
+        onRefresh: () {
+          Appvariables.futureHoldingReport = null;
+          return fetchHoldingReport();
+        },
         child: Stack(
           children: [
             SingleChildScrollView(
@@ -266,7 +271,7 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                     child: Column(
                       children: [
                         FutureBuilder<HoldingReportModel>(
-                          future: futureReport,
+                          future: Appvariables.futureHoldingReport,
                           builder: (context, snapshot) {
                             if (snapshot.connectionState == ConnectionState.waiting) {
                               return Center(

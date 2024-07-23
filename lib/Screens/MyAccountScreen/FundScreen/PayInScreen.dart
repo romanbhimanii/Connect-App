@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:connect/Models/BankDetailsModel/BankDetailsModel.dart';
 import 'package:connect/Utils/Utils.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';

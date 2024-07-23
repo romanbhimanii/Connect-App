@@ -1,4 +1,4 @@
-// ignore_for_file: unrelated_type_equality_checks
+// ignore_for_file: unrelated_type_equality_checks, deprecated_member_use
 
 import 'package:connect/ApiServices/ApiServices.dart';
 import 'package:connect/Models/PositionReportModel/PositionReportModel.dart';
@@ -359,7 +359,7 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                                                                   text: dfFilter.amount,
                                                                   fontSize: 12,
                                                                   fontWeight: FontWeight.w400,
-                                                                  color: "${dfFilter.amount}".startsWith("-") ? const Color(0xFFFF2E2E) : const Color(0xFF008710)
+                                                                  color: dfFilter.amount.startsWith("-") ? const Color(0xFFFF2E2E) : const Color(0xFF008710)
                                                               )
                                                             ],
                                                           ),
@@ -373,19 +373,19 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                                                                   text: "QTY: -${dfFilter.osqty}",
                                                                   fontWeight: FontWeight.w600,
                                                                   fontSize: 10,
-                                                                color: Color(0xFF4A5568)
+                                                                color: const Color(0xFF4A5568)
                                                               ),
                                                               Utils.text(
                                                                   text: "RATE: -${dfFilter.osrate}",
                                                                   fontSize: 10,
                                                                   fontWeight: FontWeight.w400,
-                                                                  color: Color(0xFF4A5568)
+                                                                  color: const Color(0xFF4A5568)
                                                               ),
                                                               Utils.text(
                                                                   text: "Closing Price: -${dfFilter.closingPrice}",
                                                                   fontSize: 10,
                                                                   fontWeight: FontWeight.w400,
-                                                                  color: Color(0xFF4A5568)
+                                                                  color: const Color(0xFF4A5568)
                                                               ),
                                                             ],
                                                           ),
@@ -398,69 +398,6 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                                             ),
                                           ],
                                         ),
-                                        // Row(
-                                        //   children: [
-                                        //     Utils.text(
-                                        //       text: "OS Rate : ",
-                                        //       color: Colors.black,
-                                        //       fontSize: 12,
-                                        //       fontWeight: FontWeight.bold,
-                                        //     ),
-                                        //     Utils.text(
-                                        //       text: "${dfFilter.osrate}" == "" ? "-" : "${dfFilter.osrate}",
-                                        //       color: Colors.black,
-                                        //       fontSize: 12,
-                                        //       textOverFlow: TextOverflow.ellipsis,
-                                        //     ),
-                                        //     const Spacer(),
-                                        //     Utils.text(
-                                        //       text: "Position : ",
-                                        //       color: Colors.black,
-                                        //       fontSize: 12,
-                                        //       fontWeight: FontWeight.bold,
-                                        //     ),
-                                        //     Utils.text(
-                                        //       text: dfFilter.position == "" ? "-" : dfFilter.position,
-                                        //       color: Colors.black,
-                                        //       fontSize: 12,
-                                        //       textOverFlow: TextOverflow.ellipsis,
-                                        //     ),
-                                        //   ],
-                                        // ),
-                                        // const SizedBox(
-                                        //   height: 10,
-                                        // ),
-                                        // Row(
-                                        //   children: [
-                                        //     Utils.text(
-                                        //       text: "Des : ",
-                                        //       color: Colors.black,
-                                        //       fontSize: 12,
-                                        //       fontWeight: FontWeight.bold,
-                                        //     ),
-                                        //     Utils.text(
-                                        //       text: (dfFilter.description.length ?? 0) > 15
-                                        //           ? "${dfFilter.description.substring(0, 15)}..."
-                                        //           : dfFilter.description,
-                                        //       color: Colors.black,
-                                        //       fontSize: 12,
-                                        //       textOverFlow: TextOverflow.ellipsis,
-                                        //     ),
-                                        //     const Spacer(),
-                                        //     Utils.text(
-                                        //       text: "Amount : ",
-                                        //       color: Colors.black,
-                                        //       fontSize: 12,
-                                        //       fontWeight: FontWeight.bold,
-                                        //     ),
-                                        //     Utils.text(
-                                        //       text: "${dfFilter.amount}" == "" ? "-" : dfFilter.amount.toStringAsFixed(2),
-                                        //       color: "${dfFilter.amount}".startsWith("-") ? Colors.red : Colors.green,
-                                        //       fontSize: 12,
-                                        //       textOverFlow: TextOverflow.ellipsis,
-                                        //     ),
-                                        //   ],
-                                        // ),
                                         Visibility(
                                           visible: (isShow?[index] ?? false),
                                           child: Column(
@@ -482,7 +419,7 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                                                         child: Row(
                                                           children: [
                                                             Utils.text(
-                                                              text: (dfFilter.description.length ?? 0) > 10 ? "${dfFilter.description.substring(0,10)}..." : dfFilter.description,
+                                                              text: (dfFilter.description.length) > 10 ? "${dfFilter.description.substring(0,10)}..." : dfFilter.description,
                                                               color: Colors.black,
                                                               fontSize: 16,
                                                               fontWeight: FontWeight.w600,
@@ -580,13 +517,13 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                 children: [
                                                                   Utils.text(
-                                                                    text: "${dfFilter.osqty}" == "" ? "-" : "${dfFilter.osqty}",
+                                                                    text: dfFilter.osqty == "" ? "-" : dfFilter.osqty,
                                                                     color: kBlackColor87,
                                                                     fontSize: 13,
                                                                     fontWeight: FontWeight.w600,
                                                                   ),
                                                                   Utils.text(
-                                                                    text: "${dfFilter.osrate}" == "" ? "-" : "${dfFilter.osrate}",
+                                                                    text: dfFilter.osrate == "" ? "-" : dfFilter.osrate,
                                                                     color: kBlackColor87,
                                                                     fontSize: 13,
                                                                     fontWeight: FontWeight.w600,
@@ -618,13 +555,13 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                 children: [
                                                                   Utils.text(
-                                                                    text: "${dfFilter.osrate}" == "" ? "-" : "${dfFilter.osrate}",
+                                                                    text: dfFilter.osrate == "" ? "-" : dfFilter.osrate,
                                                                     color: kBlackColor87,
                                                                     fontSize: 13,
                                                                     fontWeight: FontWeight.w600,
                                                                   ),
                                                                   Utils.text(
-                                                                    text: "${dfFilter.osqty}" == "" ? "-" : "${dfFilter.osqty}",
+                                                                    text: dfFilter.osqty == "" ? "-" : dfFilter.osqty,
                                                                     color: kBlackColor87,
                                                                     fontSize: 13,
                                                                     fontWeight: FontWeight.w600,
@@ -651,8 +588,8 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                                 children: [
                                                                   Utils.text(
-                                                                    text: "${dfFilter.amount}",
-                                                                    color: "${dfFilter.amount}".startsWith("-") ? Colors.red : Colors.green,
+                                                                    text: dfFilter.amount,
+                                                                    color: dfFilter.amount.startsWith("-") ? Colors.red : Colors.green,
                                                                     fontSize: 13,
                                                                     fontWeight: FontWeight.w600,
                                                                   ),
@@ -704,7 +641,6 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                     decoration: BoxDecoration(
                       color: const Color(0xFFF2F2F7),
                       borderRadius: BorderRadius.circular(10),
-
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
