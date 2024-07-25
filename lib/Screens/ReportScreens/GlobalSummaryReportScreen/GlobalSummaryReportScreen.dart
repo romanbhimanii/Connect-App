@@ -28,7 +28,6 @@ class Globalsummaryreportscreen extends StatefulWidget {
 
 class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
   final ConnectivityService connectivityService = ConnectivityService();
-  Future<GlobalSummary>? globalSummary;
   DateTime dateTime = DateTime.now();
   List<bool>? isShow;
   TotalsDf? totalsDf;
@@ -45,6 +44,7 @@ class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
   String? selectedValue;
   String? selectedValue1;
   String datePickedValue = "";
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -61,16 +61,19 @@ class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
   }
 
   Future<void> _fetchGlobalSummaryReport() async {
-    globalSummary = ApiServices().fetchGlobalSummary(
-      toDate: datePickedValue,
-      token: Appvariables.token,
-      openBalance: selectedValue1 ?? "y",
-    );
-    globalSummary?.then((data) {
-      setState(() {
-        isShow = List<bool>.filled((data.data!.filteredDf?.length ?? 0), false);
+    if(Appvariables.globalSummary.isNull || Appvariables.globalSummary == null){
+      Appvariables.globalSummary = ApiServices().fetchGlobalSummary(
+        toDate: datePickedValue,
+        token: Appvariables.token,
+        openBalance: selectedValue1 ?? "y",
+      );
+      Appvariables.globalSummary?.then((data) {
+        setState(() {
+          isShow = List<bool>.filled((data.data!.filteredDf?.length ?? 0), false);
+          isLoading = false;
+        });
       });
-    });
+    }
   }
 
   Future<void> _showDateTimePicker() async {
@@ -99,9 +102,12 @@ class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
     );
 
     if (datePicked != null) {
-      datePickedValue =
-          "${datePicked.year}-${datePicked.month.toString().padLeft(2, '0')}-${datePicked.day.toString().padLeft(2, '0')}";
-      _fetchGlobalSummaryReport();
+      datePickedValue = "${datePicked.year}-${datePicked.month.toString().padLeft(2, '0')}-${datePicked.day.toString().padLeft(2, '0')}";
+      setState(() {
+        Appvariables.globalSummary = null;
+        isLoading = true;
+        _fetchGlobalSummaryReport();
+      });
     }
   }
 
@@ -270,6 +276,8 @@ class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
                       onChanged: (String? value) {
                         setState(() {
                           selectedValue = value;
+                          Appvariables.globalSummary = null;
+                          isLoading = true;
                           _fetchGlobalSummaryReport();
                         });
                       },
@@ -344,6 +352,8 @@ class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
                         setState(
                           () {
                             selectedValue1 = value;
+                            Appvariables.globalSummary = null;
+                            isLoading = true;
                             _fetchGlobalSummaryReport();
                           },
                         );
@@ -401,8 +411,8 @@ class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
                       //     context: context
                       // );
                     } else if (result == "Excel") {
-                      if (await globalSummary != null) {
-                        globalSummary?.then((response) {
+                      if (await Appvariables.globalSummary != null) {
+                        Appvariables.globalSummary?.then((response) {
                           if (response.data?.filteredDf != null) {
                             exportToCSV(response.data?.filteredDf);
                           }
@@ -458,7 +468,13 @@ class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: _fetchGlobalSummaryReport,
+        onRefresh: () {
+          setState(() {
+            isLoading = true;
+            Appvariables.globalSummary = null;
+          });
+          return _fetchGlobalSummaryReport();
+        },
         child: Stack(
           children: [
             SingleChildScrollView(
@@ -472,12 +488,17 @@ class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
                     child: Column(
                       children: [
                         FutureBuilder<GlobalSummary?>(
-                          future: globalSummary,
+                          future: Appvariables.globalSummary,
                           builder: (context, snapshot) {
                             if (snapshot.connectionState == ConnectionState.waiting) {
-                              return Center(
-                                  child: Lottie.asset('assets/lottie/loading.json',
-                                      height: 100, width: 100));
+                              return Column(
+                                children: [
+                                  const SizedBox(
+                                    height: 250,
+                                  ),
+                                  Center(child: Lottie.asset('assets/lottie/loading.json', height: 100, width: 100)),
+                                ],
+                              );
                             } else if (snapshot.hasError) {
                               return Center(
                                   child: Utils.text(
@@ -1432,7 +1453,7 @@ class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
               ),
             ),
             Visibility(
-              visible: !totalsDf.isNull,
+              visible: !totalsDf.isNull && isLoading == false,
               child: Positioned(
                 bottom: 70,
                 left: 0,

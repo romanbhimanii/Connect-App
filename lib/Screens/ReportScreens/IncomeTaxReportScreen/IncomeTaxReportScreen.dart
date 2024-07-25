@@ -1,6 +1,5 @@
 import 'package:connect/ApiServices/ApiServices.dart';
 import 'package:connect/Models/IncomeTaxReportModel/IncomeTaxReportModel.dart';
-import 'package:connect/Utils/AppDrawer.dart';
 import 'package:connect/Utils/AppVariables.dart';
 import 'package:connect/Utils/ConnectivityService.dart';
 import 'package:connect/Utils/Constant.dart';
@@ -23,7 +22,6 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
 
   final ConnectivityService connectivityService = ConnectivityService();
   TabController? _tabController;
-  Future<IncomeTaxReport?>? futureIncomeTaxReport;
   List<bool>? isShow;
   List<bool>? isShow1;
   List<bool>? isShow2;
@@ -46,24 +44,28 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
   }
 
   Future<void> fetchIncomeTaxReport() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    DateTime time = DateTime.now();
-    String year = prefs.getString('year') ?? "${time.year}";
-    setState(() {
-      futureIncomeTaxReport = ApiServices().getIncomeTaxReport(token: Appvariables.token,financialYear: year);
-    });
-    futureIncomeTaxReport?.then((data) {
+    if(Appvariables.futureIncomeTaxReport.isNull || Appvariables.futureIncomeTaxReport == null){
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      DateTime time = DateTime.now();
+      String year = prefs.getString('year') ?? "${time.year}";
       setState(() {
-        isShow = List<bool>.filled((data?.data?.aSSETS?.length ?? 0), false);
-        isShow1 = List<bool>.filled((data?.data?.eXPENSES?.length ?? 0), false);
-        isShow2 = List<bool>.filled((data?.data?.lONGTERM?.length ?? 0), false);
-        isShow3 = List<bool>.filled((data?.data?.oPASSETS?.length ?? 0), false);
-        isShow4 = List<bool>.filled((data?.data?.oPSHORTTERM?.length ?? 0), false);
-        isShow5 = List<bool>.filled((data?.data?.sHORTTERM?.length ?? 0), false);
-        isShow6 = List<bool>.filled((data?.data?.tRADING?.length ?? 0),false);
-        isShow7 = List<bool>.filled((data?.data?.grandTotal?.length ?? 0), false);
+        Appvariables.futureIncomeTaxReport = ApiServices().getIncomeTaxReport(token: Appvariables.token,financialYear: year);
       });
-    });
+      Appvariables.futureIncomeTaxReport?.then((data) {
+        if(mounted){
+          setState(() {
+            isShow = List<bool>.filled((data?.data?.aSSETS?.length ?? 0), false);
+            isShow1 = List<bool>.filled((data?.data?.eXPENSES?.length ?? 0), false);
+            isShow2 = List<bool>.filled((data?.data?.lONGTERM?.length ?? 0), false);
+            isShow3 = List<bool>.filled((data?.data?.oPASSETS?.length ?? 0), false);
+            isShow4 = List<bool>.filled((data?.data?.oPSHORTTERM?.length ?? 0), false);
+            isShow5 = List<bool>.filled((data?.data?.sHORTTERM?.length ?? 0), false);
+            isShow6 = List<bool>.filled((data?.data?.tRADING?.length ?? 0),false);
+            isShow7 = List<bool>.filled((data?.data?.grandTotal?.length ?? 0), false);
+          });
+        }
+      });
+    }
   }
 
   @override
@@ -168,7 +170,12 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
           controller: _tabController,
           children: [
         RefreshIndicator(
-          onRefresh: fetchIncomeTaxReport,
+          onRefresh: () {
+            setState(() {
+              Appvariables.futureIncomeTaxReport = null;
+            });
+            return fetchIncomeTaxReport();
+          },
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -180,16 +187,23 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                   child: Column(
                     children: [
                       FutureBuilder<IncomeTaxReport?>(
-                        future: futureIncomeTaxReport,
+                        future: Appvariables.futureIncomeTaxReport,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
-                            return Center(
-                                child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100));
+                            return Column(
+                              children: [
+                                const SizedBox(
+                                  height: 250,
+                                ),
+                                Center(
+                                    child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100)),
+                              ],
+                            );
                           } else if (snapshot.hasError) {
                             return Center(child: Text('Error: ${snapshot.error}'));
                           } else if (snapshot.hasData) {
                             final report = snapshot.data!;
-                            return Column(
+                            return report.data?.aSSETS?.isNotEmpty ?? false ? Column(
                               children: [
                                 ListView.builder(
                                   shrinkWrap: true,
@@ -238,11 +252,11 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                                                           fontSize: 10,
                                                         ),
                                                         Utils.text(
-                                                          text: "${assetsReport?.netAmount}" == "" ? "N/A" : "${assetsReport?.netAmount}",
-                                                          color: (assetsReport?.netAmount?.startsWith('-') ?? false) ? Colors.red : Colors.green,
-                                                          fontSize: 12,
-                                                          textOverFlow: TextOverflow.ellipsis,
-                                                          fontWeight: FontWeight.w600
+                                                            text: "${assetsReport?.netAmount}" == "" ? "N/A" : "${assetsReport?.netAmount}",
+                                                            color: (assetsReport?.netAmount?.startsWith('-') ?? false) ? Colors.red : Colors.green,
+                                                            fontSize: 12,
+                                                            textOverFlow: TextOverflow.ellipsis,
+                                                            fontWeight: FontWeight.w600
                                                         ),
                                                       ],
                                                     ),
@@ -259,9 +273,9 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
                                                         Utils.text(
-                                                            text: "Net Qty",
-                                                            fontSize: 10,
-                                                            color: const Color(0xFF4A5568).withOpacity(0.70),
+                                                          text: "Net Qty",
+                                                          fontSize: 10,
+                                                          color: const Color(0xFF4A5568).withOpacity(0.70),
                                                         ),
                                                         Utils.text(
                                                             text: assetsReport?.netQty,
@@ -276,9 +290,9 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
                                                         Utils.text(
-                                                            text: "Net Rate",
-                                                            fontSize: 10,
-                                                            color: const Color(0xFF4A5568).withOpacity(0.70),
+                                                          text: "Net Rate",
+                                                          fontSize: 10,
+                                                          color: const Color(0xFF4A5568).withOpacity(0.70),
                                                         ),
                                                         Utils.text(
                                                             text: assetsReport?.netRate,
@@ -293,9 +307,9 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
                                                         Utils.text(
-                                                            text: "Buy Qty",
-                                                            fontSize: 10,
-                                                            color: const Color(0xFF4A5568).withOpacity(0.70),
+                                                          text: "Buy Qty",
+                                                          fontSize: 10,
+                                                          color: const Color(0xFF4A5568).withOpacity(0.70),
                                                         ),
                                                         Utils.text(
                                                             text: assetsReport?.buyQty,
@@ -310,9 +324,9 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
                                                         Utils.text(
-                                                            text: "Buy Rate",
-                                                            fontSize: 10,
-                                                            color: const Color(0xFF4A5568).withOpacity(0.70),
+                                                          text: "Buy Rate",
+                                                          fontSize: 10,
+                                                          color: const Color(0xFF4A5568).withOpacity(0.70),
                                                         ),
                                                         Utils.text(
                                                             text: assetsReport?.buyRate,
@@ -335,9 +349,9 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
                                                         Utils.text(
-                                                            text: "Buy Amt",
-                                                            fontSize: 10,
-                                                            color: const Color(0xFF4A5568).withOpacity(0.70),
+                                                          text: "Buy Amt",
+                                                          fontSize: 10,
+                                                          color: const Color(0xFF4A5568).withOpacity(0.70),
                                                         ),
                                                         Utils.text(
                                                             text: assetsReport?.buyAmt,
@@ -352,9 +366,9 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
                                                         Utils.text(
-                                                            text: "Sale Qty",
-                                                            fontSize: 10,
-                                                            color: const Color(0xFF4A5568).withOpacity(0.70),
+                                                          text: "Sale Qty",
+                                                          fontSize: 10,
+                                                          color: const Color(0xFF4A5568).withOpacity(0.70),
                                                         ),
                                                         Utils.text(
                                                             text: assetsReport?.saleQty,
@@ -369,9 +383,9 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
                                                         Utils.text(
-                                                            text: "Sale Rate",
-                                                            fontSize: 10,
-                                                            color: const Color(0xFF4A5568).withOpacity(0.70),
+                                                          text: "Sale Rate",
+                                                          fontSize: 10,
+                                                          color: const Color(0xFF4A5568).withOpacity(0.70),
                                                         ),
                                                         Utils.text(
                                                             text: assetsReport?.saleRate,
@@ -386,9 +400,9 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
                                                         Utils.text(
-                                                            text: "Sale Amt",
-                                                            fontSize: 10,
-                                                            color: const Color(0xFF4A5568).withOpacity(0.70),
+                                                          text: "Sale Amt",
+                                                          fontSize: 10,
+                                                          color: const Color(0xFF4A5568).withOpacity(0.70),
                                                         ),
                                                         Utils.text(
                                                             text: assetsReport?.saleAmt,
@@ -632,6 +646,18 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                                   height: 100,
                                 )
                               ],
+                            ) :
+                            Column(
+                              children: [
+                                const SizedBox(
+                                  height: 250,
+                                ),
+                                Center(child: Utils.text(
+                                    text: "No Data Found!",
+                                    color: Colors.black,
+                                    fontSize: 15
+                                )),
+                              ],
                             );
                           } else {
                             return const Center(child: Text('No data available'));
@@ -646,7 +672,12 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
           ),
         ),
         RefreshIndicator(
-          onRefresh: fetchIncomeTaxReport,
+          onRefresh: () {
+            setState(() {
+              Appvariables.futureIncomeTaxReport = null;
+            });
+            return fetchIncomeTaxReport();
+          },
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -658,16 +689,23 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                   child: Column(
                     children: [
                       FutureBuilder<IncomeTaxReport?>(
-                        future: futureIncomeTaxReport,
+                        future: Appvariables.futureIncomeTaxReport,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
-                            return Center(
-                                child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100));
+                            return Column(
+                              children: [
+                                const SizedBox(
+                                  height: 250,
+                                ),
+                                Center(
+                                    child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100)),
+                              ],
+                            );
                           } else if (snapshot.hasError) {
                             return Center(child: Text('Error: ${snapshot.error}'));
                           } else if (snapshot.hasData) {
                             final report = snapshot.data!;
-                            return Column(
+                            return report.data?.eXPENSES?.isNotEmpty ?? false ? Column(
                               children: [
                                 ListView.builder(
                                   shrinkWrap: true,
@@ -1110,6 +1148,17 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                                   height: 100,
                                 )
                               ],
+                            ) : Column(
+                              children: [
+                                const SizedBox(
+                                  height: 250,
+                                ),
+                                Center(child: Utils.text(
+                                    text: "No Data Found!",
+                                    color: Colors.black,
+                                    fontSize: 15
+                                )),
+                              ],
                             );
                           } else {
                             return const Center(child: Text('No data available'));
@@ -1124,7 +1173,12 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
           ),
         ),
         RefreshIndicator(
-          onRefresh: fetchIncomeTaxReport,
+          onRefresh: () {
+            setState(() {
+              Appvariables.futureIncomeTaxReport = null;
+            });
+            return fetchIncomeTaxReport();
+          },
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -1136,16 +1190,23 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                   child: Column(
                     children: [
                       FutureBuilder<IncomeTaxReport?>(
-                        future: futureIncomeTaxReport,
+                        future: Appvariables.futureIncomeTaxReport,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
-                            return Center(
-                                child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100));
+                            return Column(
+                              children: [
+                                const SizedBox(
+                                  height: 250,
+                                ),
+                                Center(
+                                    child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100)),
+                              ],
+                            );
                           } else if (snapshot.hasError) {
                             return Center(child: Text('Error: ${snapshot.error}'));
                           } else if (snapshot.hasData) {
                             final report = snapshot.data!;
-                            return Column(
+                            return report.data?.lONGTERM?.isNotEmpty ?? false ? Column(
                               children: [
                                 ListView.builder(
                                   shrinkWrap: true,
@@ -1588,6 +1649,17 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                                   height: 100,
                                 )
                               ],
+                            ) : Column(
+                              children: [
+                                const SizedBox(
+                                  height: 250,
+                                ),
+                                Center(child: Utils.text(
+                                    text: "No Data Found!",
+                                    color: Colors.black,
+                                    fontSize: 15
+                                )),
+                              ],
                             );
                           } else {
                             return const Center(child: Text('No data available'));
@@ -1602,7 +1674,12 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
           ),
         ),
         RefreshIndicator(
-          onRefresh: fetchIncomeTaxReport,
+          onRefresh: () {
+            setState(() {
+              Appvariables.futureIncomeTaxReport = null;
+            });
+            return fetchIncomeTaxReport();
+          },
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -1614,16 +1691,23 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                   child: Column(
                     children: [
                       FutureBuilder<IncomeTaxReport?>(
-                        future: futureIncomeTaxReport,
+                        future: Appvariables.futureIncomeTaxReport,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
-                            return Center(
-                                child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100));
+                            return Column(
+                              children: [
+                                const SizedBox(
+                                  height: 250,
+                                ),
+                                Center(
+                                    child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100)),
+                              ],
+                            );
                           } else if (snapshot.hasError) {
                             return Center(child: Text('Error: ${snapshot.error}'));
                           } else if (snapshot.hasData) {
                             final report = snapshot.data!;
-                            return Column(
+                            return report.data?.oPASSETS?.isNotEmpty ?? false ? Column(
                               children: [
                                 ListView.builder(
                                   shrinkWrap: true,
@@ -2066,6 +2150,17 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                                   height: 100,
                                 ),
                               ],
+                            ) : Column(
+                              children: [
+                                const SizedBox(
+                                  height: 250,
+                                ),
+                                Center(child: Utils.text(
+                                    text: "No Data Found!",
+                                    color: Colors.black,
+                                    fontSize: 15
+                                )),
+                              ],
                             );
                           } else {
                             return const Center(child: Text('No data available'));
@@ -2080,7 +2175,12 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
           ),
         ),
         RefreshIndicator(
-          onRefresh: fetchIncomeTaxReport,
+          onRefresh: () {
+            setState(() {
+              Appvariables.futureIncomeTaxReport = null;
+            });
+            return fetchIncomeTaxReport();
+          },
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -2092,16 +2192,23 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                   child: Column(
                     children: [
                       FutureBuilder<IncomeTaxReport?>(
-                        future: futureIncomeTaxReport,
+                        future: Appvariables.futureIncomeTaxReport,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
-                            return Center(
-                                child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100));
+                            return Column(
+                              children: [
+                                const SizedBox(
+                                  height: 250,
+                                ),
+                                Center(
+                                    child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100)),
+                              ],
+                            );
                           } else if (snapshot.hasError) {
                             return Center(child: Text('Error: ${snapshot.error}'));
                           } else if (snapshot.hasData) {
                             final report = snapshot.data!;
-                            return Column(
+                            return report.data?.oPSHORTTERM?.isNotEmpty ?? false ? Column(
                               children: [
                                 ListView.builder(
                                   shrinkWrap: true,
@@ -2544,6 +2651,17 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                                   height: 100,
                                 ),
                               ],
+                            ) : Column(
+                              children: [
+                                const SizedBox(
+                                  height: 250,
+                                ),
+                                Center(child: Utils.text(
+                                    text: "No Data Found!",
+                                    color: Colors.black,
+                                    fontSize: 15
+                                )),
+                              ],
                             );
                           } else {
                             return const Center(child: Text('No data available'));
@@ -2558,7 +2676,12 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
           ),
         ),
         RefreshIndicator(
-          onRefresh: fetchIncomeTaxReport,
+          onRefresh: () {
+            setState(() {
+              Appvariables.futureIncomeTaxReport = null;
+            });
+            return fetchIncomeTaxReport();
+          },
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -2570,16 +2693,23 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                   child: Column(
                     children: [
                       FutureBuilder<IncomeTaxReport?>(
-                        future: futureIncomeTaxReport,
+                        future: Appvariables.futureIncomeTaxReport,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
-                            return Center(
-                                child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100));
+                            return Column(
+                              children: [
+                                const SizedBox(
+                                  height: 250,
+                                ),
+                                Center(
+                                    child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100)),
+                              ],
+                            );
                           } else if (snapshot.hasError) {
                             return Center(child: Text('Error: ${snapshot.error}'));
                           } else if (snapshot.hasData) {
                             final report = snapshot.data!;
-                            return Column(
+                            return report.data?.sHORTTERM?.isNotEmpty ?? false ? Column(
                               children: [
                                 ListView.builder(
                                   shrinkWrap: true,
@@ -3022,6 +3152,17 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                                   height: 100,
                                 )
                               ],
+                            ) : Column(
+                              children: [
+                                const SizedBox(
+                                  height: 250,
+                                ),
+                                Center(child: Utils.text(
+                                    text: "No Data Found!",
+                                    color: Colors.black,
+                                    fontSize: 15
+                                )),
+                              ],
                             );
                           } else {
                             return const Center(child: Text('No data available'));
@@ -3036,7 +3177,12 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
           ),
         ),
         RefreshIndicator(
-          onRefresh: fetchIncomeTaxReport,
+          onRefresh: () {
+            setState(() {
+              Appvariables.futureIncomeTaxReport = null;
+            });
+            return fetchIncomeTaxReport();
+          },
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -3048,16 +3194,25 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                   child: Column(
                     children: [
                       FutureBuilder<IncomeTaxReport?>(
-                        future: futureIncomeTaxReport,
+                        future: Appvariables.futureIncomeTaxReport,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
-                            return Center(
-                                child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100));
-                          } else if (snapshot.hasError) {
-                            return Center(child: Text('Error: ${snapshot.error}'));
-                          } else if (snapshot.hasData) {
-                            final report = snapshot.data!;
                             return Column(
+                              children: [
+                                const SizedBox(
+                                  height: 250,
+                                ),
+                                Center(
+                                    child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100)),
+                              ],
+                            );
+                          }
+                          else if (snapshot.hasError) {
+                            return Center(child: Text('Error: ${snapshot.error}'));
+                          }
+                          else if (snapshot.hasData) {
+                            final report = snapshot.data!;
+                            return report.data?.tRADING?.isNotEmpty ?? false ? Column(
                               children: [
                                 ListView.builder(
                                   shrinkWrap: true,
@@ -3506,9 +3661,25 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                                   height: 100,
                                 )
                               ],
+                            ) : Column(
+                              children: [
+                                const SizedBox(
+                                  height: 250,
+                                ),
+                                Center(child: Utils.text(
+                                    text: "No Data Found!",
+                                    color: Colors.black,
+                                    fontSize: 15
+                                )),
+                              ],
                             );
-                          } else {
-                            return const Center(child: Text('No data available'));
+                          }
+                          else {
+                            return Center(child: Utils.text(
+                              text: "No Data Found!",
+                              color: Colors.black,
+                              fontSize: 15
+                            ));
                           }
                         },
                       ),
@@ -3520,7 +3691,12 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
           ),
         ),
         RefreshIndicator(
-          onRefresh: fetchIncomeTaxReport,
+          onRefresh: () {
+            setState(() {
+              Appvariables.futureIncomeTaxReport = null;
+            });
+            return fetchIncomeTaxReport();
+          },
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -3532,16 +3708,23 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                   child: Column(
                     children: [
                       FutureBuilder<IncomeTaxReport?>(
-                        future: futureIncomeTaxReport,
+                        future: Appvariables.futureIncomeTaxReport,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
-                            return Center(
-                                child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100));
+                            return Column(
+                              children: [
+                                const SizedBox(
+                                  height: 250,
+                                ),
+                                Center(
+                                    child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100)),
+                              ],
+                            );
                           } else if (snapshot.hasError) {
                             return Center(child: Text('Error: ${snapshot.error}'));
                           } else if (snapshot.hasData) {
                             final report = snapshot.data!;
-                            return Column(
+                            return report.data?.grandTotal?.isNotEmpty ?? false ? Column(
                               children: [
                                 ListView.builder(
                                   shrinkWrap: true,
@@ -3983,6 +4166,17 @@ class _IncometaxreportscreenState extends State<Incometaxreportscreen> with Sing
                                 const SizedBox(
                                   height: 100,
                                 )
+                              ],
+                            ) : Column(
+                              children: [
+                                const SizedBox(
+                                  height: 250,
+                                ),
+                                Center(child: Utils.text(
+                                    text: "No Data Found!",
+                                    color: Colors.black,
+                                    fontSize: 15
+                                )),
                               ],
                             );
                           } else {

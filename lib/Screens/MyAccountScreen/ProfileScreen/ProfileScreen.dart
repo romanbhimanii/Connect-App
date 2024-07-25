@@ -339,7 +339,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         height: 5,
                                       ),
                                       Utils.text(
-                                          text: data.personalDetails.sex,
+                                          text: data.personalDetails.sex == "F" ? "Female" : "Male",
                                           fontSize: 14,
                                           color: const Color(0xFF1E1E1E),
                                           fontWeight: FontWeight.w500)
@@ -670,118 +670,94 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 color: kBlackColor));
                       } else if (snapshot.hasData) {
                         final data = snapshot.data!.data;
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 20,
-                                  backgroundColor: Colors.grey.withOpacity(0.1),
-                                  child: const Icon(
-                                    Icons.person,
-                                    color: Colors.blue,
+                        return Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Utils.text(
+                                        text: "Client Name",
+                                        fontSize: 12,
+                                        color: const Color(0xFF777777),
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Utils.text(
+                                        text: data.dpDetails.clientDpName,
+                                          fontSize: 14,
+                                          color: const Color(0xFF1E1E1E),
+                                          fontWeight: FontWeight.w500
+                                      )
+                                    ],
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Utils.text(
-                                      text: "Client Name",
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w300,
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Utils.text(
-                                      text: data.dpDetails.clientDpName,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500,
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Divider(
-                              color: Colors.black12.withOpacity(0.06),
-                            ),
-                            Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 20,
-                                  backgroundColor: Colors.grey.withOpacity(0.1),
-                                  child: const Icon(
-                                    Icons.person,
-                                    color: Colors.blue,
+                                ],
+                              ),
+                              Divider(
+                                color: Colors.black12.withOpacity(0.06),
+                              ),
+                              Row(
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Utils.text(
+                                        text: "BO ID",
+                                        fontSize: 12,
+                                        color: const Color(0xFF777777),
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Utils.text(
+                                        text: data.dpDetails.clientDpCode,
+                                          fontSize: 14,
+                                          color: const Color(0xFF1E1E1E),
+                                          fontWeight: FontWeight.w500
+                                      )
+                                    ],
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Utils.text(
-                                      text: "BO ID",
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w300,
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Utils.text(
-                                      text: data.dpDetails.clientDpCode,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500,
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Divider(
-                              color: Colors.black12.withOpacity(0.06),
-                            ),
-                            Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 20,
-                                  backgroundColor: Colors.grey.withOpacity(0.1),
-                                  child: const Icon(
-                                    Icons.person,
-                                    color: Colors.blue,
+                                ],
+                              ),
+                              Divider(
+                                color: Colors.black12.withOpacity(0.06),
+                              ),
+                              Row(
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Utils.text(
+                                        text: "Depository",
+                                        fontSize: 12,
+                                        color: const Color(0xFF777777),
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Utils.text(
+                                        text: data.dpDetails.depository,
+                                          fontSize: 14,
+                                          color: const Color(0xFF1E1E1E),
+                                          fontWeight: FontWeight.w500
+                                      )
+                                    ],
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Utils.text(
-                                      text: "Depository",
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w300,
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Utils.text(
-                                      text: data.dpDetails.depository,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500,
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
+                                ],
+                              ),
+                            ],
+                          ),
                         );
                       } else {
                         return Center(
@@ -862,119 +838,94 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 color: kBlackColor));
                       } else if (snapshot.hasData) {
                         final data = snapshot.data!.data;
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 20,
-                                  backgroundColor: Colors.grey.withOpacity(0.1),
-                                  child: const Icon(
-                                    Icons.person,
-                                    color: Colors.blue,
+                        return Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Utils.text(
+                                        text: "Client Name",
+                                        fontSize: 12,
+                                        color: const Color(0xFF777777),
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Utils.text(
+                                        text: data.nomineeDetails.nomineeName,
+                                          fontSize: 14,
+                                          color: const Color(0xFF1E1E1E),
+                                          fontWeight: FontWeight.w500
+                                      )
+                                    ],
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Utils.text(
-                                      text: "Client Name",
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w300,
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Utils.text(
-                                      text: data.nomineeDetails.nomineeName,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500,
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Divider(
-                              color: Colors.black12.withOpacity(0.06),
-                            ),
-                            Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 20,
-                                  backgroundColor: Colors.grey.withOpacity(0.1),
-                                  child: const Icon(
-                                    Icons.person,
-                                    color: Colors.blue,
+                                ],
+                              ),
+                              Divider(
+                                color: Colors.black12.withOpacity(0.06),
+                              ),
+                              Row(
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Utils.text(
+                                        text: "Nominee Status",
+                                        fontSize: 12,
+                                        color: const Color(0xFF777777),
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Utils.text(
+                                        text: data.nomineeDetails.nomineeoptout,
+                                          fontSize: 14,
+                                          color: const Color(0xFF1E1E1E),
+                                          fontWeight: FontWeight.w500
+                                      )
+                                    ],
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Utils.text(
-                                      text: "Nominee Status",
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w300,
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Utils.text(
-                                      text: data.nomineeDetails.nomineeoptout,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500,
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Divider(
-                              color: Colors.black12.withOpacity(0.06),
-                            ),
-                            Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 20,
-                                  backgroundColor: Colors.grey.withOpacity(0.1),
-                                  child: const Icon(
-                                    Icons.person,
-                                    color: Colors.blue,
+                                ],
+                              ),
+                              Divider(
+                                color: Colors.black12.withOpacity(0.06),
+                              ),
+                              Row(
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Utils.text(
+                                        text: "I / We wish to make a Nomination?",
+                                        fontSize: 12,
+                                        color: const Color(0xFF777777),
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Utils.text(
+                                        text: "Modification In Process!!!!",
+                                          fontSize: 14,
+                                          color: const Color(0xFF1E1E1E),
+                                          fontWeight: FontWeight.w500
+                                      )
+                                    ],
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Utils.text(
-                                      text: "I / We wish to make a Nomination?",
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w300,
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Utils.text(
-                                      text: "Modification In Process!!!!",
-                                      fontSize: 13,
-                                      color: Colors.red,
-                                      fontWeight: FontWeight.w500,
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
+                                ],
+                              ),
+                            ],
+                          ),
                         );
                       } else {
                         return Center(
@@ -1074,7 +1025,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: CheckboxListTile(
                           value: isChecked,
                           contentPadding: const EdgeInsets.all(0),
-                          activeColor: const Color.fromRGBO(27, 82, 52, 1.0),
+                          activeColor: kPrimaryColor,
                           controlAffinity: ListTileControlAffinity.leading,
                           onChanged: (value) {
                             setState(() {
@@ -1127,8 +1078,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           TextFormField(
                                             controller: _otpController,
                                             decoration: const InputDecoration(
-                                              fillColor: Color.fromRGBO(
-                                                  27, 82, 52, 0.2),
+                                              fillColor: Colors.white,
                                               labelText: 'Enter OTP',
                                               border: OutlineInputBorder(),
                                             ),
@@ -1143,8 +1093,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           const SizedBox(height: 20),
                                           DropdownButtonFormField<String>(
                                             decoration: InputDecoration(
-                                              fillColor: const Color.fromRGBO(
-                                                  27, 82, 52, 0.1),
+                                              fillColor: Colors.white,
                                               labelText: 'Select Income Range'
                                                   '',
                                               labelStyle: GoogleFonts.poppins(),
@@ -1183,33 +1132,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             onPressed: () => _pickFile(),
                                           ),
                                           const SizedBox(height: 20),
-                                          ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                                  const Color.fromRGBO(
-                                                      27, 82, 52, 1.0),
-                                            ),
-                                            onPressed: () {
+                                          InkWell(
+                                            onTap: () {
                                               if (_formKey.currentState!
                                                   .validate()) {
                                                 ApiServices()
                                                     .modifyIncomeDetails(
-                                                        token:
-                                                            Appvariables.token,
-                                                        file: file1,
-                                                        fileBytes: file1Bytes,
-                                                        income: income,
-                                                        otp:
-                                                            _otpController.text,
-                                                        isSendOrVerifyOtp:
-                                                            "verify_otp");
+                                                    token:
+                                                    Appvariables.token,
+                                                    file: file1,
+                                                    fileBytes: file1Bytes,
+                                                    income: income,
+                                                    otp:
+                                                    _otpController.text,
+                                                    isSendOrVerifyOtp:
+                                                    "verify_otp");
                                                 Get.back();
                                               }
                                             },
-                                            child: Utils.text(
-                                                text: 'VERIFY OTP',
-                                                color: kBlackColor),
-                                          ),
+                                            child: Utils.gradientButton(
+                                              message: "Verify Otp"
+                                            ),
+                                          )
                                         ],
                                       ),
                                     ),
@@ -1218,29 +1162,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               },
                             );
                           },
-                          child: Container(
-                            height: 40,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(05),
-                              color: const Color.fromRGBO(27, 82, 52, 1.0),
-                            ),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Center(
-                                child: Utils.text(
-                                  text: "Send Otp",
-                                  color: Colors.white,
-                                  fontSize: 13,
-                                ),
-                              ),
-                            ),
+                          child: Utils.gradientButton(
+                            message: "Send Otp"
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
+              ),
+              const SizedBox(
+                height: 150,
               )
             ],
           ),

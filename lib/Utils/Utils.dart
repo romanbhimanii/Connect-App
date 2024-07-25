@@ -55,7 +55,7 @@ class Utils {
       timeInSecForIosWeb: 1,
       backgroundColor: kBlackColor,
       textColor: Colors.white,
-      fontSize: 10.0,
+      fontSize: 13.0,
     );
   }
 

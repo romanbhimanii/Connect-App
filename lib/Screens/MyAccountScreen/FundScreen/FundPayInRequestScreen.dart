@@ -372,9 +372,9 @@ class _FundpayinrequestscreenState extends State<Fundpayinrequestscreen> {
                 child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100));
           } else if (snapshot.hasError) {
             return Center(child: Utils.text(
-              text: "Error: ${snapshot.error}",
+              text: "No Data Found!",
               color: kBlackColor,
-              fontSize: 13,
+              fontSize: 15,
             ),);
           } else if (!snapshot.hasData || snapshot.data!.data.isEmpty) {
             return Center(child: Utils.text(

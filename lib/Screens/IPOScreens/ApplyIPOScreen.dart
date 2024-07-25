@@ -171,7 +171,7 @@ class _ApplyiposcreenState extends State<Applyiposcreen> {
             context: context,
             animType: AnimType.scale,
             dialogType: DialogType.success,
-            btnOkColor: const Color.fromRGBO(27, 82, 52, 1.0),
+            btnOkColor: kPrimaryColor,
             dismissOnBackKeyPress: false,
             dismissOnTouchOutside: false,
             btnOkOnPress: () {
@@ -180,7 +180,7 @@ class _ApplyiposcreenState extends State<Applyiposcreen> {
             title: response.message,
             desc: response.data.exchange == "NSE" ? 'Application No: ${response.data.applicationNo}\n\nBid Reference No: ${response.data.bidReferenceNo}' : 'Application No: ${response.data.applicationNo}',
             titleTextStyle: GoogleFonts.poppins(
-                fontSize: 20, fontWeight: FontWeight.bold, color: const Color.fromRGBO(27, 82, 52, 1.0)),
+                fontSize: 20, fontWeight: FontWeight.bold, color: kPrimaryColor),
             descTextStyle: GoogleFonts.poppins(
                 fontSize: 12, fontWeight: FontWeight.w600, color: kBlackColor))
             .show();
@@ -209,6 +209,15 @@ class _ApplyiposcreenState extends State<Applyiposcreen> {
         btnOkOnPress: () {
           FocusScope.of(context).unfocus();
         },
+        btnOkColor: kPrimaryColor,
+        btnOk: InkWell(
+          onTap: () {
+            Get.back();
+          },
+          child: Utils.gradientButton(
+            message: "Ok"
+          ),
+        ),
         title: 'ERROR!',
         desc: 'Failed to Submit Bid!',
         titleTextStyle: GoogleFonts.poppins(
@@ -243,8 +252,15 @@ class _ApplyiposcreenState extends State<Applyiposcreen> {
       future: futureAccountProfile,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-              child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100));
+          return Column(
+            children: [
+              const SizedBox(
+                height: 250,
+              ),
+              Center(
+                  child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100)),
+            ],
+          );
         } else if (snapshot.hasError) {
           return Utils.text(
               text: "Error: ${snapshot.error}",

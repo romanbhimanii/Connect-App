@@ -66,7 +66,7 @@ class _ReportScreenState extends State<ReportScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 5.0),
         child: GridView.builder(
           itemCount: 8,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
           physics: const BouncingScrollPhysics(),
           itemBuilder: (context, index) {
           return Padding(
@@ -120,11 +120,14 @@ class _ReportScreenState extends State<ReportScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Utils.text(
-                          text: reportName[index],
-                          color: const Color(0xFF4A5568),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
+                        Expanded(
+                          child: Utils.text(
+                            text: reportName[index],
+                            color: const Color(0xFF4A5568),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            textAlign: TextAlign.center
+                          ),
                         ),
                       ],
                     ),

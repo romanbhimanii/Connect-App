@@ -40,7 +40,6 @@ class _PayOutScreenState extends State<PayOutScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
       appBar: AppBar(
         elevation: 0.0,
         scrolledUnderElevation: 0.0,
@@ -83,9 +82,6 @@ class _PayOutScreenState extends State<PayOutScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.13,
-              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 child: Container(

@@ -4,6 +4,7 @@ import 'package:connect/SettingsScreen/ChangePasswordScreen.dart';
 import 'package:connect/Utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -174,7 +175,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             InkWell(
               onTap: () {
-                // Share.share('check Out This App on Play Store! https://play.google.com/store/apps/details?id=in.amazon.mShop.android.shopping&hl=en');
+                Share.share('check Out This App on Play Store! https://play.google.com/store/apps/details?id=com.connect-app.arham&hl=en');
               },
               child: SizedBox(
                 height: 40,

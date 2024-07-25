@@ -327,7 +327,7 @@ class ApiServices {
   // add from date and to date dynamically
   Future<ClientBidReportResponse> fetchClientBidReports({String? token}) async {
     try {
-      const String baseUrl = 'http://192.168.130.46:3012/ipo/v1/get-client-wise-bid-report?from_date=2024-02-28&to_date=2024-02-28&source=connect';
+      const String baseUrl = 'http://192.168.130.46:3012/ipo/v1/get-client-wise-bid-report?from_date=2024-07-25&to_date=2024-07-25&source=connect';
       String authToken = token ?? "";
 
       final url = Uri.parse(baseUrl);
@@ -820,6 +820,7 @@ class ApiServices {
 
   Future<HoldingReportModel> fetchHoldingsReport(
       {String? clientCode, String? date, String? token}) async {
+    print("Holding Api Called");
     try {
       final url = Uri.parse(
           'http://192.168.130.43:1818/v1/user/report/holding?source=connect');
@@ -848,6 +849,7 @@ class ApiServices {
       String? fromDate,
         String? margin,
       String? toDate}) async {
+    print("Ledger Api Called");
     try {
       const String baseUrl = 'http://192.168.130.43:1818/v1/user/report/ledger';
       const String source = 'connect';
@@ -882,6 +884,7 @@ class ApiServices {
 
   Future<PositionReportResponse> fetchPositionReport(
       {String? date, String? token, String? cocd}) async {
+    print("Position Api Called");
     try {
       String apiUrl = 'http://192.168.130.43:1818/v1/user/report/position';
       String authToken = token ?? '';
@@ -912,6 +915,7 @@ class ApiServices {
 
   Future<GlobalSummary>? fetchGlobalSummary(
       {String? toDate, String? token, String? openBalance}) async {
+    print("Global Summary Api Called");
     try {
       String baseUrl =
           'http://192.168.130.43:1818/v1/user/report/globalsummary';
@@ -943,6 +947,7 @@ class ApiServices {
 
   Future<GlobalDetailsResponse> fetchGlobalDetails(
       {String? authToken, String? fromDate, String? toDate, int? year}) async {
+    print("Global Details Api Called");
     try {
       final response = await http.post(
         Uri.parse('http://192.168.130.43:1818/v1/user/report/globaldetails'),
@@ -1028,6 +1033,7 @@ class ApiServices {
 
   Future<IncomeTaxReport?> getIncomeTaxReport(
       {String? financialYear, String? token}) async {
+    print("Income Tax Api Called");
     try {
       String baseUrl = 'http://192.168.130.43:1818/v1/user/report/incometax';
       String authToken = token ?? '';
@@ -1058,6 +1064,7 @@ class ApiServices {
       String? fromDate,
       String? toDate,
       String? clientCode}) async {
+    print("Contract Api Called");
     try {
       String baseUrl =
           'http://192.168.130.43:1818/v1/user/report/contractbills';

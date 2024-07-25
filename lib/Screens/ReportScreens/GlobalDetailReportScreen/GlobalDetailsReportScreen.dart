@@ -30,7 +30,6 @@ class Globaldetailsreportscreen extends StatefulWidget {
 
 class _GlobaldetailsreportscreenState extends State<Globaldetailsreportscreen> {
   final ConnectivityService connectivityService = ConnectivityService();
-  Future<GlobalDetailsResponse>? globalDetails;
   List<bool>? isShow;
   DateTime dateTime = DateTime.now();
   String fromDate = "";
@@ -41,6 +40,7 @@ class _GlobaldetailsreportscreenState extends State<Globaldetailsreportscreen> {
   dynamic companyKeys;
   GrandTotal? totalData;
   List<ReportDetails>? reportDetails;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -74,19 +74,22 @@ class _GlobaldetailsreportscreenState extends State<Globaldetailsreportscreen> {
     }if(toDate == ""){
       toDate = "${time.year}-${time.month.toString().padLeft(2,'0')}-${time.day.toString().padLeft(2,'0')}";
     }
-
-    globalDetails = ApiServices().fetchGlobalDetails(
-        authToken: Appvariables.token,
-        toDate: toDate,
-        fromDate: fromDate,
-      year: int.parse(year)
-    );
-    globalDetails?.then((data) {
-      isShow = List<bool>.filled(data.data.length ?? 0, false);
-      if(mounted){
-        setState(() {});
-      }
-    });
+    if(Appvariables.globalDetails.isNull || Appvariables.globalDetails == null){
+      Appvariables.globalDetails = ApiServices().fetchGlobalDetails(
+          authToken: Appvariables.token,
+          toDate: toDate,
+          fromDate: fromDate,
+          year: int.parse(year)
+      );
+      Appvariables.globalDetails?.then((data) {
+        isShow = List<bool>.filled(data.data.length ?? 0, false);
+        if(mounted){
+          setState(() {
+            isLoading = false;
+          });
+        }
+      });
+    }
   }
 
   Future<void> _showDateTimePicker(String? type) async {
@@ -122,7 +125,11 @@ class _GlobaldetailsreportscreenState extends State<Globaldetailsreportscreen> {
       }else if(type == "toDate"){
         toDate = "${datePicked.year}-${datePicked.month.toString().padLeft(2, '0')}-${datePicked.day.toString().padLeft(2, '0')}";
       }
-      fetchGlobalDetailsReport();
+      setState(() {
+        isLoading = true;
+        Appvariables.globalDetails = null;
+        fetchGlobalDetailsReport();
+      });
     }
   }
 
@@ -305,8 +312,8 @@ class _GlobaldetailsreportscreenState extends State<Globaldetailsreportscreen> {
                   color: Colors.white,
                   onSelected: (String result) async {
                     if (result == "Excel") {
-                      if (await globalDetails != null) {
-                        globalDetails?.then((response) {
+                      if (await Appvariables.globalDetails != null) {
+                        Appvariables.globalDetails?.then((response) {
                           if (response.data.isNotEmpty) {
                             List<Map<String, dynamic>> allCompanyDetails = [];
                             List<Total> total = [];
@@ -358,7 +365,13 @@ class _GlobaldetailsreportscreenState extends State<Globaldetailsreportscreen> {
         ],
       ),
       body: RefreshIndicator(
-        onRefresh: fetchGlobalDetailsReport,
+        onRefresh: () {
+          setState(() {
+            isLoading = true;
+            Appvariables.globalDetails = null;
+          });
+          return fetchGlobalDetailsReport();
+        },
         child: Stack(
           children: [
             Column(
@@ -368,11 +381,18 @@ class _GlobaldetailsreportscreenState extends State<Globaldetailsreportscreen> {
                 ),
                 Expanded(
                   child: FutureBuilder<GlobalDetailsResponse?>(
-                    future: globalDetails,
+                    future: Appvariables.globalDetails,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                            child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100));
+                        return Column(
+                          children: [
+                            const SizedBox(
+                              height: 250,
+                            ),
+                            Center(
+                                child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100)),
+                          ],
+                        );
                       } else if (snapshot.hasError) {
                         return Center(child: Utils.text(
                             text: 'Error: ${snapshot.error}',
@@ -841,7 +861,7 @@ class _GlobaldetailsreportscreenState extends State<Globaldetailsreportscreen> {
               ],
             ),
             Visibility(
-              visible: !totalData.isNull,
+              visible: !totalData.isNull && isLoading == false,
               child: Positioned(
                 bottom: 70,
                 left: 0,

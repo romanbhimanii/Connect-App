@@ -27,7 +27,7 @@ class _AddbankaccountscreenState extends State<Addbankaccountscreen> {
   bool isChecked = false;
   final TextEditingController accountController = TextEditingController();
   final TextEditingController ifscController = TextEditingController();
-  String accountType = "";
+  DropDownValueModel? accountType;
   final SingleValueDropDownController _cnt = SingleValueDropDownController();
 
   @override
@@ -253,7 +253,7 @@ class _AddbankaccountscreenState extends State<Addbankaccountscreen> {
                   DropDownValueModel(name: 'Other', value: "Other"),
                 ],
                 onChanged: (val) {
-                  accountType = val ?? "";
+                  accountType = val;
                 },
               ),
               const SizedBox(height: 16),
@@ -380,7 +380,7 @@ class _AddbankaccountscreenState extends State<Addbankaccountscreen> {
                       context: context,
                       builder: (BuildContext context) => OTPDialog(
                         accountNumber: accountController.text,
-                        accountType: accountType,
+                        accountType: accountType?.value,
                         ifscCode: ifscController.text,
                         isDefault: isChecked == false ? "No" : "Yes",
                       ),
@@ -390,7 +390,7 @@ class _AddbankaccountscreenState extends State<Addbankaccountscreen> {
                         accountNumber: accountController.text,
                         ifscCode: ifscController.text,
                         isDefault: isChecked == false ? "No" : "Yes",
-                        accountType: accountType,
+                        accountType: accountType?.value,
                         isSendOtpOrVerifyOtp: "send_otp",
                         file2Bytes: [],
                         file2: File(""),
@@ -491,7 +491,7 @@ class _OTPDialogState extends State<OTPDialog> {
               TextFormField(
                 controller: _otpController,
                 decoration: const InputDecoration(
-                  fillColor: Color.fromRGBO(27, 82, 52, 0.2),
+                  fillColor: Colors.white,
                   labelText: 'Enter OTP',
                   border: OutlineInputBorder(),
                 ),
@@ -515,11 +515,8 @@ class _OTPDialogState extends State<OTPDialog> {
                 onPressed: () => _pickFile('signature'),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromRGBO(27, 82, 52, 1.0),
-                ),
-                onPressed: () {
+              InkWell(
+                onTap: () {
                   if (_formKey.currentState!.validate()) {
                     ApiServices().addNewBankAccount(
                         token: Appvariables.token,
@@ -536,11 +533,10 @@ class _OTPDialogState extends State<OTPDialog> {
                     Get.back();
                   }
                 },
-                child: Utils.text(
-                  text: 'VERIFY OTP',
-                  color: kBlackColor
+                child: Utils.gradientButton(
+                  message: "Verify Otp"
                 ),
-              ),
+              )
             ],
           ),
         ),
@@ -568,16 +564,29 @@ class UploadField extends StatelessWidget {
       children: [
         Utils.text(
           text: label,
-          color: kBlackColor
+          color: Colors.grey.shade800.withOpacity(0.4),
+          fontSize: 13
         ),
         const SizedBox(height: 5),
-        ElevatedButton.icon(
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
-          onPressed: onPressed,
-          icon: const Icon(Icons.upload_file),
-          label: Utils.text(
-            text: fileName ?? 'Upload File',
-              color: Colors.white
+        InkWell(
+          onTap: onPressed,
+          child: Container(
+            height: 50,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                gradient: LinearGradient(colors: [
+                  Colors.grey.shade800.withOpacity(0.2),
+                  Colors.grey.shade800.withOpacity(0.5)
+                ])
+            ),
+            child: Center(
+              child: Utils.text(
+                  text: fileName ?? 'Upload File',
+                  color: Colors.black,
+                fontSize: 15,
+                textOverFlow: TextOverflow.ellipsis
+              ),
+            ),
           ),
         ),
       ],

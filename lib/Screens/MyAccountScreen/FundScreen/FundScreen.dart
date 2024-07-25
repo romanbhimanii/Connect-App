@@ -361,7 +361,7 @@ class _FundscreenState extends State<Fundscreen> {
                           width: 100));
                 } else if (snapshot.hasError) {
                   return Center(child: Utils.text(
-                    text: "${snapshot.error}",
+                    text: "No Data Found!",
                     color: kBlackColor,
                     fontSize: 13,
                   ),);

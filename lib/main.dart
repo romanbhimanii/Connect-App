@@ -1,4 +1,5 @@
 import 'package:connect/Screens/IPOScreen/IpoProvider.dart';
+import 'package:connect/Screens/ReportScreens/HoldingReportScreen/HoldingReportProvider.dart';
 import 'package:connect/Utils/Constant.dart';
 import 'package:connect/Screens/Welcome/WelcomeScreen.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:provider/provider.dart';
 void main() => runApp(
       MultiProvider(providers: [
         ChangeNotifierProvider(create: (_) => IpoProvider()),
+        ChangeNotifierProvider(create: (_) => HoldingReportProvider()),
       ], child: const MyApp()),
     );
 

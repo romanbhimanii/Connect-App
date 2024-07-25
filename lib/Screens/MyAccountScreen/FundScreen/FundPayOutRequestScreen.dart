@@ -361,7 +361,7 @@ class _FundPayOutRequestScreenState extends State<FundPayOutRequestScreen> {
                 child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100));
           } else if (snapshot.hasError) {
             return Center(child: Utils.text(
-              text: "Error: ${snapshot.error}",
+              text: "No Data Found!",
               color: kBlackColor,
               fontSize: 13,
             ),);

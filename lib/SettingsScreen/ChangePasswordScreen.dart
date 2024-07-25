@@ -1,4 +1,3 @@
-import 'package:connect/ApiServices/ApiServices.dart';
 import 'package:connect/Utils/Constant.dart';
 import 'package:connect/Utils/Utils.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +66,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         text: "Change Password?",
                         color: kTextColor,
                         fontWeight: FontWeight.bold,
-                        fontSize: 27
+                        fontSize: 27,
                     ),
                   ],
                 ),

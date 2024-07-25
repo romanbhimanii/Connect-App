@@ -21,11 +21,11 @@ class PositionReportScreen extends StatefulWidget {
 class _PositionReportScreenState extends State<PositionReportScreen> {
 
   final ConnectivityService connectivityService = ConnectivityService();
-  Future<PositionReportResponse>? positionReport;
   TotalData? totalData;
   List<bool>? isShow;
   DateTime dateTime = DateTime.now();
   String datePickedValue = "";
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -40,17 +40,20 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
   }
 
   Future<void> fetchPositionReport() async {
-    setState(() {
-      positionReport = ApiServices().fetchPositionReport(
-        token: Appvariables.token,
-        date: datePickedValue,
-      );
-    });
-    positionReport?.then((data) {
+    if(Appvariables.positionReport.isNull || Appvariables.positionReport == null){
       setState(() {
-        isShow = List<bool>.filled(data.data!.dfFilter.length, false);
+        Appvariables.positionReport = ApiServices().fetchPositionReport(
+          token: Appvariables.token,
+          date: datePickedValue,
+        );
       });
-    });
+      Appvariables.positionReport?.then((data) {
+        setState(() {
+          isShow = List<bool>.filled(data.data!.dfFilter.length, false);
+          isLoading = false;
+        });
+      });
+    }
   }
 
   Future<void> _showDateTimePicker() async {
@@ -80,8 +83,11 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
 
     if (datePicked != null) {
       datePickedValue = "${datePicked.year}-${datePicked.month.toString().padLeft(2, '0')}-${datePicked.day.toString().padLeft(2, '0')}";
-
-      fetchPositionReport();
+      setState(() {
+        isLoading = true;
+        Appvariables.positionReport = null;
+        fetchPositionReport();
+      });
     }
   }
 
@@ -127,8 +133,12 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   InkWell(
-                    onTap: () async {
-                      await _showDateTimePicker();
+                    onTap: () {
+                      setState(() {
+                        isLoading = true;
+                        Appvariables.positionReport = null;
+                        fetchPositionReport();
+                      });
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -152,8 +162,12 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                     width: 10,
                   ),
                   InkWell(
-                    onTap: () async {
-                      await _showDateTimePicker();
+                    onTap: () {
+                      setState(() {
+                        isLoading = true;
+                        Appvariables.positionReport = null;
+                        fetchPositionReport();
+                      });
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -177,8 +191,12 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                     width: 10,
                   ),
                   InkWell(
-                    onTap: () async {
-                      await _showDateTimePicker();
+                    onTap: () {
+                      setState(() {
+                        isLoading = true;
+                        Appvariables.positionReport = null;
+                        fetchPositionReport();
+                      });
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -202,8 +220,12 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                     width: 10,
                   ),
                   InkWell(
-                    onTap: () async {
-                      await _showDateTimePicker();
+                    onTap: () {
+                      setState(() {
+                        isLoading = true;
+                        Appvariables.positionReport = null;
+                        fetchPositionReport();
+                      });
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -255,7 +277,13 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
         ),
       ),
       body: RefreshIndicator(
-        onRefresh: fetchPositionReport,
+        onRefresh: () {
+          setState(() {
+            Appvariables.positionReport = null;
+            isLoading = true;
+          });
+         return fetchPositionReport();
+        },
         child: Stack(
           children: [
             Column(
@@ -265,13 +293,24 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
                 ),
                 Expanded(
                   child: FutureBuilder<PositionReportResponse>(
-                    future: positionReport,
+                    future: Appvariables.positionReport,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                            child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100));
+                        return Column(
+                          children: [
+                            const SizedBox(
+                              height: 250,
+                            ),
+                            Center(
+                                child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100)),
+                          ],
+                        );
                       } else if (snapshot.hasError) {
-                        return Center(child: Text('Error: ${snapshot.error}'));
+                        return Center(child: Utils.text(
+                          text: "No Data Found!",
+                          color: Colors.black,
+                          fontSize: 15
+                        ));
                       } else if (snapshot.hasData) {
                         final data = snapshot.data!;
                         if(totalData?.amount != snapshot.data?.totalData || totalData.isNull){
@@ -629,7 +668,7 @@ class _PositionReportScreenState extends State<PositionReportScreen> {
               ],
             ),
             Visibility(
-              visible: !totalData.isNull,
+              visible: !totalData.isNull && isLoading == false,
               child: Positioned(
                 bottom: 70,
                 left: 0,

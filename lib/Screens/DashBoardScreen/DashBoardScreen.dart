@@ -2,11 +2,9 @@
 
 import 'dart:async';
 import 'package:connect/ApiServices/ApiServices.dart';
-import 'package:connect/Models/ClientWiseBidReport/ClientWiseBidReport.dart';
 import 'package:connect/Models/IpoModels/IpoModel.dart';
 import 'package:connect/Models/LoginModel/LoginModel.dart';
 import 'package:connect/Models/TotalBalanceModel/TotalbalanceModel.dart';
-import 'package:connect/Screens/DashBoardScreen/viewFullBidDetailsScreen.dart';
 import 'package:connect/Screens/DpProcessScreen/DpProcessScreen.dart';
 import 'package:connect/Screens/IPOScreens/ViewAllIpoScreen.dart';
 import 'package:connect/SettingsScreen/SettingsScreen.dart';
@@ -35,7 +33,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
   LoginResponse? loginResponse;
   final ApiServices _apiService = ApiServices();
-  Future<ClientBidReportResponse>? futureClientBidReport;
   Future<IpoDetailsResponse>? upcomingIPO;
   Future<IpoDetailsResponse>? openIPO;
   Future<TotalBalanceModel>? holdingReport;
@@ -75,8 +72,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         token: Appvariables.token, year: year);
     upcomingIPO = _apiService.fetchUpcomingIpoDetails();
     openIPO = _apiService.fetchOpenIpoDetails();
-    futureClientBidReport =
-        _apiService.fetchClientBidReports(token: Appvariables.token);
     String date = ApiServices().loadYear().toString();
     debugPrint(date.toString());
     setState(() {});
@@ -190,7 +185,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                       ),
                     ),
                     const SizedBox(
-                      height: 08,
+                      height: 10,
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -236,9 +231,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                     value: item,
                                     child: Utils.text(
                                         text: item,
-                                        color: selectedValue == item
-                                            ? const Color(0xFFFFFBFB)
-                                            : const Color(0xFF4A5568),
+                                        color: selectedValue == item ? const Color(0xFFFFFBFB) : const Color(0xFF4A5568),
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold),
                                   ))
@@ -273,6 +266,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                 ApiServices().loadYear();
                                 setState(() {});
                               },
+                              dropdownStyleData: DropdownStyleData(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: const Color(0xFFEAF9FF)
+                                )
+                              ),
                               buttonStyleData: ButtonStyleData(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 08),
@@ -288,9 +287,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                           ),
                         ],
                       ),
-                    ),
-                    const SizedBox(
-                      height: 02,
                     ),
                   ],
                 ),
@@ -326,6 +322,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                         },
                       ));
                     },
+                    borderRadius: BorderRadius.circular(10),
                     child: Container(
                       height: 170,
                       width: 150,
@@ -506,186 +503,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     );
   }
 
-  Widget fetchClientWiseBidReport() {
-    return FutureBuilder<ClientBidReportResponse>(
-      future: futureClientBidReport,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-              child: Lottie.asset('assets/lottie/loading.json',
-                  height: 100, width: 100));
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Utils.text(text: '${snapshot.error}', color: kBlackColor),
-          );
-        } else if (snapshot.hasData) {
-          return ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(0),
-            itemCount: snapshot.data?.data.length ?? 0,
-            itemBuilder: (context, index) {
-              final report = snapshot.data!.data[index];
-              return InkWell(
-                onTap: () {
-                  Get.to(const viewFullBidDetailsScreen(),
-                      arguments: ({"data": report}));
-                },
-                child: Container(
-                  child: Card(
-                    color: Colors.white,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10.0, vertical: 10),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              height: 35,
-                                              width: 35,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                border: Border.all(
-                                                  color: Colors.grey.shade800
-                                                      .withOpacity(0.1),
-                                                ),
-                                              ),
-                                              child: Center(
-                                                child: Utils.text(
-                                                  text: "${index + 1}",
-                                                  color: kBlackColor,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(width: 10),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      width: 180,
-                                      child: Utils.text(
-                                          text:
-                                              "Application No. ${report.applicationNo}",
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600,
-                                          color: kBlackColor),
-                                    ),
-                                    const SizedBox(height: 5),
-                                    SizedBox(
-                                      width: 180,
-                                      child: RichText(
-                                        textAlign: TextAlign.start,
-                                        text: TextSpan(
-                                          text: 'Bid Amount ',
-                                          style: GoogleFonts.poppins(
-                                            color: kBlackColor,
-                                            fontSize: 10,
-                                          ),
-                                          children: <InlineSpan>[
-                                            TextSpan(
-                                              text: report.bidAmount,
-                                              style: GoogleFonts.poppins(
-                                                color: kBlackColor,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 5),
-                                    RichText(
-                                      textAlign: TextAlign.start,
-                                      text: TextSpan(
-                                        text: 'Date ',
-                                        style: GoogleFonts.poppins(
-                                          color: kBlackColor,
-                                          fontSize: 10,
-                                        ),
-                                        children: <InlineSpan>[
-                                          TextSpan(
-                                            text: report.timestamp,
-                                            style: GoogleFonts.poppins(
-                                              color: kBlackColor,
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 10,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(height: 5),
-                                  ],
-                                ),
-                                const Spacer(),
-                                Container(
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color:
-                                        const Color.fromRGBO(27, 82, 52, 1.0),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: Center(
-                                      child: Utils.text(
-                                        text: "View",
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            },
-          );
-        } else {
-          return Utils.text(
-              text: 'No data found', color: kBlackColor, fontSize: 15);
-        }
-      },
-    );
-  }
-
   Widget fetchHoldingReport() {
     return FutureBuilder<TotalBalanceModel>(
       future: holdingReport,
@@ -693,7 +510,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
               child: Lottie.asset('assets/lottie/loading.json',
-                  height: 40, width: 40));
+                  height: 35, width: 35));
         } else if (snapshot.hasError) {
           return Center(
               child: Utils.text(

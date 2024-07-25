@@ -20,6 +20,7 @@ class HoldingReportScreen extends StatefulWidget {
 class _HoldingReportScreenState extends State<HoldingReportScreen> {
   final ConnectivityService connectivityService = ConnectivityService();
   List<TotalsDf>? totalsDF;
+  Future<HoldingReportModel>? futureHoldingReport;
   List<bool>? isShow;
   DateTime dateTime = DateTime.now();
   String datePickedValue = "";
@@ -32,6 +33,7 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
     '2020-2021',
   ];
   String? selectedValue;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -58,6 +60,7 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
       Appvariables.futureHoldingReport?.then((data) {
         setState(() {
           isShow = List<bool>.filled(data.data!.filteredDf!.length, false);
+          isLoading = false;
         });
       });
     }
@@ -65,10 +68,10 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
 
   Future<void> _showDateTimePicker() async {
     final DateTime? datePicked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101),
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -90,8 +93,11 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
 
     if (datePicked != null) {
       datePickedValue = "${datePicked.year}-${datePicked.month.toString().padLeft(2, '0')}-${datePicked.day.toString().padLeft(2, '0')}";
-      fetchHoldingReport();
-      print("${datePicked.year}-${datePicked.month}-${datePicked.day}");
+      setState(() {
+        isLoading = true;
+        Appvariables.futureHoldingReport = null;
+        fetchHoldingReport();
+      });
     }
   }
 
@@ -128,9 +134,9 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
         backgroundColor: Colors.white,
         title: Utils.text(
           text: 'Report Holding',
-            color: const Color(0xFF00A9FF),
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+          color: const Color(0xFF00A9FF),
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
         ),
         bottom: PreferredSize(
           preferredSize: const Size(double.infinity, 40),
@@ -153,13 +159,13 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                         fontWeight: FontWeight.w500),
                     items: items
                         .map((String item) => DropdownMenuItem<String>(
-                              value: item,
-                              child: Utils.text(
-                                  text: item,
-                                  color: const Color(0xFF00A9FF),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500),
-                            ))
+                      value: item,
+                      child: Utils.text(
+                          text: item,
+                          color: const Color(0xFF00A9FF),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500),
+                    ))
                         .toList(),
                     value: selectedValue,
                     onChanged: (String? value) {
@@ -182,8 +188,11 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                           datePickedValue = "2021-03-31";
                           year = "2021";
                         }
-                        print(datePickedValue);
-                        fetchHoldingReport();
+                        setState(() {
+                          isLoading = true;
+                          Appvariables.futureHoldingReport = null;
+                          fetchHoldingReport();
+                        });
                       });
                     },
                     buttonStyleData: ButtonStyleData(
@@ -255,7 +264,10 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
       ),
       body: RefreshIndicator(
         onRefresh: () {
-          Appvariables.futureHoldingReport = null;
+          setState(() {
+            isLoading = true;
+            Appvariables.futureHoldingReport = null;
+          });
           return fetchHoldingReport();
         },
         child: Stack(
@@ -274,14 +286,21 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                           future: Appvariables.futureHoldingReport,
                           builder: (context, snapshot) {
                             if (snapshot.connectionState == ConnectionState.waiting) {
-                              return Center(
-                                  child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100));
+                              return Column(
+                                children: [
+                                  const SizedBox(
+                                    height: 250,
+                                  ),
+                                  Center(
+                                      child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100)),
+                                ],
+                              );
                             } else if (snapshot.hasError) {
                               return Center(
                                   child: Utils.text(
-                                text: 'Error: ${snapshot.error}',
-                                color: Colors.black,
-                              ));
+                                    text: 'Error: ${snapshot.error}',
+                                    color: Colors.black,
+                                  ));
                             }
                             else if (snapshot.hasData) {
                               final report = snapshot.data!;
@@ -344,12 +363,12 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                                                             fontSize: 10,
                                                           ),
                                                           Utils.text(
-                                                            text: "${data.amount}" == ""
-                                                                ? "-"
-                                                                : "${data.amount}",
-                                                            color: const Color(0xFF37474F),
-                                                            fontSize: 13,
-                                                            fontWeight: FontWeight.w600
+                                                              text: "${data.amount}" == ""
+                                                                  ? "-"
+                                                                  : "${data.amount}",
+                                                              color: const Color(0xFF37474F),
+                                                              fontSize: 13,
+                                                              fontWeight: FontWeight.w600
                                                           ),
                                                         ],
                                                       )
@@ -366,9 +385,9 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
                                                           Utils.text(
-                                                            text: "ISIN",
-                                                            fontSize: 10,
-                                                            color: const Color(0xFF4A5568)
+                                                              text: "ISIN",
+                                                              fontSize: 10,
+                                                              color: const Color(0xFF4A5568)
                                                           ),
                                                           Utils.text(
                                                               text: data.isin,
@@ -548,7 +567,7 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                                                           width: double.infinity,
                                                           child: Padding(
                                                             padding:
-                                                                const EdgeInsets.all(05.0),
+                                                            const EdgeInsets.all(05.0),
                                                             child: Column(
                                                               children: [
                                                                 Divider(
@@ -561,23 +580,23 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                                                                 ),
                                                                 Visibility(
                                                                   visible:
-                                                                      data.scripName != "",
+                                                                  data.scripName != "",
                                                                   child: Row(
                                                                     children: [
                                                                       Utils.text(
                                                                         text: (data.scripName
-                                                                                        ?.length ??
-                                                                                    0) >
-                                                                                10
+                                                                            ?.length ??
+                                                                            0) >
+                                                                            10
                                                                             ? "${data.scripName?.substring(0, 10)}..."
                                                                             : data
-                                                                                .scripName,
+                                                                            .scripName,
                                                                         color: Colors.black,
                                                                         fontSize: 16,
                                                                         fontWeight:
-                                                                            FontWeight.w600,
+                                                                        FontWeight.w600,
                                                                         textAlign:
-                                                                            TextAlign.start,
+                                                                        TextAlign.start,
                                                                       ),
                                                                       const SizedBox(
                                                                         width: 05,
@@ -586,31 +605,31 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                                                                           onTap: () {
                                                                             showDialog(
                                                                               context:
-                                                                                  context,
+                                                                              context,
                                                                               builder:
                                                                                   (context) {
                                                                                 return AlertDialog(
                                                                                   contentPadding:
-                                                                                      const EdgeInsets
-                                                                                          .all(
-                                                                                          10),
+                                                                                  const EdgeInsets
+                                                                                      .all(
+                                                                                      10),
                                                                                   content:
-                                                                                      Column(
+                                                                                  Column(
                                                                                     mainAxisSize:
-                                                                                        MainAxisSize.min,
+                                                                                    MainAxisSize.min,
                                                                                     children: [
                                                                                       Utils
                                                                                           .text(
                                                                                         text:
-                                                                                            data.scripName,
+                                                                                        data.scripName,
                                                                                         color:
-                                                                                            Colors.black,
+                                                                                        Colors.black,
                                                                                         fontSize:
-                                                                                            16,
+                                                                                        16,
                                                                                         fontWeight:
-                                                                                            FontWeight.w600,
+                                                                                        FontWeight.w600,
                                                                                         textAlign:
-                                                                                            TextAlign.start,
+                                                                                        TextAlign.start,
                                                                                       ),
                                                                                     ],
                                                                                   ),
@@ -621,34 +640,34 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                                                                           child: const Icon(
                                                                             Icons.info,
                                                                             color:
-                                                                                Colors.grey,
+                                                                            Colors.grey,
                                                                             size: 20,
                                                                           )),
                                                                       const Spacer(),
                                                                       Visibility(
                                                                         visible:
-                                                                            data.isin != "",
+                                                                        data.isin != "",
                                                                         child: Row(
                                                                           children: [
                                                                             Container(
                                                                               height: 15,
                                                                               decoration:
-                                                                                  BoxDecoration(
+                                                                              BoxDecoration(
                                                                                 borderRadius:
-                                                                                    BorderRadius.circular(
-                                                                                        05),
+                                                                                BorderRadius.circular(
+                                                                                    05),
                                                                                 color: Colors
                                                                                     .deepPurpleAccent
                                                                                     .shade700
                                                                                     .withOpacity(
-                                                                                        0.1),
+                                                                                    0.1),
                                                                               ),
                                                                               child:
-                                                                                  Padding(
+                                                                              Padding(
                                                                                 padding: const EdgeInsets
                                                                                     .symmetric(
                                                                                     horizontal:
-                                                                                        5.0),
+                                                                                    5.0),
                                                                                 child: Utils
                                                                                     .text(
                                                                                   text: data
@@ -656,7 +675,7 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                                                                                   color: Colors
                                                                                       .deepPurple,
                                                                                   fontSize:
-                                                                                      09,
+                                                                                  09,
                                                                                 ),
                                                                               ),
                                                                             ),
@@ -676,18 +695,18 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                                                                   width: double.infinity,
                                                                   decoration: BoxDecoration(
                                                                     borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(05),
+                                                                    BorderRadius
+                                                                        .circular(05),
                                                                     border: Border.all(
                                                                         color: Colors
                                                                             .grey.shade800
                                                                             .withOpacity(
-                                                                                0.2)),
+                                                                            0.2)),
                                                                   ),
                                                                   child: Padding(
                                                                     padding:
-                                                                        const EdgeInsets
-                                                                            .all(10.0),
+                                                                    const EdgeInsets
+                                                                        .all(10.0),
                                                                     child: Column(
                                                                       children: [
                                                                         const SizedBox(
@@ -695,21 +714,21 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                                                                         ),
                                                                         Row(
                                                                           mainAxisAlignment:
-                                                                              MainAxisAlignment
-                                                                                  .spaceBetween,
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
                                                                           children: [
                                                                             Utils.text(
                                                                               text:
-                                                                                  "Pledge Qty",
+                                                                              "Pledge Qty",
                                                                               color:
-                                                                                  kBlackColor87,
+                                                                              kBlackColor87,
                                                                               fontSize: 11,
                                                                             ),
                                                                             Utils.text(
                                                                               text:
-                                                                                  "Free Qty",
+                                                                              "Free Qty",
                                                                               color:
-                                                                                  kBlackColor87,
+                                                                              kBlackColor87,
                                                                               fontSize: 11,
                                                                             ),
                                                                           ],
@@ -719,32 +738,32 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                                                                         ),
                                                                         Row(
                                                                           mainAxisAlignment:
-                                                                              MainAxisAlignment
-                                                                                  .spaceBetween,
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
                                                                           children: [
                                                                             Utils.text(
                                                                               text: "${data.pledgeqty}" ==
-                                                                                      ""
+                                                                                  ""
                                                                                   ? "-"
                                                                                   : "${data.pledgeqty}",
                                                                               color:
-                                                                                  kBlackColor87,
+                                                                              kBlackColor87,
                                                                               fontSize: 13,
                                                                               fontWeight:
-                                                                                  FontWeight
-                                                                                      .w600,
+                                                                              FontWeight
+                                                                                  .w600,
                                                                             ),
                                                                             Utils.text(
                                                                               text: "${data.freeqty}" ==
-                                                                                      ""
+                                                                                  ""
                                                                                   ? "-"
                                                                                   : "${data.freeqty}",
                                                                               color:
-                                                                                  kBlackColor87,
+                                                                              kBlackColor87,
                                                                               fontSize: 13,
                                                                               fontWeight:
-                                                                                  FontWeight
-                                                                                      .w600,
+                                                                              FontWeight
+                                                                                  .w600,
                                                                             ),
                                                                           ],
                                                                         ),
@@ -753,21 +772,21 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                                                                         ),
                                                                         Row(
                                                                           mainAxisAlignment:
-                                                                              MainAxisAlignment
-                                                                                  .spaceBetween,
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
                                                                           children: [
                                                                             Utils.text(
                                                                               text:
-                                                                                  "COL Qty",
+                                                                              "COL Qty",
                                                                               color:
-                                                                                  kBlackColor87,
+                                                                              kBlackColor87,
                                                                               fontSize: 11,
                                                                             ),
                                                                             Utils.text(
                                                                               text:
-                                                                                  "Net Total",
+                                                                              "Net Total",
                                                                               color:
-                                                                                  kBlackColor87,
+                                                                              kBlackColor87,
                                                                               fontSize: 11,
                                                                             ),
                                                                           ],
@@ -777,32 +796,32 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                                                                         ),
                                                                         Row(
                                                                           mainAxisAlignment:
-                                                                              MainAxisAlignment
-                                                                                  .spaceBetween,
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
                                                                           children: [
                                                                             Utils.text(
                                                                               text: "${data.colqty}" ==
-                                                                                      ""
+                                                                                  ""
                                                                                   ? "-"
                                                                                   : "${data.colqty}",
                                                                               color:
-                                                                                  kBlackColor87,
+                                                                              kBlackColor87,
                                                                               fontSize: 13,
                                                                               fontWeight:
-                                                                                  FontWeight
-                                                                                      .w600,
+                                                                              FontWeight
+                                                                                  .w600,
                                                                             ),
                                                                             Utils.text(
                                                                               text: "${data.netTotal}" ==
-                                                                                      ""
+                                                                                  ""
                                                                                   ? "-"
                                                                                   : "${data.netTotal}",
                                                                               color:
-                                                                                  kBlackColor87,
+                                                                              kBlackColor87,
                                                                               fontSize: 13,
                                                                               fontWeight:
-                                                                                  FontWeight
-                                                                                      .w600,
+                                                                              FontWeight
+                                                                                  .w600,
                                                                             ),
                                                                           ],
                                                                         ),
@@ -811,21 +830,21 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                                                                         ),
                                                                         Row(
                                                                           mainAxisAlignment:
-                                                                              MainAxisAlignment
-                                                                                  .spaceBetween,
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
                                                                           children: [
                                                                             Utils.text(
                                                                               text:
-                                                                                  "Out Short",
+                                                                              "Out Short",
                                                                               color:
-                                                                                  kBlackColor87,
+                                                                              kBlackColor87,
                                                                               fontSize: 11,
                                                                             ),
                                                                             Utils.text(
                                                                               text:
-                                                                                  "In Short",
+                                                                              "In Short",
                                                                               color:
-                                                                                  kBlackColor87,
+                                                                              kBlackColor87,
                                                                               fontSize: 11,
                                                                             ),
                                                                           ],
@@ -835,32 +854,32 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                                                                         ),
                                                                         Row(
                                                                           mainAxisAlignment:
-                                                                              MainAxisAlignment
-                                                                                  .spaceBetween,
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
                                                                           children: [
                                                                             Utils.text(
                                                                               text: "${data.inshort}" ==
-                                                                                      ""
+                                                                                  ""
                                                                                   ? "-"
                                                                                   : "${data.inshort}",
                                                                               color:
-                                                                                  kBlackColor87,
+                                                                              kBlackColor87,
                                                                               fontSize: 13,
                                                                               fontWeight:
-                                                                                  FontWeight
-                                                                                      .w600,
+                                                                              FontWeight
+                                                                                  .w600,
                                                                             ),
                                                                             Utils.text(
                                                                               text: "${data.outshort}" ==
-                                                                                      ""
+                                                                                  ""
                                                                                   ? "-"
                                                                                   : "${data.outshort}",
                                                                               color:
-                                                                                  kBlackColor87,
+                                                                              kBlackColor87,
                                                                               fontSize: 13,
                                                                               fontWeight:
-                                                                                  FontWeight
-                                                                                      .w600,
+                                                                              FontWeight
+                                                                                  .w600,
                                                                             ),
                                                                           ],
                                                                         ),
@@ -869,14 +888,14 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                                                                         ),
                                                                         Row(
                                                                           mainAxisAlignment:
-                                                                              MainAxisAlignment
-                                                                                  .center,
+                                                                          MainAxisAlignment
+                                                                              .center,
                                                                           children: [
                                                                             Utils.text(
                                                                               text:
-                                                                                  "Amount",
+                                                                              "Amount",
                                                                               color:
-                                                                                  kBlackColor87,
+                                                                              kBlackColor87,
                                                                               fontSize: 11,
                                                                             ),
                                                                           ],
@@ -886,23 +905,23 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                                                                         ),
                                                                         Row(
                                                                           mainAxisAlignment:
-                                                                              MainAxisAlignment
-                                                                                  .center,
+                                                                          MainAxisAlignment
+                                                                              .center,
                                                                           children: [
                                                                             Utils.text(
                                                                               text:
-                                                                                  "${data.amount}",
+                                                                              "${data.amount}",
                                                                               color: "${data.amount}"
-                                                                                      .startsWith(
-                                                                                          "-")
+                                                                                  .startsWith(
+                                                                                  "-")
                                                                                   ? Colors
-                                                                                      .red
+                                                                                  .red
                                                                                   : Colors
-                                                                                      .green,
+                                                                                  .green,
                                                                               fontSize: 13,
                                                                               fontWeight:
-                                                                                  FontWeight
-                                                                                      .w600,
+                                                                              FontWeight
+                                                                                  .w600,
                                                                             ),
                                                                           ],
                                                                         ),
@@ -942,7 +961,7 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
               ),
             ),
             Visibility(
-              visible: totalsDF != null && totalsDF!.isNotEmpty,
+              visible: totalsDF != null && totalsDF!.isNotEmpty && isLoading == false,
               child: Positioned(
                 bottom: 70,
                 left: 0,

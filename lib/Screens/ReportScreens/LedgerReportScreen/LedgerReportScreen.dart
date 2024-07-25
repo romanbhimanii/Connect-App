@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, deprecated_member_use
 
 import 'dart:io';
 import 'package:connect/ApiServices/ApiServices.dart';
@@ -56,6 +56,7 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
   ];
   String? selectedValue;
   String? selectedValueOfMargin;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -97,7 +98,6 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
             return false;
         }
       }).toList();
-      print(filteredData.length);
     });
   }
 
@@ -158,6 +158,7 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
         isShow = List<bool>.filled(data.data.length, false);
         filteredData = data.data;
         originalData = data.data;
+        isLoading = false;
       });
     });
   }
@@ -195,7 +196,11 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
       }else if(type == "toDate"){
         toDate = "${datePicked.year}-${datePicked.month.toString().padLeft(2, '0')}-${datePicked.day.toString().padLeft(2, '0')}";
       }
-      _fetchLedgerReport();
+      setState(() {
+        Appvariables.ledgerReport = null;
+        isLoading = true;
+        _fetchLedgerReport();
+      });
     }
   }
 
@@ -344,7 +349,11 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                             datePickedValue = "2021-03-31";
                             year = "2021";
                           }
-                          _fetchLedgerReport();
+                          setState(() {
+                            Appvariables.ledgerReport = null;
+                            isLoading = true;
+                            _fetchLedgerReport();
+                          });
                         });
                       },
                       buttonStyleData: ButtonStyleData(
@@ -437,6 +446,8 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                       onChanged: (String? value) {
                         setState(() {
                           selectedValueOfMargin = value;
+                          Appvariables.ledgerReport = null;
+                          isLoading = true;
                           _fetchLedgerReport();
                         });
                       },
@@ -599,6 +610,8 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                                       const Spacer(),
                                       TextButton(onPressed: () {
                                         setState(() {
+                                          Appvariables.ledgerReport = null;
+                                          isLoading = true;
                                           _fetchLedgerReport();
                                           Get.back();
                                         });
@@ -719,7 +732,10 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
       ),
       body: RefreshIndicator(
         onRefresh: () {
-          Appvariables.ledgerReport = null;
+          setState(() {
+            Appvariables.ledgerReport = null;
+            isLoading = true;
+          });
           return _fetchLedgerReport();
         },
         child: Stack(
@@ -738,8 +754,15 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                           future: Appvariables.ledgerReport,
                           builder: (context, snapshot) {
                             if (snapshot.connectionState == ConnectionState.waiting) {
-                              return Center(
-                                  child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100));
+                              return Column(
+                                children: [
+                                  const SizedBox(
+                                    height: 250,
+                                  ),
+                                  Center(
+                                      child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100)),
+                                ],
+                              );
                             } else if (snapshot.hasError) {
                               return Center(child: Text('Error: ${snapshot.error}'));
                             } else if (snapshot.hasData) {
@@ -747,7 +770,6 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                                 WidgetsBinding.instance.addPostFrameCallback((_){
                                   setState(() {
                                     totalData = snapshot.data!.data.last;
-                                    print(totalData);
                                   });
                                 });
                               }
@@ -781,12 +803,12 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                                                     mainAxisAlignment: MainAxisAlignment.start,
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
-                                                      Container(
+                                                      SizedBox(
                                                         width: 180,
                                                         child: Utils.text(
-                                                            text: "${ledgerReport.narration}" == ""
+                                                            text: ledgerReport.narration == ""
                                                                 ? "-"
-                                                                : "${ledgerReport.narration}",
+                                                                : ledgerReport.narration,
                                                             color: const Color(0xFF37474F),
                                                             fontSize: 12,
                                                             fontWeight: FontWeight.w700,
@@ -802,10 +824,10 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                                                             fontSize: 10,
                                                           ),
                                                           Utils.text(
-                                                              text: "${ledgerReport.balance}" == ""
+                                                              text: ledgerReport.balance == ""
                                                                   ? "-"
-                                                                  : "${ledgerReport.balance}",
-                                                              color: "${ledgerReport.balance}".startsWith("-") ? const Color(0xFFFF2E2E) : const Color(0xFF61A735),
+                                                                  : ledgerReport.balance,
+                                                              color: ledgerReport.balance.startsWith("-") ? const Color(0xFFFF2E2E) : const Color(0xFF61A735),
                                                               fontSize: 13,
                                                               fontWeight: FontWeight.w600
                                                           ),
@@ -905,7 +927,7 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                                                               color: const Color(0xFF4A5568)
                                                           ),
                                                           Utils.text(
-                                                              text: "${ledgerReport.drAmt}",
+                                                              text: ledgerReport.drAmt,
                                                               color: Colors.black,
                                                               fontSize: 13,
                                                               fontWeight: FontWeight.w600
@@ -922,7 +944,7 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                                                               color: const Color(0xFF4A5568)
                                                           ),
                                                           Utils.text(
-                                                              text: "${ledgerReport.crAmt}",
+                                                              text: ledgerReport.crAmt,
                                                               color: Colors.black,
                                                               fontSize: 13,
                                                               fontWeight: FontWeight.w600
@@ -1126,13 +1148,13 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                                                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                           children: [
                                                                             Utils.text(
-                                                                              text: "${ledgerReport.drAmt}" == "" ? "-" : "${ledgerReport.drAmt}",
+                                                                              text: ledgerReport.drAmt == "" ? "-" : ledgerReport.drAmt,
                                                                               color: kBlackColor87,
                                                                               fontSize: 13,
                                                                               fontWeight: FontWeight.w600,
                                                                             ),
                                                                             Utils.text(
-                                                                              text: "${ledgerReport.crAmt }" == "" ? "-" : "${ledgerReport.crAmt}",
+                                                                              text: ledgerReport.crAmt == "" ? "-" : ledgerReport.crAmt,
                                                                               color: kBlackColor87,
                                                                               fontSize: 13,
                                                                               fontWeight: FontWeight.w600,
@@ -1159,8 +1181,8 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                                                                           mainAxisAlignment: MainAxisAlignment.center,
                                                                           children: [
                                                                             Utils.text(
-                                                                              text: "${ledgerReport.balance}",
-                                                                              color: "${ledgerReport.balance}".startsWith("-") ? Colors.red : Colors.green,
+                                                                              text: ledgerReport.balance,
+                                                                              color: ledgerReport.balance.startsWith("-") ? Colors.red : Colors.green,
                                                                               fontSize: 13,
                                                                               fontWeight: FontWeight.w600,
                                                                             ),
@@ -1208,7 +1230,7 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
               ),
             ),
             Visibility(
-              visible: !totalData.isNull,
+              visible: !totalData.isNull && isLoading == false,
               child: Positioned(
                 bottom: 70,
                 left: 0,

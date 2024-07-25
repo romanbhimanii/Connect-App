@@ -102,147 +102,156 @@ class _ViewalliposcreenState extends State<Viewalliposcreen> {
           ));
         } else if (snapshot.hasData) {
           final data = snapshot.data!.data;
-          return data.isNotEmpty ? ListView.builder(
-            shrinkWrap: true,
-            itemCount: data.length,
-            physics: const NeverScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(0),
-            itemBuilder: (context, index) {
-              final ipo = data[index];
-              return InkWell(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return IPODetailsScreen(name: widget.name,data: ipo,);
-                  },));
-                },
-                child: Card(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color:  const Color(0xFFEAF9FF),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-                      child: Column(
-                        children: [
-                          Row(
+          return data.isNotEmpty ? Column(
+            children: [
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: data.length,
+                physics: const NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(0),
+                itemBuilder: (context, index) {
+                  final ipo = data[index];
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                        return IPODetailsScreen(name: widget.name,data: ipo,);
+                      },));
+                    },
+                    child: Card(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color:  const Color(0xFFEAF9FF),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+                          child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Column(
+                              Utils.text(
+                                text: ipo.name,
+                                color: const Color(0xFF4A5568),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                textAlign: TextAlign.start,
+                              ),
+                              Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Row(
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                      Row(
                                         children: [
-                                          Utils.text(
-                                            text: ipo.name,
-                                              color: const Color(0xFF4A5568),
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
-                                            textAlign: TextAlign.start,
-                                          ),
-                                          const SizedBox(height: 5),
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: 'Lot Size ',
-                                              style: GoogleFonts.poppins(
-                                                  color: const Color(0xFF4A5568),
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600
-                                              ),
-                                              children: <InlineSpan>[
-                                                TextSpan(
-                                                  text: ipo.lotSize,
+                                          Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(height: 5),
+                                              RichText(
+                                                textAlign: TextAlign.start,
+                                                text: TextSpan(
+                                                  text: 'Lot Size ',
                                                   style: GoogleFonts.poppins(
-                                                    color: const Color(0xFF001533),
-                                                    fontSize: 13,
+                                                      color: const Color(0xFF4A5568),
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.w600
                                                   ),
+                                                  children: <InlineSpan>[
+                                                    TextSpan(
+                                                      text: ipo.lotSize,
+                                                      style: GoogleFonts.poppins(
+                                                        color: const Color(0xFF001533),
+                                                        fontSize: 13,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(height: 5),
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: 'IPO Type ',
-                                              style: GoogleFonts.poppins(
-                                                  color: const Color(0xFF4A5568),
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600
                                               ),
-                                              children: <InlineSpan>[
-                                                TextSpan(
-                                                  text: ipo.ipoType,
+                                              const SizedBox(height: 5),
+                                              RichText(
+                                                textAlign: TextAlign.start,
+                                                text: TextSpan(
+                                                  text: 'IPO Type ',
                                                   style: GoogleFonts.poppins(
-                                                    color: const Color(0xFF001533),
-                                                    fontSize: 13,
+                                                      color: const Color(0xFF4A5568),
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.w600
                                                   ),
+                                                  children: <InlineSpan>[
+                                                    TextSpan(
+                                                      text: ipo.ipoType,
+                                                      style: GoogleFonts.poppins(
+                                                        color: const Color(0xFF001533),
+                                                        fontSize: 13,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(height: 5),
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: 'Bid Start Date ',
-                                              style: GoogleFonts.poppins(
-                                                color: const Color(0xFF4A5568),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w600
                                               ),
-                                              children: <InlineSpan>[
-                                                TextSpan(
-                                                  text: ipo.biddingStartDate,
+                                              const SizedBox(height: 5),
+                                              RichText(
+                                                textAlign: TextAlign.start,
+                                                text: TextSpan(
+                                                  text: 'Bid Start Date ',
                                                   style: GoogleFonts.poppins(
-                                                    color: const Color(0xFF001533),
-                                                    fontSize: 13,
+                                                    color: const Color(0xFF4A5568),
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600
                                                   ),
+                                                  children: <InlineSpan>[
+                                                    TextSpan(
+                                                      text: ipo.biddingStartDate,
+                                                      style: GoogleFonts.poppins(
+                                                        color: const Color(0xFF001533),
+                                                        fontSize: 13,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
-                              const Spacer(),
-                              Container(
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: const Color(0xFF2970E8),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Center(
-                                    child: Utils.text(
-                                      text: "Apply Now",
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 12,
+                                  const Spacer(),
+                                  Container(
+                                    height: 30,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: const Color(0xFF2970E8),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                      child: Center(
+                                        child: Utils.text(
+                                          text: "Apply Now",
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 12,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              );
-            },
+                  );
+                },
+              ),
+              const SizedBox(
+                height: 150,
+              ),
+            ],
           ) : Column(
             children: [
               SizedBox(
@@ -280,114 +289,118 @@ class _ViewalliposcreenState extends State<Viewalliposcreen> {
           ));
         } else if (snapshot.hasData) {
           final data = snapshot.data!.data;
-          return data.isNotEmpty ?  ListView.builder(
-            shrinkWrap: true,
-            itemCount: data.length,
-            physics: const NeverScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(0),
-            itemBuilder: (context, index) {
-              final ipo = data[index];
-              return InkWell(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return IPODetailsScreen(name: widget.name,data: ipo,);
-                  },));
-                },
-                child: Card(
-                  color: Colors.white,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color:  const Color(0xFFEAF9FF),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10.0, vertical: 10),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+          return data.isNotEmpty ?  Column(
+            children: [
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: data.length,
+                physics: const NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(0),
+                itemBuilder: (context, index) {
+                  final ipo = data[index];
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                        return IPODetailsScreen(name: widget.name,data: ipo,);
+                      },));
+                    },
+                    child: Card(
+                      color: Colors.white,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color:  const Color(0xFFEAF9FF),
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 10),
+                          child: Column(
                             children: [
-                              Column(
+                              Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Column(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                      Row(
                                         children: [
-                                          Utils.text(
-                                            text: ipo.name,
-                                              color: kBlackColor,
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w600,
-                                            textAlign: TextAlign.start,
-                                          ),
-                                          const SizedBox(height: 5),
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: 'Lot Size ',
-                                              style: GoogleFonts.poppins(
-                                                  color: const Color(0xFF4A5568),
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600
+                                          Column(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                            children: [
+                                              Utils.text(
+                                                text: ipo.name,
+                                                  color: kBlackColor,
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w600,
+                                                textAlign: TextAlign.start,
                                               ),
-                                              children: <InlineSpan>[
-                                                TextSpan(
-                                                  text: ipo.lotSize,
+                                              const SizedBox(height: 5),
+                                              RichText(
+                                                textAlign: TextAlign.start,
+                                                text: TextSpan(
+                                                  text: 'Lot Size ',
                                                   style: GoogleFonts.poppins(
-                                                    color: const Color(0xFF001533),
-                                                    fontSize: 13,
+                                                      color: const Color(0xFF4A5568),
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.w600
                                                   ),
+                                                  children: <InlineSpan>[
+                                                    TextSpan(
+                                                      text: ipo.lotSize,
+                                                      style: GoogleFonts.poppins(
+                                                        color: const Color(0xFF001533),
+                                                        fontSize: 13,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(height: 5),
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: 'IPO Type ',
-                                              style: GoogleFonts.poppins(
-                                                  color: const Color(0xFF4A5568),
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600
                                               ),
-                                              children: <InlineSpan>[
-                                                TextSpan(
-                                                  text: ipo.ipoType,
+                                              const SizedBox(height: 5),
+                                              RichText(
+                                                textAlign: TextAlign.start,
+                                                text: TextSpan(
+                                                  text: 'IPO Type ',
                                                   style: GoogleFonts.poppins(
-                                                    color: const Color(0xFF001533),
-                                                    fontSize: 13,
+                                                      color: const Color(0xFF4A5568),
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.w600
                                                   ),
+                                                  children: <InlineSpan>[
+                                                    TextSpan(
+                                                      text: ipo.ipoType,
+                                                      style: GoogleFonts.poppins(
+                                                        color: const Color(0xFF001533),
+                                                        fontSize: 13,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(height: 5),
-                                          RichText(
-                                            textAlign: TextAlign.start,
-                                            text: TextSpan(
-                                              text: 'Bid Start Date ',
-                                              style: GoogleFonts.poppins(
-                                                  color: const Color(0xFF4A5568),
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600
                                               ),
-                                              children: <InlineSpan>[
-                                                TextSpan(
-                                                  text: ipo.biddingStartDate,
+                                              const SizedBox(height: 5),
+                                              RichText(
+                                                textAlign: TextAlign.start,
+                                                text: TextSpan(
+                                                  text: 'Bid Start Date ',
                                                   style: GoogleFonts.poppins(
-                                                    color: const Color(0xFF001533),
-                                                    fontSize: 13,
+                                                      color: const Color(0xFF4A5568),
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.w600
                                                   ),
+                                                  children: <InlineSpan>[
+                                                    TextSpan(
+                                                      text: ipo.biddingStartDate,
+                                                      style: GoogleFonts.poppins(
+                                                        color: const Color(0xFF001533),
+                                                        fontSize: 13,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
@@ -397,13 +410,16 @@ class _ViewalliposcreenState extends State<Viewalliposcreen> {
                               ),
                             ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              );
-            },
+                  );
+                },
+              ),
+              const SizedBox(
+                height: 150,
+              ),
+            ],
           ) : Column(
             children: [
               SizedBox(
