@@ -276,12 +276,16 @@ class _ContractbillreportscreenState extends State<Contractbillreportscreen> {
           });
           return fetchContractBillReport();
         },
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                Expanded(
-                  child: FutureBuilder<ContractBillReportModel?>(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              Padding(padding: const EdgeInsets.all(0.0),
+              child: Column(
+                children: [
+                  FutureBuilder<ContractBillReportModel?>(
                     future: Appvariables.contractBill,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -294,158 +298,165 @@ class _ContractbillreportscreenState extends State<Contractbillreportscreen> {
                           return Utils.noDataFound();
                         } else {
                           final data = snapshot.data!;
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: data.data?.length,
-                            physics: const BouncingScrollPhysics(),
-                            padding: const EdgeInsets.all(0),
-                            itemBuilder: (context, index) {
-                              final ledgerReport = data.data?[index];
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 05),
-                                child: InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      isShow?[index] = !(isShow?[index] ?? false);
-                                    });
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Color(0xFFEAF9FF),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-                                      child: Column(
-                                        children: [
-                                          Row(
+                          return Column(
+                            children: [
+                              ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: data.data?.length,
+                                physics: const BouncingScrollPhysics(),
+                                padding: const EdgeInsets.all(0),
+                                itemBuilder: (context, index) {
+                                  final ledgerReport = data.data?[index];
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 05),
+                                    child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          isShow?[index] = !(isShow?[index] ?? false);
+                                        });
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10),
+                                          color: Color(0xFFEAF9FF),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+                                          child: Column(
                                             children: [
-                                              Utils.text(
-                                                text: "Generate Date : ",
-                                                color: kBlackColor,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold,
+                                              Row(
+                                                children: [
+                                                  Utils.text(
+                                                    text: "Generate Date : ",
+                                                    color: kBlackColor,
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  Utils.text(
+                                                    text: ledgerReport?.generateDate == "" ? "-" : ledgerReport?.generateDate,
+                                                    color: kBlackColor,
+                                                    fontSize: 12,
+                                                    textOverFlow: TextOverflow.ellipsis,
+                                                  ),
+                                                  const Spacer(),
+                                                  Utils.text(
+                                                    text: "Client Id : ",
+                                                    color: kBlackColor,
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  Utils.text(
+                                                    text: "${ledgerReport?.clientId}" == "" ? "-" : "${ledgerReport?.clientId}",
+                                                    color: kBlackColor,
+                                                    fontSize: 12,
+                                                    textOverFlow: TextOverflow.ellipsis,
+                                                  ),
+                                                ],
                                               ),
-                                              Utils.text(
-                                                text: ledgerReport?.generateDate == "" ? "-" : ledgerReport?.generateDate,
-                                                color: kBlackColor,
-                                                fontSize: 12,
-                                                textOverFlow: TextOverflow.ellipsis,
+                                              const SizedBox(
+                                                height: 10,
                                               ),
-                                              const Spacer(),
-                                              Utils.text(
-                                                text: "Client Id : ",
-                                                color: kBlackColor,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold,
+                                              Row(
+                                                children: [
+                                                  Utils.text(
+                                                    text: "Client Name : ",
+                                                    color: kBlackColor,
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  Utils.text(
+                                                    text: (ledgerReport?.clientName?.length ?? 0) > 10
+                                                        ? "${ledgerReport?.clientName?.substring(0, 10)}..."
+                                                        : ledgerReport?.clientName,
+                                                    color: kBlackColor,
+                                                    fontSize: 12,
+                                                    textOverFlow: TextOverflow.ellipsis,
+                                                  ),
+                                                ],
                                               ),
-                                              Utils.text(
-                                                text: "${ledgerReport?.clientId}" == "" ? "-" : "${ledgerReport?.clientId}",
-                                                color: kBlackColor,
-                                                fontSize: 12,
-                                                textOverFlow: TextOverflow.ellipsis,
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Utils.text(
-                                                text: "Client Name : ",
-                                                color: kBlackColor,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              Utils.text(
-                                                text: (ledgerReport?.clientName?.length ?? 0) > 10
-                                                    ? "${ledgerReport?.clientName?.substring(0, 10)}..."
-                                                    : ledgerReport?.clientName,
-                                                color: kBlackColor,
-                                                fontSize: 12,
-                                                textOverFlow: TextOverflow.ellipsis,
-                                              ),
-                                            ],
-                                          ),
-                                          Visibility(
-                                            visible: (isShow?[index] ?? false),
-                                            child: Column(
-                                              children: [
-                                                SizedBox(
-                                                  width: double.infinity,
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.all(05.0),
-                                                    child: Column(
-                                                      children: [
-                                                        Divider(
-                                                          color: Colors.grey.shade800.withOpacity(0.2),
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 05,
-                                                        ),
-                                                        Visibility(
-                                                          visible: ledgerReport?.docfilename != "",
-                                                          child: Row(
-                                                            mainAxisAlignment: MainAxisAlignment.center,
-                                                            children: [
-                                                              InkWell(
-                                                                onTap:(){
-                                                                  Utils.showLoadingDialogue(context);
-                                                                  ApiServices().downloadPDF(
-                                                                      pdfFileName: ledgerReport?.docfilename,
-                                                                      pdfUrl: ledgerReport?.path,
-                                                                      context: context,
-                                                                  );
-                                                                },
-                                                                child: Container(
-                                                                  height: 25,
-                                                                  decoration: BoxDecoration(
-                                                                    borderRadius: BorderRadius.circular(05),
-                                                                    color: Colors.deepPurpleAccent.shade700.withOpacity(0.1),
-                                                                  ),
-                                                                  child: Padding(
-                                                                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                                                                    child: Center(
-                                                                      child: Utils.text(
-                                                                        text: ledgerReport?.docfilename?.toString() ?? 'N/A',
-                                                                        color: Colors.deepPurple,
-                                                                        fontSize: 14,
+                                              Visibility(
+                                                visible: (isShow?[index] ?? false),
+                                                child: Column(
+                                                  children: [
+                                                    SizedBox(
+                                                      width: double.infinity,
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.all(05.0),
+                                                        child: Column(
+                                                          children: [
+                                                            Divider(
+                                                              color: Colors.grey.shade800.withOpacity(0.2),
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 05,
+                                                            ),
+                                                            Visibility(
+                                                              visible: ledgerReport?.docfilename != "",
+                                                              child: Row(
+                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                children: [
+                                                                  InkWell(
+                                                                    onTap:(){
+                                                                      Utils.showLoadingDialogue(context);
+                                                                      ApiServices().downloadPDF(
+                                                                        pdfFileName: ledgerReport?.docfilename,
+                                                                        pdfUrl: ledgerReport?.path,
+                                                                        context: context,
+                                                                      );
+                                                                    },
+                                                                    child: Container(
+                                                                      height: 25,
+                                                                      decoration: BoxDecoration(
+                                                                        borderRadius: BorderRadius.circular(05),
+                                                                        color: Colors.deepPurpleAccent.shade700.withOpacity(0.1),
+                                                                      ),
+                                                                      child: Padding(
+                                                                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                                                        child: Center(
+                                                                          child: Utils.text(
+                                                                            text: ledgerReport?.docfilename?.toString() ?? 'N/A',
+                                                                            color: Colors.deepPurple,
+                                                                            fontSize: 14,
+                                                                          ),
+                                                                        ),
                                                                       ),
                                                                     ),
                                                                   ),
-                                                                ),
+                                                                  const SizedBox(
+                                                                    width: 7,
+                                                                  ),
+                                                                ],
                                                               ),
-                                                              const SizedBox(
-                                                                width: 7,
-                                                              ),
-                                                            ],
-                                                          ),
+                                                            ),
+                                                          ],
                                                         ),
-                                                      ],
+                                                      ),
                                                     ),
-                                                  ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                              );
-                            },
+                                  );
+                                },
+                              ),
+                              const SizedBox(
+                                height: 150,
+                              )
+                            ],
                           );
                         }
                       }
                     },
                   ),
-                ),
-              ],
-            ),
-          ],
-        ),
+                ],
+              ),)
+            ],
+          ),
+        )
       ),
     );
   }

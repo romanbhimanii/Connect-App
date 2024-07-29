@@ -1,5 +1,6 @@
-import 'package:connect/Utils/Constant.dart';
-import 'package:connect/Utils/Utils.dart';
+
+import 'package:connect/ConnectApp/Utils/Constant.dart';
+import 'package:connect/ConnectApp/Utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

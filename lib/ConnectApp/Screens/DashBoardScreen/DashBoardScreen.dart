@@ -217,19 +217,30 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                               ) : Center(
                                   child: Lottie.asset('assets/lottie/loading.json',
                                       height: 35, width: 35)),
-                              items: items
-                                  .map(
-                                      (String item) => DropdownMenuItem<String>(
-                                            value: item,
-                                            child: Utils.text(
-                                                text: item,
-                                                color: selectedValue == item
-                                                    ? const Color(0xFFFFFBFB)
-                                                    : const Color(0xFF4A5568),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold),
-                                          ))
-                                  .toList(),
+                              selectedItemBuilder: (_) {
+                                return items
+                                    .map((e) => Container(
+                                  alignment: Alignment.center,
+                                  child: Utils.text(
+                                    text: e,
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold
+                                  ),
+                                ),)
+                                    .toList();
+                              },
+                              items: items.map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Utils.text(
+                                    text: value,
+                                      color: const Color(0xFF4A5568),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold
+                                  ),
+                                );
+                              }).toList(),
                               style: GoogleFonts.inter(
                                 color: const Color(0xFFFFFBFB),
                                 fontSize: 14,
@@ -263,6 +274,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                               dropdownStyleData: DropdownStyleData(
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
+                                      // boxShadow: const [
+                                      //   BoxShadow(
+                                      //     color: Colors.grey,
+                                      //     blurRadius: 5.0,
+                                      //     spreadRadius: 0.5,
+                                      //   )
+                                      // ],
                                       color: const Color(0xFFEAF9FF))),
                               buttonStyleData: ButtonStyleData(
                                 padding:

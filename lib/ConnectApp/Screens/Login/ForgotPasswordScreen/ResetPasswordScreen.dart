@@ -96,7 +96,7 @@ class _ResetpasswordscreenState extends State<Resetpasswordscreen> {
                   controller: otpController,
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
-                  cursorColor: const Color.fromRGBO(27, 82, 52, 1.0),
+                  cursorColor: Colors.black,
                   onSaved: (email) {},
                   style: GoogleFonts.inter(
                     color: kBlackColor,
@@ -150,7 +150,7 @@ class _ResetpasswordscreenState extends State<Resetpasswordscreen> {
                   controller: newPassController,
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
-                  cursorColor: const Color.fromRGBO(27, 82, 52, 1.0),
+                  cursorColor: Colors.black,
                   onSaved: (email) {},
                   style: GoogleFonts.inter(
                     color: kBlackColor,
@@ -204,7 +204,7 @@ class _ResetpasswordscreenState extends State<Resetpasswordscreen> {
                   controller: confirmPassController,
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
-                  cursorColor: const Color.fromRGBO(27, 82, 52, 1.0),
+                  cursorColor: Colors.black,
                   onSaved: (email) {},
                   style: GoogleFonts.inter(
                     color: kBlackColor,

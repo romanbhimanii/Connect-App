@@ -81,7 +81,7 @@ class ConnectivityService {
               height: 45,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: const Color.fromRGBO(27, 82, 52, 1.0),
+                color: Colors.black,
                 borderRadius: BorderRadius.circular(10)
               ),
               child: Center(

@@ -133,12 +133,11 @@ class _SegmentAdditionScreenState extends State<SegmentAdditionScreen> {
               child: Lottie.asset('assets/lottie/loading.json',
                   height: 100, width: 100));
         } else if (snapshot.hasError) {
-          return Utils.text(
-              text: "Error: ${snapshot.error}",
-              color: Colors.black,
-              fontSize: 15,
-              fontWeight: FontWeight.bold);
-        } else if (snapshot.hasData) {
+          return Center(
+            child: Utils.noDataFound(),
+          );
+        }
+        else if (snapshot.hasData) {
           final data = snapshot.data!.data;
           List<String> segments = data.dpDetails.activateSegment.split(', ');
           if (segments.contains("Mutual fund")) {
@@ -534,7 +533,8 @@ class _SegmentAdditionScreenState extends State<SegmentAdditionScreen> {
               ),
             ),
           );
-        } else {
+        }
+        else {
           return Utils.noDataFound();
         }
       },

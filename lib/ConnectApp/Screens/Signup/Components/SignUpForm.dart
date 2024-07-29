@@ -1,6 +1,7 @@
-import 'package:connect/Components/already_have_an_account_screen.dart';
-import 'package:connect/Utils/Constant.dart';
-import 'package:connect/Utils/Utils.dart';
+
+import 'package:connect/ConnectApp/Components/already_have_an_account_screen.dart';
+import 'package:connect/ConnectApp/Utils/Constant.dart';
+import 'package:connect/ConnectApp/Utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../Login/login_screen.dart';
@@ -28,7 +29,7 @@ class SignUpForm extends StatelessWidget {
               fillColor: Color.fromRGBO(27, 82, 52, 0.15),
               prefixIcon: Padding(
                 padding: EdgeInsets.all(defaultPadding),
-                child: Icon(Icons.person,color: Color.fromRGBO(27, 82, 52, 1.0),),
+                child: Icon(Icons.person,color: Colors.black,),
               ),
             ),
           ),
@@ -46,7 +47,7 @@ class SignUpForm extends StatelessWidget {
                 fillColor: Color.fromRGBO(27, 82, 52, 0.15),
                 prefixIcon: Padding(
                   padding: EdgeInsets.all(defaultPadding),
-                  child: Icon(Icons.lock,color: Color.fromRGBO(27, 82, 52, 1.0),),
+                  child: Icon(Icons.lock,color: Colors.black,),
                 ),
               ),
             ),
@@ -55,7 +56,7 @@ class SignUpForm extends StatelessWidget {
           ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromRGBO(27, 82, 52, 1.0),
+              backgroundColor: Colors.black,
             ),
             child: Utils.text(
               text: "SIGN UP",

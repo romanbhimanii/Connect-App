@@ -69,15 +69,15 @@ class Utils {
           borderRadius: BorderRadius.circular(10),
           gradient: const LinearGradient(colors: [
             Color(0xFF007FEB),
-            Color(0xFF00A9FF)
-          ])
+            Color(0xFF00A9FF),
+          ],),
       ),
       child: Center(
         child: Utils.text(
             text: message,
             color: Colors.white,
             fontSize: 17,
-            fontWeight: FontWeight.bold
+            fontWeight: FontWeight.bold,
         ),
       ),
     );
@@ -89,6 +89,9 @@ class Utils {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SvgPicture.asset("assets/icons/NoDataFound.svg"),
+        const SizedBox(
+          height: 10,
+        ),
         Center(
           child: Utils.text(
               text: "No data Found!",

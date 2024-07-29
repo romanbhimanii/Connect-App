@@ -430,14 +430,14 @@ class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
                     //     children: [
                     //       const Icon(
                     //         Icons.download,
-                    //         color: Color.fromRGBO(27, 82, 52, 1.0),
+                    //         color: Colors.black,
                     //       ),
                     //       const SizedBox(
                     //         width: 8,
                     //       ),
                     //       Utils.text(
                     //         text: "PDF",
-                    //         color: const Color.fromRGBO(27, 82, 52, 1.0),
+                    //         color: Colors.black,
                     //         fontSize: 15,
                     //       )
                     //     ],
@@ -449,14 +449,14 @@ class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
                         children: [
                           const Icon(
                             Icons.download,
-                            color: Color.fromRGBO(27, 82, 52, 1.0),
+                            color: Colors.black,
                           ),
                           const SizedBox(
                             width: 8,
                           ),
                           Utils.text(
                             text: "Excel",
-                            color: const Color.fromRGBO(27, 82, 52, 1.0),
+                            color: Colors.black,
                             fontSize: 15,
                           ),
                         ],
@@ -503,9 +503,14 @@ class _GlobalsummaryreportscreenState extends State<Globalsummaryreportscreen> {
                               );
                             } else if (snapshot.hasError) {
                               return Center(
-                                  child: Utils.text(
-                                      text: 'Error: ${snapshot.error}',
-                                      color: Colors.black));
+                                  child: Column(
+                                    children: [
+                                      const SizedBox(
+                                        height: 200,
+                                      ),
+                                      Utils.noDataFound(),
+                                    ],
+                                  ));
                             } else if (snapshot.hasData) {
                               final data = snapshot.data;
                               if (snapshot.data?.data?.totalsDf?.last.netAmount !=

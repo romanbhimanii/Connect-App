@@ -1,8 +1,9 @@
-import 'package:connect/Utils/ConnectivityService.dart';
-import 'package:connect/Utils/Constant.dart';
-import 'package:connect/Utils/Responsive.dart';
-import 'package:connect/Screens/Signup/Components/SignUpForm.dart';
-import 'package:connect/Screens/Signup/Components/SignUpTopImageScreen.dart';
+
+import 'package:connect/ConnectApp/Screens/Signup/Components/SignUpForm.dart';
+import 'package:connect/ConnectApp/Screens/Signup/Components/SignUpTopImageScreen.dart';
+import 'package:connect/ConnectApp/Utils/ConnectivityService.dart';
+import 'package:connect/ConnectApp/Utils/Constant.dart';
+import 'package:connect/ConnectApp/Utils/Responsive.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import '../../components/background.dart';

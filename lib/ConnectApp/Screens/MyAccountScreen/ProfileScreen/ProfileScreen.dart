@@ -1,9 +1,9 @@
-
 import 'dart:io';
 import 'package:connect/ConnectApp/ApiServices/ApiServices.dart';
 import 'package:connect/ConnectApp/Models/BankDetailsModel/BankDetailsModel.dart';
 import 'package:connect/ConnectApp/Models/ProfileClientDetails/ProfileClientDetails.dart';
 import 'package:connect/ConnectApp/Screens/MyAccountScreen/ProfileScreen/AddBankAccountScreen.dart';
+import 'package:connect/ConnectApp/Screens/MyAccountScreen/ProfileScreen/nomineeModificationScreen.dart';
 import 'package:connect/ConnectApp/Utils/AppVariables.dart';
 import 'package:connect/ConnectApp/Utils/ConnectivityService.dart';
 import 'package:connect/ConnectApp/Utils/Constant.dart';
@@ -29,8 +29,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final ConnectivityService connectivityService = ConnectivityService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _otpController = TextEditingController();
-  Future<AccountProfile>? futureAccountProfile;
-  Future<BankDetailsResponse>? futureBankDetails;
   final TextEditingController mobileController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController otpController = TextEditingController();
@@ -44,6 +42,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   List<int>? file1Bytes;
   String? _signatureProofFileName;
   String? income;
+  String? annualIncome;
+  AccountProfile? accountProfile;
+  BankDetailsResponse? bankDetails;
+  bool isLoading = true;
+  bool hasError = false;
 
   @override
   void initState() {
@@ -57,9 +60,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
     loadData();
   }
 
-  void loadData() {
-    futureAccountProfile = ApiServices().fetchAccountProfile(token: Appvariables.token);
-    futureBankDetails = ApiServices().fetchBankDetails(token: Appvariables.token);
+  void loadData() async {
+    try {
+      final profile =
+          await ApiServices().fetchAccountProfile(token: Appvariables.token);
+      final bankDetailsResponse =
+          await ApiServices().fetchBankDetails(token: Appvariables.token);
+
+      setState(() {
+        accountProfile = profile;
+        bankDetails = bankDetailsResponse;
+        annualIncome = profile.data.personalDetails.annualIncome;
+        isLoading = false;
+        hasError = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+        hasError = true;
+      });
+    }
   }
 
   Future<void> _pickFile() async {
@@ -101,9 +121,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: const Color(0xFFEAF9FF)
-                  ),
+                      borderRadius: BorderRadius.circular(10),
+                      color: const Color(0xFFEAF9FF)),
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -144,221 +163,230 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   decoration: BoxDecoration(
                       color: const Color(0xFFD9D9D9).withOpacity(0.20),
                       borderRadius: BorderRadius.circular(10)),
-                  child: FutureBuilder<AccountProfile>(
-                    future: futureAccountProfile,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                            child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100));
-                      } else if (snapshot.hasError) {
-                        return Utils.text(
-                            text: "Error: ${snapshot.error}",
-                            color: kBlackColor,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600);
-                      } else if (snapshot.hasData) {
-                        final data = snapshot.data!.data;
-                        return Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Utils.text(
-                                        text: "CLIENT ID",
-                                        fontSize: 12,
-                                        color: const Color(0xFF777777),
-                                        fontWeight: FontWeight.w800,
+                  child: isLoading
+                      ? Center(
+                          child: Lottie.asset('assets/lottie/loading.json',
+                              height: 100, width: 100),
+                        )
+                      : hasError
+                          ? Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SvgPicture.asset(
+                                        "assets/icons/NoDataFound.svg",
+                                        height: 80,
+                                        width: 80),
+                                    const SizedBox(height: 10),
+                                    Center(
+                                      child: Utils.text(
+                                        text: "No data Found!",
+                                        color: kBlackColor,
+                                        fontSize: 14,
                                       ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Utils.text(
-                                          text:
-                                              data.personalDetails.assClientId,
-                                          fontSize: 14,
-                                          color: const Color(0xFF1E1E1E),
-                                          fontWeight: FontWeight.w500)
-                                    ],
-                                  ),
-                                ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                              Divider(
-                                color: Colors.black12.withOpacity(0.06),
-                              ),
-                              Row(
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  Row(
                                     children: [
-                                      Utils.text(
-                                        text: "BO ID",
-                                        fontSize: 12,
-                                        color: const Color(0xFF777777),
-                                        fontWeight: FontWeight.w800,
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Utils.text(
-                                          text:
-                                              data.personalDetails.clientDpCode,
-                                          fontSize: 14,
-                                          color: const Color(0xFF1E1E1E),
-                                          fontWeight: FontWeight.w500)
-                                    ],
-                                  ),
-                                  const Spacer(),
-                                  IconButton(
-                                      onPressed: () {
-                                        Clipboard.setData(
-                                          ClipboardData(
-                                            text: data
-                                                .personalDetails.clientDpCode,
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Utils.text(
+                                            text: "CLIENT ID",
+                                            fontSize: 12,
+                                            color: const Color(0xFF777777),
+                                            fontWeight: FontWeight.w800,
                                           ),
-                                        );
-                                        Utils.toast(
-                                            msg: "BO ID Copied into ClipBoard");
-                                      },
-                                      icon: const Icon(
-                                        Icons.copy,
-                                        size: 20,
-                                      ))
-                                ],
-                              ),
-                              Divider(
-                                color: Colors.black12.withOpacity(0.06),
-                              ),
-                              Row(
-                                children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Utils.text(
-                                        text: "NAME",
-                                        fontSize: 12,
-                                        color: const Color(0xFF777777),
-                                        fontWeight: FontWeight.w800,
+                                          const SizedBox(height: 5),
+                                          Utils.text(
+                                            text: accountProfile!.data
+                                                .personalDetails.assClientId,
+                                            fontSize: 14,
+                                            color: const Color(0xFF1E1E1E),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ],
                                       ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Utils.text(
-                                          text:
-                                              data.personalDetails.clientDpName,
-                                          fontSize: 14,
-                                          color: const Color(0xFF1E1E1E),
-                                          fontWeight: FontWeight.w500)
                                     ],
                                   ),
-                                ],
-                              ),
-                              Divider(
-                                color: Colors.black12.withOpacity(0.06),
-                              ),
-                              Row(
-                                children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  Divider(
+                                      color: Colors.black12.withOpacity(0.06)),
+                                  Row(
                                     children: [
-                                      Utils.text(
-                                        text: "EMAIL ID",
-                                        fontSize: 12,
-                                        color: const Color(0xFF777777),
-                                        fontWeight: FontWeight.w800,
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Utils.text(
+                                            text: "BO ID",
+                                            fontSize: 12,
+                                            color: const Color(0xFF777777),
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Utils.text(
+                                            text: accountProfile!.data
+                                                .personalDetails.clientDpCode,
+                                            fontSize: 14,
+                                            color: const Color(0xFF1E1E1E),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ],
                                       ),
-                                      const SizedBox(
-                                        height: 5,
+                                      const Spacer(),
+                                      IconButton(
+                                        onPressed: () {
+                                          Clipboard.setData(
+                                            ClipboardData(
+                                                text: accountProfile!
+                                                    .data
+                                                    .personalDetails
+                                                    .clientDpCode),
+                                          );
+                                          Utils.toast(
+                                              msg:
+                                                  "BO ID Copied into ClipBoard");
+                                        },
+                                        icon: const Icon(Icons.copy, size: 20),
                                       ),
-                                      Utils.text(
-                                          text:
-                                              data.personalDetails.clientIdMail,
-                                          fontSize: 14,
-                                          color: const Color(0xFF1E1E1E),
-                                          fontWeight: FontWeight.w500)
                                     ],
                                   ),
-                                ],
-                              ),
-                              Divider(
-                                color: Colors.black12.withOpacity(0.06),
-                              ),
-                              Row(
-                                children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  Divider(
+                                      color: Colors.black12.withOpacity(0.06)),
+                                  Row(
                                     children: [
-                                      Utils.text(
-                                        text: "MOBILE NO",
-                                        fontSize: 12,
-                                        color: const Color(0xFF777777),
-                                        fontWeight: FontWeight.w800,
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Utils.text(
+                                            text: "NAME",
+                                            fontSize: 12,
+                                            color: const Color(0xFF777777),
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Utils.text(
+                                            text: accountProfile!.data
+                                                .personalDetails.clientDpName,
+                                            fontSize: 14,
+                                            color: const Color(0xFF1E1E1E),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ],
                                       ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Utils.text(
-                                          text: data.personalDetails.mobileNo,
-                                          fontSize: 14,
-                                          color: const Color(0xFF1E1E1E),
-                                          fontWeight: FontWeight.w500)
                                     ],
                                   ),
-                                ],
-                              ),
-                              Divider(
-                                color: Colors.black12.withOpacity(0.06),
-                              ),
-                              Row(
-                                children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  Divider(
+                                      color: Colors.black12.withOpacity(0.06)),
+                                  Row(
                                     children: [
-                                      Utils.text(
-                                        text: "GENDER",
-                                        fontSize: 12,
-                                        color: const Color(0xFF777777),
-                                        fontWeight: FontWeight.w800,
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Utils.text(
+                                            text: "EMAIL ID",
+                                            fontSize: 12,
+                                            color: const Color(0xFF777777),
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Utils.text(
+                                            text: accountProfile!.data
+                                                .personalDetails.clientIdMail,
+                                            fontSize: 14,
+                                            color: const Color(0xFF1E1E1E),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ],
                                       ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Utils.text(
-                                          text: data.personalDetails.sex == "F" ? "Female" : "Male",
-                                          fontSize: 14,
-                                          color: const Color(0xFF1E1E1E),
-                                          fontWeight: FontWeight.w500)
                                     ],
                                   ),
+                                  Divider(
+                                      color: Colors.black12.withOpacity(0.06)),
+                                  Row(
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Utils.text(
+                                            text: "MOBILE NO",
+                                            fontSize: 12,
+                                            color: const Color(0xFF777777),
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Utils.text(
+                                            text: accountProfile!
+                                                .data.personalDetails.mobileNo,
+                                            fontSize: 14,
+                                            color: const Color(0xFF1E1E1E),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  Divider(
+                                      color: Colors.black12.withOpacity(0.06)),
+                                  Row(
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Utils.text(
+                                            text: "GENDER",
+                                            fontSize: 12,
+                                            color: const Color(0xFF777777),
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Utils.text(
+                                            text: accountProfile!.data
+                                                        .personalDetails.sex ==
+                                                    "F"
+                                                ? "Female"
+                                                : "Male",
+                                            fontSize: 14,
+                                            color: const Color(0xFF1E1E1E),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  Divider(
+                                      color: Colors.black12.withOpacity(0.06)),
                                 ],
                               ),
-                              Divider(
-                                color: Colors.black12.withOpacity(0.06),
-                              ),
-                            ],
-                          ),
-                        );
-                      } else {
-                        return Utils.noDataFound();
-                      }
-                    },
-                  ),
+                            ),
                 ),
               ),
               const SizedBox(
@@ -373,9 +401,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                      color: const Color(0xFFEAF9FF)
-                  ),
+                      borderRadius: BorderRadius.circular(10),
+                      color: const Color(0xFFEAF9FF)),
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -416,126 +443,146 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   decoration: BoxDecoration(
                       color: const Color(0xFFD9D9D9).withOpacity(0.20),
                       borderRadius: BorderRadius.circular(10)),
-                  child: FutureBuilder<BankDetailsResponse>(
-                    future: futureBankDetails,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                            child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100));
-                      } else if (snapshot.hasError) {
-                        return Center(
-                            child: Utils.text(
-                                text: 'Error: ${snapshot.error}',
-                                color: kBlackColor));
-                      } else if (snapshot.hasData) {
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          padding: const EdgeInsets.all(0),
-                          itemCount: snapshot.data!.data.bankName.length,
-                          itemBuilder: (context, index) {
-                            final bankName = snapshot.data!.data.bankName['$index']!;
-                            final bankAccountNumber = snapshot.data!.data.bankAccountNumber['$index']!;
-                            final ifscCode = snapshot.data!.data.ifscCode['$index']!;
-                            final bankAccountType = snapshot.data!.data.bankAccountType['$index']!;
-                            return Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Container(
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                        color: const Color(0xFF000000)
-                                            .withOpacity(0.20))),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Utils.text(
-                                            text: "Bank Name",
-                                            color: const Color(0xFF4A5568),
-                                            fontSize: 10,
-                                          ),
-                                          Utils.text(
-                                            text: "Account Number",
-                                            color: const Color(0xFF4A5568),
-                                            fontSize: 10,
-                                          ),
-                                        ],
+                  child: isLoading
+                      ? Center(
+                          child: Lottie.asset('assets/lottie/loading.json',
+                              height: 100, width: 100),
+                        )
+                      : hasError
+                          ? Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SvgPicture.asset(
+                                        "assets/icons/NoDataFound.svg",
+                                        height: 80,
+                                        width: 80),
+                                    const SizedBox(height: 10),
+                                    Center(
+                                      child: Utils.text(
+                                        text: "No data Found!",
+                                        color: kBlackColor,
+                                        fontSize: 14,
                                       ),
-                                      const SizedBox(
-                                        height: 05,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Utils.text(
-                                              text: bankName,
-                                              color: const Color(0xFF4A5568),
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w700),
-                                          Utils.text(
-                                              text: bankAccountNumber,
-                                              color: const Color(0xFF4A5568),
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w700),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 15,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Utils.text(
-                                            text: "IFSC Code",
-                                            color: const Color(0xFF4A5568),
-                                            fontSize: 10,
-                                          ),
-                                          Utils.text(
-                                            text: "Account Type",
-                                            color: const Color(0xFF4A5568),
-                                            fontSize: 10,
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 05,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Utils.text(
-                                              text: ifscCode,
-                                              color: const Color(0xFF4A5568),
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w700),
-                                          Utils.text(
-                                              text: bankAccountType,
-                                              color: const Color(0xFF4A5568),
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w700),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            );
-                          },
-                        );
-                      } else {
-                        return Utils.noDataFound();
-                      }
-                    },
-                  ),
+                            )
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              padding: const EdgeInsets.all(0),
+                              itemCount: bankDetails!.data.bankName.length,
+                              itemBuilder: (context, index) {
+                                final bankName =
+                                    bankDetails!.data.bankName['$index']!;
+                                final bankAccountNumber = bankDetails!
+                                    .data.bankAccountNumber['$index']!;
+                                final ifscCode =
+                                    bankDetails!.data.ifscCode['$index']!;
+                                final bankAccountType = bankDetails!
+                                    .data.bankAccountType['$index']!;
+                                return Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Container(
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                            color: const Color(0xFF000000)
+                                                .withOpacity(0.20))),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Utils.text(
+                                                text: "Bank Name",
+                                                color: const Color(0xFF4A5568),
+                                                fontSize: 10,
+                                              ),
+                                              Utils.text(
+                                                text: "Account Number",
+                                                color: const Color(0xFF4A5568),
+                                                fontSize: 10,
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                            height: 05,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Utils.text(
+                                                  text: bankName,
+                                                  color:
+                                                      const Color(0xFF4A5568),
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w700),
+                                              Utils.text(
+                                                  text: bankAccountNumber,
+                                                  color:
+                                                      const Color(0xFF4A5568),
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w700),
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                            height: 15,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Utils.text(
+                                                text: "IFSC Code",
+                                                color: const Color(0xFF4A5568),
+                                                fontSize: 10,
+                                              ),
+                                              Utils.text(
+                                                text: "Account Type",
+                                                color: const Color(0xFF4A5568),
+                                                fontSize: 10,
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                            height: 05,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Utils.text(
+                                                  text: ifscCode,
+                                                  color:
+                                                      const Color(0xFF4A5568),
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w700),
+                                              Utils.text(
+                                                  text: bankAccountType,
+                                                  color:
+                                                      const Color(0xFF4A5568),
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w700),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                 ),
               ),
               Visibility(
@@ -559,11 +606,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Get.to(const Addbankaccountscreen());
                       },
                       child: Utils.text(
-                        text: "Add Bank Account",
+                          text: "Add Bank Account",
                           color: const Color(0xFF0066F6),
                           fontSize: 12,
-                          fontWeight: FontWeight.w600
-                      ),
+                          fontWeight: FontWeight.w600),
                     )
                   ],
                 ),
@@ -580,9 +626,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                      color: const Color(0xFFEAF9FF)
-                  ),
+                      borderRadius: BorderRadius.circular(10),
+                      color: const Color(0xFFEAF9FF)),
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -623,113 +668,130 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   decoration: BoxDecoration(
                       color: const Color(0xFFD9D9D9).withOpacity(0.20),
                       borderRadius: BorderRadius.circular(10)),
-                  child: FutureBuilder<AccountProfile>(
-                    future: futureAccountProfile,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                            child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100));
-                      } else if (snapshot.hasError) {
-                        return Center(
-                            child: Utils.text(
-                                text: 'Error: ${snapshot.error}',
-                                color: kBlackColor));
-                      } else if (snapshot.hasData) {
-                        final data = snapshot.data!.data;
-                        return Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
+                  child: isLoading
+                      ? Center(
+                          child: Lottie.asset('assets/lottie/loading.json',
+                              height: 100, width: 100),
+                        )
+                      : hasError
+                          ? Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SvgPicture.asset(
+                                        "assets/icons/NoDataFound.svg",
+                                        height: 80,
+                                        width: 80),
+                                    const SizedBox(height: 10),
+                                    Center(
+                                      child: Utils.text(
+                                        text: "No data Found!",
+                                        color: kBlackColor,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                  Row(
                                     children: [
-                                      Utils.text(
-                                        text: "Client Name",
-                                        fontSize: 12,
-                                        color: const Color(0xFF777777),
-                                        fontWeight: FontWeight.w800,
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Utils.text(
+                                            text: "Client Name",
+                                            fontSize: 12,
+                                            color: const Color(0xFF777777),
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Utils.text(
+                                              text: accountProfile
+                                                  ?.data.dpDetails.clientDpName,
+                                              fontSize: 14,
+                                              color: const Color(0xFF1E1E1E),
+                                              fontWeight: FontWeight.w500)
+                                        ],
                                       ),
-                                      const SizedBox(
-                                        height: 5,
+                                    ],
+                                  ),
+                                  Divider(
+                                    color: Colors.black12.withOpacity(0.06),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Utils.text(
+                                            text: "BO ID",
+                                            fontSize: 12,
+                                            color: const Color(0xFF777777),
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Utils.text(
+                                              text: accountProfile
+                                                  ?.data.dpDetails.clientDpCode,
+                                              fontSize: 14,
+                                              color: const Color(0xFF1E1E1E),
+                                              fontWeight: FontWeight.w500)
+                                        ],
                                       ),
-                                      Utils.text(
-                                        text: data.dpDetails.clientDpName,
-                                          fontSize: 14,
-                                          color: const Color(0xFF1E1E1E),
-                                          fontWeight: FontWeight.w500
-                                      )
+                                    ],
+                                  ),
+                                  Divider(
+                                    color: Colors.black12.withOpacity(0.06),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Utils.text(
+                                            text: "Depository",
+                                            fontSize: 12,
+                                            color: const Color(0xFF777777),
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Utils.text(
+                                              text: accountProfile
+                                                  ?.data.dpDetails.depository,
+                                              fontSize: 14,
+                                              color: const Color(0xFF1E1E1E),
+                                              fontWeight: FontWeight.w500)
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 ],
                               ),
-                              Divider(
-                                color: Colors.black12.withOpacity(0.06),
-                              ),
-                              Row(
-                                children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Utils.text(
-                                        text: "BO ID",
-                                        fontSize: 12,
-                                        color: const Color(0xFF777777),
-                                        fontWeight: FontWeight.w800,
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Utils.text(
-                                        text: data.dpDetails.clientDpCode,
-                                          fontSize: 14,
-                                          color: const Color(0xFF1E1E1E),
-                                          fontWeight: FontWeight.w500
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Divider(
-                                color: Colors.black12.withOpacity(0.06),
-                              ),
-                              Row(
-                                children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Utils.text(
-                                        text: "Depository",
-                                        fontSize: 12,
-                                        color: const Color(0xFF777777),
-                                        fontWeight: FontWeight.w800,
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Utils.text(
-                                        text: data.dpDetails.depository,
-                                          fontSize: 14,
-                                          color: const Color(0xFF1E1E1E),
-                                          fontWeight: FontWeight.w500
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
-                      } else {
-                        return Utils.noDataFound();
-                      }
-                    },
-                  ),
+                            ),
                 ),
               ),
               const SizedBox(
@@ -744,9 +806,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                      color: const Color(0xFFEAF9FF)
-                  ),
+                      borderRadius: BorderRadius.circular(10),
+                      color: const Color(0xFFEAF9FF)),
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -787,113 +848,181 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   decoration: BoxDecoration(
                       color: const Color(0xFFD9D9D9).withOpacity(0.20),
                       borderRadius: BorderRadius.circular(10)),
-                  child: FutureBuilder<AccountProfile>(
-                    future: futureAccountProfile,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                            child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100));
-                      } else if (snapshot.hasError) {
-                        return Center(
-                            child: Utils.text(
-                                text: 'Error: ${snapshot.error}',
-                                color: kBlackColor));
-                      } else if (snapshot.hasData) {
-                        final data = snapshot.data!.data;
-                        return Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
+                  child: isLoading
+                      ? Center(
+                          child: Lottie.asset('assets/lottie/loading.json',
+                              height: 100, width: 100),
+                        )
+                      : hasError
+                          ? Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SvgPicture.asset(
+                                        "assets/icons/NoDataFound.svg",
+                                        height: 80,
+                                        width: 80),
+                                    const SizedBox(height: 10),
+                                    Center(
+                                      child: Utils.text(
+                                        text: "No data Found!",
+                                        color: kBlackColor,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                  Row(
                                     children: [
-                                      Utils.text(
-                                        text: "Client Name",
-                                        fontSize: 12,
-                                        color: const Color(0xFF777777),
-                                        fontWeight: FontWeight.w800,
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Utils.text(
+                                            text: "Client Name",
+                                            fontSize: 12,
+                                            color: const Color(0xFF777777),
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Utils.text(
+                                              text: accountProfile!.data
+                                                  .nomineeDetails.nomineeName,
+                                              fontSize: 14,
+                                              color: const Color(0xFF1E1E1E),
+                                              fontWeight: FontWeight.w500)
+                                        ],
                                       ),
-                                      const SizedBox(
-                                        height: 5,
+                                    ],
+                                  ),
+                                  Divider(
+                                    color: Colors.black12.withOpacity(0.06),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Utils.text(
+                                            text: "Nominee Status",
+                                            fontSize: 12,
+                                            color: const Color(0xFF777777),
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Utils.text(
+                                              text: accountProfile!.data
+                                                  .nomineeDetails.nomineeoptout,
+                                              fontSize: 14,
+                                              color: const Color(0xFF1E1E1E),
+                                              fontWeight: FontWeight.w500)
+                                        ],
                                       ),
-                                      Utils.text(
-                                        text: data.nomineeDetails.nomineeName,
-                                          fontSize: 14,
-                                          color: const Color(0xFF1E1E1E),
-                                          fontWeight: FontWeight.w500
-                                      )
+                                    ],
+                                  ),
+                                  Divider(
+                                    color: Colors.black12.withOpacity(0.06),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Utils.text(
+                                            text:
+                                                "I / We wish to make a Nomination?",
+                                            fontSize: 12,
+                                            color: const Color(0xFF777777),
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Visibility(
+                                            visible: accountProfile!.data.modificationNomineeStatus == "pending" || accountProfile!.data.modificationNomineeStatus == "Pending",
+                                              child: Utils.text(
+                                                  text:
+                                                      "Modification In Process!!!!",
+                                                  fontSize: 14,
+                                                  color:
+                                                      const Color(0xFF1E1E1E),
+                                                  fontWeight: FontWeight.w500)),
+                                          Visibility(
+                                              visible: accountProfile!.data.modificationNomineeStatus != "pending" || accountProfile!.data.modificationNomineeStatus != "Pending",
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  InkWell(
+                                                    onTap: (){
+                                                      Get.to(const Nomineemodificationscreen());
+                                                    },
+                                                    child: Container(
+                                                        height: 40,
+                                                        decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius.circular(10),
+                                                          color: const Color(0xFF2970E8),
+                                                        ),
+                                                        child: Padding(padding: const EdgeInsets.symmetric(horizontal: 25),
+                                                          child: Center(
+                                                            child: Utils.text(
+                                                                text: "Yes",
+                                                                color: Colors.white,
+                                                                fontSize: 15,
+                                                                fontWeight: FontWeight.w600
+                                                            ),
+                                                          ),)
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 15,
+                                                  ),
+                                                  Container(
+                                                    height: 40,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(10),
+                                                      color: const Color(0xFF2970E8),
+                                                    ),
+                                                      child: Padding(padding: const EdgeInsets.symmetric(horizontal: 25),
+                                                        child: Center(
+                                                          child: Utils.text(
+                                                              text: "No",
+                                                              color: Colors.white,
+                                                              fontSize: 15,
+                                                              fontWeight: FontWeight.w600
+                                                          ),
+                                                        ),)
+                                                  ),
+                                                ],
+                                              )),
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 ],
                               ),
-                              Divider(
-                                color: Colors.black12.withOpacity(0.06),
-                              ),
-                              Row(
-                                children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Utils.text(
-                                        text: "Nominee Status",
-                                        fontSize: 12,
-                                        color: const Color(0xFF777777),
-                                        fontWeight: FontWeight.w800,
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Utils.text(
-                                        text: data.nomineeDetails.nomineeoptout,
-                                          fontSize: 14,
-                                          color: const Color(0xFF1E1E1E),
-                                          fontWeight: FontWeight.w500
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Divider(
-                                color: Colors.black12.withOpacity(0.06),
-                              ),
-                              Row(
-                                children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Utils.text(
-                                        text: "I / We wish to make a Nomination?",
-                                        fontSize: 12,
-                                        color: const Color(0xFF777777),
-                                        fontWeight: FontWeight.w800,
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Utils.text(
-                                        text: "Modification In Process!!!!",
-                                          fontSize: 14,
-                                          color: const Color(0xFF1E1E1E),
-                                          fontWeight: FontWeight.w500
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
-                      } else {
-                        return Utils.noDataFound();
-                      }
-                    },
-                  ),
+                            ),
                 ),
               ),
               const SizedBox(
@@ -908,9 +1037,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                      color: const Color(0xFFEAF9FF)
-                  ),
+                      borderRadius: BorderRadius.circular(10),
+                      color: const Color(0xFFEAF9FF)),
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -967,7 +1095,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             style: GoogleFonts.inter(color: kBlackColor),
                             children: <TextSpan>[
                               TextSpan(
-                                  text: 'ONE CRORE TO FIVE CRORES',
+                                  text: annualIncome ?? "N/A",
                                   style: GoogleFonts.inter(
                                       color: kBlackColor,
                                       fontWeight: FontWeight.bold)),
@@ -1096,21 +1224,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   .validate()) {
                                                 ApiServices()
                                                     .modifyIncomeDetails(
-                                                    token:
-                                                    Appvariables.token,
-                                                    file: file1,
-                                                    fileBytes: file1Bytes,
-                                                    income: income,
-                                                    otp:
-                                                    _otpController.text,
-                                                    isSendOrVerifyOtp:
-                                                    "verify_otp");
+                                                        token:
+                                                            Appvariables.token,
+                                                        file: file1,
+                                                        fileBytes: file1Bytes,
+                                                        income: income,
+                                                        otp:
+                                                            _otpController.text,
+                                                        isSendOrVerifyOtp:
+                                                            "verify_otp");
                                                 Get.back();
                                               }
                                             },
                                             child: Utils.gradientButton(
-                                              message: "Verify Otp"
-                                            ),
+                                                message: "Verify Otp"),
                                           )
                                         ],
                                       ),
@@ -1120,9 +1247,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               },
                             );
                           },
-                          child: Utils.gradientButton(
-                            message: "Send Otp"
-                          ),
+                          child: Utils.gradientButton(message: "Send Otp"),
                         ),
                       ),
                     ],

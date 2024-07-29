@@ -1,4 +1,3 @@
-
 import 'package:connect/ConnectApp/Screens/ReportScreens/ContractBillReportScreen/ContractBillReportScreen.dart';
 import 'package:connect/ConnectApp/Screens/ReportScreens/GlobalDetailReportScreen/GlobalDetailsReportScreen.dart';
 import 'package:connect/ConnectApp/Screens/ReportScreens/GlobalSummaryReportScreen/GlobalSummaryReportScreen.dart';
@@ -21,7 +20,6 @@ class ReportScreen extends StatefulWidget {
 }
 
 class _ReportScreenState extends State<ReportScreen> {
-
   List<String> reportName = [
     "Holdings",
     "Ledger",
@@ -33,9 +31,21 @@ class _ReportScreenState extends State<ReportScreen> {
     "Contract Bill"
   ];
 
+  List<String> icons = [
+    "assets/ReportsIcon/holdingsIcon.svg",
+    "assets/ReportsIcon/ledgerIcon.svg",
+    "assets/ReportsIcon/positionIcon.svg",
+    "assets/ReportsIcon/globalSummaryIcon.svg",
+    "assets/ReportsIcon/globalDetailsIcon.svg",
+    "assets/ReportsIcon/profitAndLoss.svg",
+    "assets/ReportsIcon/incomeTaxIcon.svg",
+    "assets/ReportsIcon/contractBillIcon.svg",
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         leadingWidth: 50,
         scrolledUnderElevation: 0.0,
@@ -66,47 +76,64 @@ class _ReportScreenState extends State<ReportScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 5.0),
         child: GridView.builder(
           itemCount: 8,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3),
           physics: const BouncingScrollPhysics(),
           itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.all(08.0),
-            child: InkWell(
-              onTap: () {
-                if(index == 0){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const HoldingReportScreen();
-                  },));
-                }else if(index == 1){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const LedgerReportScreen();
-                  },));
-                }else if(index == 2){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const PositionReportScreen();
-                  },));
-                }else if(index == 3){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const Globalsummaryreportscreen();
-                  },));
-                }else if(index == 4){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const Globaldetailsreportscreen();
-                  },));
-                }else if(index == 5){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const Profitandlossreportscreen();
-                  },));
-                }else if(index == 6){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const Incometaxreportscreen();
-                  },));
-                }else if(index == 7){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const Contractbillreportscreen();
-                  },));
-                }
-              },
+            return Padding(
+              padding: const EdgeInsets.all(08.0),
+              child: InkWell(
+                onTap: () {
+                  if (index == 0) {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return const HoldingReportScreen();
+                      },
+                    ));
+                  } else if (index == 1) {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return const LedgerReportScreen();
+                      },
+                    ));
+                  } else if (index == 2) {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return const PositionReportScreen();
+                      },
+                    ));
+                  } else if (index == 3) {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return const Globalsummaryreportscreen();
+                      },
+                    ));
+                  } else if (index == 4) {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return const Globaldetailsreportscreen();
+                      },
+                    ));
+                  } else if (index == 5) {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return const Profitandlossreportscreen();
+                      },
+                    ));
+                  } else if (index == 6) {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return const Incometaxreportscreen();
+                      },
+                    ));
+                  } else if (index == 7) {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return const Contractbillreportscreen();
+                      },
+                    ));
+                  }
+                },
                 child: Container(
                   height: 50,
                   width: double.infinity,
@@ -114,27 +141,41 @@ class _ReportScreenState extends State<ReportScreen> {
                     borderRadius: BorderRadius.circular(10),
                     color: const Color(0xFFEAF9FF),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Utils.text(
-                            text: reportName[index],
-                            color: const Color(0xFF4A5568),
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            textAlign: TextAlign.center
-                          ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        icons[index],
+                        height: 30,
+                        width: 30,
+                        color: const Color(0xFF4A5568),
+                      ),
+                      const SizedBox(
+                        height: 05,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Utils.text(
+                                  text: reportName[index],
+                                  color: const Color(0xFF4A5568),
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  textAlign: TextAlign.center),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
+                      ),
+                    ],
+                  )
                 ),
-            ),
-          );
-        },),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

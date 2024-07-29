@@ -1,4 +1,6 @@
 
+import 'package:connect/ConnectApp/ApiServices/ApiServices.dart';
+import 'package:connect/ConnectApp/Utils/AppVariables.dart';
 import 'package:connect/ConnectApp/Utils/Constant.dart';
 import 'package:connect/ConnectApp/Utils/Utils.dart';
 import 'package:flutter/material.dart';
@@ -94,7 +96,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   controller: otpController,
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
-                  cursorColor: const Color.fromRGBO(27, 82, 52, 1.0),
+                  cursorColor: Colors.black,
                   onSaved: (email) {},
                   style: GoogleFonts.inter(
                     color: kBlackColor,
@@ -148,7 +150,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   controller: newPassController,
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
-                  cursorColor: const Color.fromRGBO(27, 82, 52, 1.0),
+                  cursorColor: Colors.black,
                   onSaved: (email) {},
                   style: GoogleFonts.inter(
                     color: kBlackColor,
@@ -202,7 +204,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   controller: confirmPassController,
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
-                  cursorColor: const Color.fromRGBO(27, 82, 52, 1.0),
+                  cursorColor: Colors.black,
                   onSaved: (email) {},
                   style: GoogleFonts.inter(
                     color: kBlackColor,
@@ -246,6 +248,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     if(_formKey.currentState!.validate()){
                       if(newPassController.text == confirmPassController.text){
                         Utils.showLoadingDialogue(context);
+                        ApiServices().updatePassword(Appvariables.token, otpController.text, confirmPassController.text);
                       }else{
                         Utils.toast(msg: "Password Doesn't Match");
                       }

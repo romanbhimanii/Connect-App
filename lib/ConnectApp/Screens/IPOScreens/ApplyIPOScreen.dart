@@ -45,14 +45,6 @@ class _ApplyiposcreenState extends State<Applyiposcreen> {
   bool value = false;
   String symbol = "";
 
-  var items = [
-    'Item 1',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5',
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -232,7 +224,7 @@ class _ApplyiposcreenState extends State<Applyiposcreen> {
         context: context,
         animType: AnimType.scale,
         dialogType: DialogType.success,
-        btnOkColor: const Color.fromRGBO(27, 82, 52, 1.0),
+        btnOkColor: Colors.black,
         dismissOnBackKeyPress: false,
         dismissOnTouchOutside: false,
         btnOkOnPress: () {
@@ -241,7 +233,7 @@ class _ApplyiposcreenState extends State<Applyiposcreen> {
         title: 'This is SUCCESS',
         desc: 'this is your description text',
         titleTextStyle: GoogleFonts.inter(
-            fontSize: 20, fontWeight: FontWeight.bold, color: const Color.fromRGBO(27, 82, 52, 1.0)),
+            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black,),
         descTextStyle: GoogleFonts.inter(
             fontSize: 12, fontWeight: FontWeight.bold, color: kBlackColor))
       .show();
@@ -262,11 +254,14 @@ class _ApplyiposcreenState extends State<Applyiposcreen> {
             ],
           );
         } else if (snapshot.hasError) {
-          return Utils.text(
-              text: "Error: ${snapshot.error}",
-              color: kBlackColor,
-              fontSize: 15,
-              fontWeight: FontWeight.bold);
+          return Column(
+            children: [
+              const SizedBox(
+                height: 200,
+              ),
+              Utils.noDataFound(),
+            ],
+          );
         } else if (snapshot.hasData) {
           final data = snapshot.data!.data;
           return Column(

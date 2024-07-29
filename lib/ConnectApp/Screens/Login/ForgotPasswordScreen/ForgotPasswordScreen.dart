@@ -86,7 +86,7 @@ class _ForgotpasswordscreenState extends State<Forgotpasswordscreen> {
                   controller: forgotPasswordController,
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
-                  cursorColor: const Color.fromRGBO(27, 82, 52, 1.0),
+                  cursorColor: Colors.black,
                   onSaved: (email) {},
                   style: GoogleFonts.inter(
                     color: kBlackColor,

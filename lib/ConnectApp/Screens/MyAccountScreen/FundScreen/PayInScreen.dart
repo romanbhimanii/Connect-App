@@ -333,7 +333,7 @@ class _PayInScreenState extends State<PayInScreen> {
                             child: TextFormField(
                               controller: upiController,
                               textInputAction: TextInputAction.done,
-                              cursorColor: const Color.fromRGBO(27, 82, 52, 1.0),
+                              cursorColor: Colors.black,
                               style: GoogleFonts.inter(
                                 color: const Color(0xFF4A5568),
                                 fontSize: 16,

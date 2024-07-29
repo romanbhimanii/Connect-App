@@ -197,60 +197,6 @@ class _ViewalliposcreenState extends State<Viewalliposcreen> {
                             const SizedBox(
                               height: 10,
                             ),
-                            // Row(
-                            //   children: [
-                            //     Expanded(
-                            //       child: DropdownButtonFormField<String>(
-                            //         value: selectedColumn,
-                            //         onChanged: (value) {
-                            //           setState(() {
-                            //             selectedColumn = value!;
-                            //           });
-                            //         },
-                            //         items: columns.map((column) {
-                            //           return DropdownMenuItem(
-                            //             value: column,
-                            //             child: Utils.text(
-                            //                 text: column,
-                            //                 color: kBlackColor
-                            //             ),
-                            //           );
-                            //         }).toList(),
-                            //         decoration: const InputDecoration(
-                            //           fillColor: Color.fromRGBO(27, 82, 52, 0.1),
-                            //           labelText: 'Columns',
-                            //           border: OutlineInputBorder(),
-                            //         ),
-                            //       ),
-                            //     ),
-                            //     const SizedBox(width: 10),
-                            //     Expanded(
-                            //       child: DropdownButtonFormField<String>(
-                            //         value: selectedOperator,
-                            //         onChanged: (value) {
-                            //           setState(() {
-                            //             selectedOperator = value!;
-                            //           });
-                            //         },
-                            //         items: operators.map((operator) {
-                            //           return DropdownMenuItem(
-                            //             value: operator,
-                            //             child: Utils.text(
-                            //                 text: operator,
-                            //                 color: kBlackColor
-                            //             ),
-                            //           );
-                            //         }).toList(),
-                            //         decoration: const InputDecoration(
-                            //           fillColor: Color.fromRGBO(27, 82, 52, 0.1),
-                            //           labelText: 'Operator',
-                            //           border: OutlineInputBorder(),
-                            //         ),
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ),
-                            // const SizedBox(height: 10),
                             TextField(
                               onChanged: (value) {
                                 setState(() {
@@ -258,7 +204,7 @@ class _ViewalliposcreenState extends State<Viewalliposcreen> {
                                 });
                               },
                               decoration: const InputDecoration(
-                                fillColor: Color.fromRGBO(27, 82, 52, 0.1),
+                                fillColor: Colors.transparent,
                                 labelText: 'Enter Ipo Type',
                                 border: OutlineInputBorder(),
                               ),
@@ -288,14 +234,14 @@ class _ViewalliposcreenState extends State<Viewalliposcreen> {
                   children: [
                     const Icon(
                       Icons.filter_list,
-                      color: Color.fromRGBO(27, 82, 52, 1.0),
+                      color: Colors.black,
                     ),
                     const SizedBox(
                       width: 8,
                     ),
                     Utils.text(
                       text: "Filters",
-                      color: const Color.fromRGBO(27, 82, 52, 1.0),
+                      color: Colors.black,
                       fontSize: 15,
                     )
                   ],
@@ -587,12 +533,16 @@ class _ViewalliposcreenState extends State<Viewalliposcreen> {
                                             crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                             children: [
-                                              Utils.text(
-                                                text: ipo.name,
-                                                color: const Color(0xFF001533),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w600,
-                                                textAlign: TextAlign.start,
+                                              SizedBox(
+                                                width: 280,
+                                                child: Utils.text(
+                                                    text: ipo.name,
+                                                    color: const Color(0xFF001533),
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                    textAlign: TextAlign.start,
+                                                    textOverFlow: TextOverflow.ellipsis
+                                                ),
                                               ),
                                               const SizedBox(height: 5),
                                               RichText(

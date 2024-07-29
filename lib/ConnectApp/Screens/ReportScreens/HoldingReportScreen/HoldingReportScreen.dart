@@ -297,7 +297,8 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                                       child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100)),
                                 ],
                               );
-                            } else if (snapshot.hasError) {
+                            }
+                            else if (snapshot.hasError) {
                               return Center(
                                   child: Utils.text(
                                     text: 'Error: ${snapshot.error}',
@@ -951,7 +952,8 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                                   ),
                                 ],
                               );
-                            } else {
+                            }
+                            else {
                               return Utils.noDataFound();
                             }
                           },

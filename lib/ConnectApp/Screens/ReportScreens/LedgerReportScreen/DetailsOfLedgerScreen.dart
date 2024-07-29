@@ -1,8 +1,8 @@
 // ignore_for_file: unrelated_type_equality_checks
 
-import 'package:connect/Models/LedgerReportModel/LedgerReportModel.dart';
-import 'package:connect/Utils/Constant.dart';
-import 'package:connect/Utils/Utils.dart';
+import 'package:connect/ConnectApp/Models/LedgerReportModel/LedgerReportModel.dart';
+import 'package:connect/ConnectApp/Utils/Constant.dart';
+import 'package:connect/ConnectApp/Utils/Utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -27,10 +27,10 @@ class _DetailsOfLedgerScreenState extends State<DetailsOfLedgerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.white,
       appBar: AppBar(
         scrolledUnderElevation: 0.0,
-        backgroundColor: Colors.grey[200],
+        backgroundColor: Colors.white,
         centerTitle: true,
         title: Utils.text(
           text: "Ledger Report Details",

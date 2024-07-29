@@ -1,4 +1,3 @@
-
 import 'package:connect/ConnectApp/Screens/IPOScreen/IpoProvider.dart';
 import 'package:connect/ConnectApp/Screens/Welcome/WelcomeScreen.dart';
 import 'package:connect/ConnectApp/Utils/Constant.dart';
@@ -47,7 +46,7 @@ class MyApp extends StatelessWidget {
               borderSide: BorderSide.none,
             ),
           )),
-      home: WelcomeScreen(),
+      home: const WelcomeScreen(),
     );
   }
 }

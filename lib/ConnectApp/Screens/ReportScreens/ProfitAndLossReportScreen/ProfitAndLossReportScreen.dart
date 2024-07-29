@@ -39,7 +39,7 @@ class _ProfitandlossreportscreenState extends State<Profitandlossreportscreen> {
   Widget build(BuildContext context) {
     final orientation = MediaQuery.of(context).orientation;
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.white,
       appBar: AppBar(
         leadingWidth: 50,
         centerTitle: true,
@@ -62,7 +62,7 @@ class _ProfitandlossreportscreenState extends State<Profitandlossreportscreen> {
             ),
           ),
         ),
-        backgroundColor: Colors.grey[200],
+        backgroundColor: Colors.white,
         scrolledUnderElevation: 0.0,
         title: Utils.text(
             text: "Profit And Loss",           color: const Color(0xFF00A9FF),
@@ -94,7 +94,7 @@ class _ProfitandlossreportscreenState extends State<Profitandlossreportscreen> {
                       },
                       child: Utils.text(
                           text: "Download All as Zip",
-                          color: const Color.fromRGBO(27, 82, 52, 1.0),
+                          color: Colors.black,
                           fontSize: 15,
                           fontWeight: FontWeight.bold))
                 ],

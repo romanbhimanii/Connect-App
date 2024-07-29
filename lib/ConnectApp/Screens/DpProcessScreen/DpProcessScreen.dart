@@ -317,8 +317,27 @@ class _DpprocessscreenState extends State<Dpprocessscreen>
                         child: Lottie.asset('assets/lottie/loading.json',
                             height: 100, width: 100));
                   } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else if (snapshot.hasData) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset("assets/icons/NoDataFound.svg",height: 100,width: 100,),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Center(
+                            child: Utils.text(
+                              text: "No data Found!",
+                              color: kBlackColor,
+                              fontSize: 17,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                  else if (snapshot.hasData) {
                     final data = snapshot.data;
                     if (data != null && data.data.isNotEmpty) {
                       return ListView.builder(
@@ -454,7 +473,8 @@ class _DpprocessscreenState extends State<Dpprocessscreen>
                     } else {
                       return Utils.noDataFound();
                     }
-                  } else {
+                  }
+                  else {
                     return Utils.noDataFound();
                   }
                 },
@@ -757,8 +777,7 @@ class _DpprocessscreenState extends State<Dpprocessscreen>
                 ),
               )
             : Center(
-                child: Lottie.asset('assets/lottie/loading.json',
-                    height: 100, width: 100))
+                child: Utils.noDataFound())
       ]),
     );
   }

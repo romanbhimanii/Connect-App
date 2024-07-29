@@ -212,7 +212,7 @@ class _AddbankaccountscreenState extends State<Addbankaccountscreen> {
               // ),
               DropDownTextField(
                 controller: _cnt,
-                clearOption: true,
+                clearOption: false,
                 enableSearch: false,
                 dropdownRadius: 10,
                 padding: const EdgeInsets.all(0),
@@ -280,7 +280,7 @@ class _AddbankaccountscreenState extends State<Addbankaccountscreen> {
                   //   child: Row(
                   //     children: [
                   //       Radio(
-                  //         activeColor: const Color.fromRGBO(27, 82, 52, 1.0),
+                  //         activeColor: Colors.black,
                   //         value: true,
                   //         groupValue: isDefaultAccount,
                   //         onChanged: (value) {
@@ -300,7 +300,7 @@ class _AddbankaccountscreenState extends State<Addbankaccountscreen> {
                   //   child: Row(
                   //     children: [
                   //       Radio(
-                  //         activeColor: const Color.fromRGBO(27, 82, 52, 1.0),
+                  //         activeColor: Colors.black,
                   //         value: false,
                   //         groupValue: isDefaultAccount,
                   //         onChanged: (value) {
@@ -364,7 +364,7 @@ class _AddbankaccountscreenState extends State<Addbankaccountscreen> {
               //     }
               //   },
               //   style: ElevatedButton.styleFrom(
-              //       backgroundColor: const Color.fromRGBO(27, 82, 52, 1.0),
+              //       backgroundColor: Colors.black,
               //       foregroundColor: Colors.white),
               //   child: Utils.text(
               //       text: "SUBMIT",

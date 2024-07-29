@@ -58,7 +58,7 @@ class _LoginFormState extends State<LoginForm> {
             controller: emailController,
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
-            cursorColor: const Color.fromRGBO(27, 82, 52, 1.0),
+            cursorColor: Colors.black,
             onSaved: (email) {},
             style: GoogleFonts.inter(
               color: kBlackColor,
@@ -112,7 +112,7 @@ class _LoginFormState extends State<LoginForm> {
             controller: passwordController,
             textInputAction: TextInputAction.done,
             obscureText: isShowPassword ? false : true,
-            cursorColor: const Color.fromRGBO(27, 82, 52, 1.0),
+            cursorColor: Colors.black,
             style: GoogleFonts.inter(
               color: kBlackColor,
             ),

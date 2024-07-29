@@ -223,7 +223,7 @@ class _FundpayinrequestscreenState extends State<Fundpayinrequestscreen> {
                                       );
                                     }).toList(),
                                     decoration: const InputDecoration(
-                                      fillColor: Color.fromRGBO(27, 82, 52, 0.1),
+                                      fillColor: Colors.transparent,
                                       labelText: 'Columns',
                                       border: OutlineInputBorder(),
                                     ),
@@ -248,7 +248,7 @@ class _FundpayinrequestscreenState extends State<Fundpayinrequestscreen> {
                                       );
                                     }).toList(),
                                     decoration: const InputDecoration(
-                                      fillColor: Color.fromRGBO(27, 82, 52, 0.1),
+                                      fillColor: Colors.transparent,
                                       labelText: 'Operator',
                                       border: OutlineInputBorder(),
                                     ),
@@ -264,7 +264,7 @@ class _FundpayinrequestscreenState extends State<Fundpayinrequestscreen> {
                                 });
                               },
                               decoration: const InputDecoration(
-                                fillColor: Color.fromRGBO(27, 82, 52, 0.1),
+                                fillColor: Colors.transparent,
                                 labelText: 'Filter Value',
                                 border: OutlineInputBorder(),
                               ),
@@ -294,14 +294,14 @@ class _FundpayinrequestscreenState extends State<Fundpayinrequestscreen> {
                   children: [
                     const Icon(
                       Icons.filter_list,
-                      color: Color.fromRGBO(27, 82, 52, 1.0),
+                      color: Colors.black,
                     ),
                     const SizedBox(
                       width: 8,
                     ),
                     Utils.text(
                       text: "Filters",
-                      color: const Color.fromRGBO(27, 82, 52, 1.0),
+                      color: Colors.black,
                       fontSize: 15,
                     )
                   ],
@@ -313,14 +313,14 @@ class _FundpayinrequestscreenState extends State<Fundpayinrequestscreen> {
                   children: [
                     const Icon(
                       Icons.download,
-                      color: Color.fromRGBO(27, 82, 52, 1.0),
+                      color: Colors.black,
                     ),
                     const SizedBox(
                       width: 8,
                     ),
                     Utils.text(
                       text: "Export",
-                      color: const Color.fromRGBO(27, 82, 52, 1.0),
+                      color: Colors.black,
                       fontSize: 15,
                     ),
                   ],

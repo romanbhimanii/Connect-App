@@ -342,14 +342,14 @@ class _GlobaldetailsreportscreenState extends State<Globaldetailsreportscreen> {
                         children: [
                           const Icon(
                             Icons.download,
-                            color: Color.fromRGBO(27, 82, 52, 1.0),
+                            color: Colors.black,
                           ),
                           const SizedBox(
                             width: 8,
                           ),
                           Utils.text(
                             text: "Excel",
-                            color: const Color.fromRGBO(27, 82, 52, 1.0),
+                            color: Colors.black,
                             fontSize: 15,
                           ),
                         ],

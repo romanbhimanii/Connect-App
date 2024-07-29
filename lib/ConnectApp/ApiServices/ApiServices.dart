@@ -1308,6 +1308,33 @@ class ApiServices {
       throw Exception("Internal Server Error!");
     }
   }
+
+  Future<void> updatePassword(String authToken, String oldPassword, String newPassword) async {
+    const String baseUrl = 'http://192.168.130.43:1818/v1';
+    const String endpoint = '$baseUrl/user/update-password';
+
+    final response = await http.post(
+      Uri.parse(endpoint),
+      headers: {
+        'accept': 'application/json',
+        'authToken': authToken,
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'old_password': oldPassword,
+        'new_password': newPassword
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      Get.back();
+      Get.back();
+      Utils.toast(msg: "Password updated successfully");
+    } else {
+      Get.back();
+      Utils.toast(msg: "Failed to update password");
+    }
+  }
 }
 
 
