@@ -38,6 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool isNomineeDetails = false;
   bool isIncomeDetails = false;
   bool isChecked = false;
+  bool isCheckedNomineeModification = false;
   File? file1;
   List<int>? file1Bytes;
   String? _signatureProofFileName;
@@ -998,22 +999,57 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   const SizedBox(
                                                     width: 15,
                                                   ),
-                                                  Container(
-                                                    height: 40,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(10),
-                                                      color: const Color(0xFF2970E8),
+                                                  InkWell(
+                                                    onTap: () {
+                                                      showDialog(
+                                                        context: context,
+                                                        builder: (ctx) => StatefulBuilder(builder: (context, setState) {
+                                                          return AlertDialog(
+                                                            shape: OutlineInputBorder(
+                                                              borderRadius: BorderRadius.circular(10),
+                                                              borderSide: const BorderSide(
+                                                                color: Colors.white,
+                                                                width: 0,
+                                                                strokeAlign: 0.0,
+                                                              )
+                                                            ),
+                                                            backgroundColor: Colors.white,
+                                                            title: Utils.text(
+                                                                text: "Nominee Details",
+                                                              fontWeight: FontWeight.w600,
+                                                              fontSize: 17,
+                                                            ),
+                                                            content: Utils.text(
+                                                                text: "I / We hereby confirm that I / We do not wish to appoint any nominee(s) in my / our trading / demat account and understand the issues involved in non-appointment of nominee(s) and further are aware that in case of death of all the account holder(s), my / our legal heirs would need to submit all the requisite documents / information for claiming of assets held in my / our trading / demat account, which may also include documents issued by Court or other such competent authority, based on the value of assets held in the trading / demat account.",
+                                                                color: Colors.red,
+                                                                fontSize: 11,
+                                                                textAlign: TextAlign.justify),
+                                                            actions: <Widget>[
+                                                              Utils.gradientButton(
+                                                                message: "Move to E-Sign",
+                                                              ),
+                                                            ],
+                                                          );
+                                                        },),
+                                                      );
+                                                    },
+                                                    child: Container(
+                                                        height: 40,
+                                                        decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius.circular(10),
+                                                          color: const Color(0xFF2970E8),
+                                                        ),
+                                                        child: Padding(padding: const EdgeInsets.symmetric(horizontal: 25),
+                                                          child: Center(
+                                                            child: Utils.text(
+                                                                text: "No",
+                                                                color: Colors.white,
+                                                                fontSize: 15,
+                                                                fontWeight: FontWeight.w600
+                                                            ),
+                                                          ),)
                                                     ),
-                                                      child: Padding(padding: const EdgeInsets.symmetric(horizontal: 25),
-                                                        child: Center(
-                                                          child: Utils.text(
-                                                              text: "No",
-                                                              color: Colors.white,
-                                                              fontSize: 15,
-                                                              fontWeight: FontWeight.w600
-                                                          ),
-                                                        ),)
-                                                  ),
+                                                  )
                                                 ],
                                               )),
                                         ],

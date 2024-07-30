@@ -1,4 +1,5 @@
 
+import 'package:connect/BackOffice/BackOfficeApiService/BackOfficeApiService.dart';
 import 'package:connect/ConnectApp/ApiServices/ApiServices.dart';
 import 'package:connect/ConnectApp/Utils/Constant.dart';
 import 'package:connect/ConnectApp/Utils/Utils.dart';
@@ -7,7 +8,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Resetpasswordscreen extends StatefulWidget {
-  const Resetpasswordscreen({super.key});
+  String appName = "";
+  Resetpasswordscreen({super.key,required this.appName});
 
   @override
   State<Resetpasswordscreen> createState() => _ResetpasswordscreenState();
@@ -17,6 +19,7 @@ class _ResetpasswordscreenState extends State<Resetpasswordscreen> {
 
   dynamic arguments = Get.arguments;
   String clientCode = "";
+  String userType = "";
   final TextEditingController otpController = TextEditingController();
   final TextEditingController newPassController = TextEditingController();
   final TextEditingController confirmPassController = TextEditingController();
@@ -26,6 +29,7 @@ class _ResetpasswordscreenState extends State<Resetpasswordscreen> {
   void initState() {
     super.initState();
     clientCode = arguments['clientId'];
+    userType = arguments["userType"];
   }
 
   @override
@@ -248,12 +252,22 @@ class _ResetpasswordscreenState extends State<Resetpasswordscreen> {
                     if(_formKey.currentState!.validate()){
                       if(newPassController.text == confirmPassController.text){
                         Utils.showLoadingDialogue(context);
-                        ApiServices().resetPassword(
-                            clientCode: clientCode,
-                            otp: otpController.text,
-                            password: confirmPassController.text,
-                          context: context
-                        );
+                        if(widget.appName == "connect"){
+                          ApiServices().resetPassword(
+                              clientCode: clientCode,
+                              otp: otpController.text,
+                              password: confirmPassController.text,
+                              context: context
+                          );
+                        }else{
+                          BackOfficeApiService().backOfficeResetPassword(
+                              clientCode: clientCode,
+                              otp: otpController.text,
+                              password: confirmPassController.text,
+                              userType: userType,
+                              context: context
+                          );
+                        }
                       }else{
                         Utils.toast(msg: "Password Doesn't Match");
                       }

@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_unnecessary_containers
 
-
 import 'package:connect/ConnectApp/ApiServices/ApiServices.dart';
 import 'package:connect/ConnectApp/Models/TotalBalanceModel/TotalbalanceModel.dart';
 import 'package:connect/ConnectApp/Screens/DpProcessScreen/DpProcessScreen.dart';
@@ -56,9 +55,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   }
 
   void loadData() async {
-    holdingReport = _apiService.fetchTotalBalanceData(token: Appvariables.token, year: year);
     ApiServices().loadYear();
     setState(() {});
+    holdingReport = _apiService.fetchTotalBalanceData(token: Appvariables.token, year: year);
   }
 
   @override
@@ -498,7 +497,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         } else if (snapshot.hasError) {
           return Center(
               child: Utils.text(
-            text: 'Error',
+            text: '',
             color: Colors.white,
           ));
         } else if (snapshot.hasData) {

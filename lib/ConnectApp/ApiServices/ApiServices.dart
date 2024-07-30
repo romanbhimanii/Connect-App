@@ -1,4 +1,4 @@
-// ignore_for_file: depend_on_referenced_packages, use_build_context_synchronously
+// ignore_for_file: depend_on_referenced_packages, use_build_context_synchronously, non_constant_identifier_names
 
 
 import 'dart:convert';
@@ -41,10 +41,12 @@ import 'package:path/path.dart';
 
 class ApiServices {
 
+  String baseUrl = "http://192.168.130.43:1818";
+
   Future<void> login({String? username, String? password, required BuildContext context}) async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.130.43:1818/v1/user/login'),
+        Uri.parse('$baseUrl/v1/user/login'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -80,7 +82,7 @@ class ApiServices {
   }
 
   Future<void> logoutUser({required BuildContext context}) async {
-    final url = Uri.parse('http://192.168.130.43:1818/v1/user/logout');
+    final url = Uri.parse('$baseUrl/v1/user/logout');
     final headers = {
       'accept': 'application/json',
       'authToken': Appvariables.token,
@@ -95,7 +97,7 @@ class ApiServices {
 
       if (response.statusCode == 200) {
         Utils.toast(msg: "You Are Log out From Current Session");
-        Get.offAll(const LoginScreen());
+        Get.offAll(LoginScreen(appName: "connect",));
       } else {
         Utils.toast(msg: "Internal Server Error!");
         Get.back();
@@ -107,7 +109,7 @@ class ApiServices {
   }
 
   Future<dynamic> forgotPassword({String? clientCode, required BuildContext context}) async {
-    final String endpoint = 'http://192.168.130.43:1818/v1/user/forgot-password?client_code=$clientCode';
+    final String endpoint = '$baseUrl/v1/user/forgot-password?client_code=$clientCode';
 
     try {
       final response = await http.post(
@@ -137,7 +139,7 @@ class ApiServices {
   Future<void> resetPassword(
       {String? clientCode, String? otp, String? password, required BuildContext context}) async {
     try{
-      final url = Uri.parse('http://192.168.130.43:1818/v1/user/reset-password?client_code=$clientCode&otp=$otp&password=$password');
+      final url = Uri.parse('$baseUrl/v1/user/reset-password?client_code=$clientCode&otp=$otp&password=$password');
 
       final response = await http.post(
         url,
@@ -191,7 +193,7 @@ class ApiServices {
 
   Future<TotalBalanceModel> fetchTotalBalanceData({String? token,String? year}) async {
     try {
-      String url = 'http://192.168.130.43:1818/v1/user/dashboard?year=$year';
+      String url = '$baseUrl/v1/user/dashboard?year=$year';
       final Map<String, String> headers = {
         'Content-Type': 'application/json',
         'auth-token': token ?? "",
@@ -259,14 +261,14 @@ class ApiServices {
 
   Future<AccountProfile> fetchAccountProfile({String? token}) async {
     try {
-      String baseUrl = 'http://192.168.130.43:1818/v1';
+      String Url = '$baseUrl/v1';
       Map<String, String> headers = {
         'Content-Type': 'application/json',
         'authToken': token ?? "",
       };
 
       final response = await http.get(
-          Uri.parse('$baseUrl/account_profile/personal_details'),
+          Uri.parse('$Url/account_profile/personal_details'),
           headers: headers);
 
       if (response.statusCode == 200) {
@@ -282,7 +284,7 @@ class ApiServices {
   Future<BankDetailsResponse> fetchBankDetails({String? token}) async {
     try {
       final url = Uri.parse(
-          'http://192.168.130.43:1818/v1/account_profile/bank_details');
+          '$baseUrl/v1/account_profile/bank_details');
       final headers = {
         'Content-Type': 'application/json',
         'authToken': token ?? "",
@@ -357,10 +359,9 @@ class ApiServices {
       String? otp,
       String? mobileOrEmail}) async {
     try {
-      const String baseUrl =
-          'http://192.168.130.43:1818/v1/account_profile/profile_modifications';
+      String Url = '$baseUrl/v1/account_profile/profile_modifications';
 
-      final url = Uri.parse('$baseUrl?process=$type&types=$mobileOrEmail');
+      final url = Uri.parse('$Url?process=$type&types=$mobileOrEmail');
 
       final response = await http.post(
         url,
@@ -402,7 +403,7 @@ class ApiServices {
       List<int>? file1Bytes,
       List<int>? file2Bytes}) async {
     String url =
-        'http://192.168.130.43:1818/v1/account_profile/bank-modification?process=$isSendOtpOrVerifyOtp';
+        '$baseUrl/v1/account_profile/bank-modification?process=$isSendOtpOrVerifyOtp';
     String authToken = token ?? "";
 
     final http.MultipartRequest request = http.MultipartRequest(
@@ -457,7 +458,7 @@ class ApiServices {
       String? income,
       String? otp,}) async {
     final url = Uri.parse(
-        'http://192.168.130.43:1818/v1/account_profile/income-modification?process=$isSendOrVerifyOtp');
+        '$baseUrl/v1/account_profile/income-modification?process=$isSendOrVerifyOtp');
     final authToken = token ?? '';
 
     var request = http.MultipartRequest('POST', url)
@@ -495,11 +496,11 @@ class ApiServices {
   Future<FundPayinResponse> fetchFundPayin(
       {String? authToken}) async {
     try {
-      const String baseUrl = 'http://192.168.130.43:1818/v1';
+      String Url = '$baseUrl/v1';
 
       final response = await http.get(
         Uri.parse(
-            '$baseUrl/account_profile/list_of_funds_payout_payin?type=fund_payin'),
+            '$Url/account_profile/list_of_funds_payout_payin?type=fund_payin'),
         headers: {
           'Content-Type': 'application/json',
           'accept': 'application/json',
@@ -520,11 +521,11 @@ class ApiServices {
   Future<PayOutModel> fetchFundPayOut(
       {String? authToken}) async {
     try {
-      const String baseUrl = 'http://192.168.130.43:1818/v1';
+      String Url = '$baseUrl/v1';
 
       final response = await http.get(
         Uri.parse(
-            '$baseUrl/account_profile/list_of_funds_payout_payin?type=fund_payout'),
+            '$Url/account_profile/list_of_funds_payout_payin?type=fund_payout'),
         headers: {
           'Content-Type': 'application/json',
           'accept': 'application/json',
@@ -557,8 +558,7 @@ class ApiServices {
       String downloadsFolderPath = await getDownloadsFolderPath();
       Directory directory = Directory(downloadsFolderPath);
 
-      const url =
-          'http://192.168.130.43:1818/v1/account_profile/download_client_details';
+      String url = '$baseUrl/v1/account_profile/download_client_details';
       final headers = {
         'accept': 'application/json',
         'authToken': token ?? '',
@@ -606,7 +606,7 @@ class ApiServices {
       String downloadsFolderPath = await getDownloadsFolderPath();
       Directory directory = Directory(downloadsFolderPath);
 
-      const url = 'http://192.168.130.43:1818/v1/account_profile/download_holdings';
+      String url = '$baseUrl/v1/account_profile/download_holdings';
       final headers = {
         'accept': 'application/json',
         'authToken': token ?? '',
@@ -650,8 +650,8 @@ class ApiServices {
       String downloadsFolderPath = await getDownloadsFolderPath();
       Directory directory = Directory(downloadsFolderPath);
 
-      const url =
-          'http://192.168.130.43:1818/v1/account_profile/download_global_summary';
+      String url =
+          '$baseUrl/v1/account_profile/download_global_summary';
       final headers = {
         'accept': 'application/json',
         'authToken': token ?? '',
@@ -695,7 +695,7 @@ class ApiServices {
       String downloadsFolderPath = await getDownloadsFolderPath();
       Directory directory = Directory(downloadsFolderPath);
 
-      const url = 'http://192.168.130.43:1818/v1/excel/download_income_tax';
+      String url = '$baseUrl/v1/excel/download_income_tax';
       final headers = {
         'accept': 'application/json',
         'authToken': token ?? '',
@@ -739,7 +739,7 @@ class ApiServices {
       String downloadsFolderPath = await getDownloadsFolderPath();
       Directory directory = Directory(downloadsFolderPath);
 
-      const url = 'http://192.168.130.43:1818/v1/excel/download_global_details';
+      String url = '$baseUrl/v1/excel/download_global_details';
       final headers = {
         'accept': 'application/json',
         'authToken': token ?? '',
@@ -782,7 +782,7 @@ class ApiServices {
       String downloadsFolderPath = await getDownloadsFolderPath();
       Directory directory = Directory(downloadsFolderPath);
 
-      const url = 'http://192.168.130.43:1818/v1/user/report/pnl?source=connect';
+      String url = '$baseUrl/v1/user/report/pnl?source=connect';
 
       final headers = {
         'accept': 'application/json',
@@ -824,7 +824,7 @@ class ApiServices {
     print("Holding Api Called");
     try {
       final url = Uri.parse(
-          'http://192.168.130.43:1818/v1/user/report/holding?source=connect');
+          '$baseUrl/v1/user/report/holding?source=connect');
       final headers = {
         'accept': 'application/json',
         'auth-token': token ?? '',
@@ -852,10 +852,10 @@ class ApiServices {
       String? toDate}) async {
     print("Ledger Api Called");
     try {
-      const String baseUrl = 'http://192.168.130.43:1818/v1/user/report/ledger';
+      String Url = '$baseUrl/v1/user/report/ledger';
       const String source = 'connect';
 
-      final url = Uri.parse('$baseUrl?source=$source');
+      final url = Uri.parse('$Url?source=$source');
       final headers = {
         'accept': 'application/json',
         'auth-token': token ?? "",
@@ -887,7 +887,7 @@ class ApiServices {
       {String? date, String? token, String? cocd}) async {
     print("Position Api Called");
     try {
-      String apiUrl = 'http://192.168.130.43:1818/v1/user/report/position';
+      String apiUrl = '$baseUrl/v1/user/report/position';
       String authToken = token ?? '';
 
       final response = await http.post(
@@ -918,12 +918,12 @@ class ApiServices {
       {String? toDate, String? token, String? openBalance}) async {
     print("Global Summary Api Called");
     try {
-      String baseUrl =
-          'http://192.168.130.43:1818/v1/user/report/globalsummary';
+      String Url =
+          '$baseUrl/v1/user/report/globalsummary';
       String authToken = token ?? '';
 
       final response = await http.post(
-        Uri.parse(baseUrl),
+        Uri.parse(Url),
         headers: {
           'accept': 'application/json',
           'auth-token': authToken,
@@ -951,7 +951,7 @@ class ApiServices {
     print("Global Details Api Called");
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.130.43:1818/v1/user/report/globaldetails'),
+        Uri.parse('$baseUrl/v1/user/report/globaldetails'),
         headers: <String, String>{
           'accept': 'application/json',
           'auth-token': authToken ?? "",
@@ -990,8 +990,8 @@ class ApiServices {
       String downloadsFolderPath = await getDownloadsFolderPath();
       Directory directory = Directory(downloadsFolderPath);
 
-      const url =
-          'http://192.168.130.43:1818/v1/user/report/pnl?source=connect';
+      String url =
+          '$baseUrl/v1/user/report/pnl?source=connect';
       final headers = {
         'accept': 'application/json',
         'auth-token': token ?? "",
@@ -1036,11 +1036,11 @@ class ApiServices {
       {String? financialYear, String? token}) async {
     print("Income Tax Api Called");
     try {
-      String baseUrl = 'http://192.168.130.43:1818/v1/user/report/incometax';
+      String Url = '$baseUrl/v1/user/report/incometax';
       String authToken = token ?? '';
 
       final response = await http.post(
-        Uri.parse(baseUrl),
+        Uri.parse(Url),
         headers: {
           'accept': 'application/json',
           'auth-token': authToken,
@@ -1067,8 +1067,8 @@ class ApiServices {
       String? clientCode}) async {
     print("Contract Api Called");
     try {
-      String baseUrl =
-          'http://192.168.130.43:1818/v1/user/report/contractbills';
+      String Url =
+          '$baseUrl/v1/user/report/contractbills';
 
       final Map<String, dynamic> requestData = {
         "company_code": ["ALL"],
@@ -1078,7 +1078,7 @@ class ApiServices {
       };
 
       final response = await http.post(
-        Uri.parse('$baseUrl?source=connect'),
+        Uri.parse('$Url?source=connect'),
         headers: {
           'accept': 'application/json',
           'auth-token': authToken ?? "",
@@ -1146,7 +1146,7 @@ class ApiServices {
   Future<EPledgeModel?> ePledgeDpProcess({String? token}) async {
     try {
       final url =
-          Uri.parse("http://192.168.130.43:1818/v1/margin_epledge_data");
+          Uri.parse("$baseUrl/v1/margin_epledge_data");
       final response = await http.get(
         url,
         headers: {
@@ -1179,7 +1179,7 @@ class ApiServices {
     required BuildContext context
   }) async {
     try{
-      var url = Uri.parse('http://192.168.130.43:1818/v1/account_profile/segmentAddition?process=$isSendOrVerifyOtp&source=connect');
+      var url = Uri.parse('$baseUrl/v1/account_profile/segmentAddition?process=$isSendOrVerifyOtp&source=connect');
 
       var request = http.MultipartRequest('POST', url)
         ..headers['accept'] = 'application/json'
@@ -1310,8 +1310,8 @@ class ApiServices {
   }
 
   Future<void> updatePassword(String authToken, String oldPassword, String newPassword) async {
-    const String baseUrl = 'http://192.168.130.43:1818/v1';
-    const String endpoint = '$baseUrl/user/update-password';
+    String Url = '$baseUrl/v1';
+    String endpoint = '$Url/user/update-password';
 
     final response = await http.post(
       Uri.parse(endpoint),

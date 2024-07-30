@@ -1,3 +1,6 @@
+// ignore_for_file: must_be_immutable
+
+import 'package:connect/BackOffice/BackOfficeApiService/BackOfficeApiService.dart';
 import 'package:connect/ConnectApp/ApiServices/ApiServices.dart';
 import 'package:connect/ConnectApp/Screens/Login/ForgotPasswordScreen/ResetPasswordScreen.dart';
 import 'package:connect/ConnectApp/Screens/Login/login_screen.dart';
@@ -8,7 +11,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Forgotpasswordscreen extends StatefulWidget {
-  const Forgotpasswordscreen({super.key});
+  String appName = "";
+  Forgotpasswordscreen({super.key, required this.appName});
 
   @override
   State<Forgotpasswordscreen> createState() => _ForgotpasswordscreenState();
@@ -18,10 +22,12 @@ class _ForgotpasswordscreenState extends State<Forgotpasswordscreen> {
 
   final TextEditingController forgotPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  int _radioVal = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Form(
@@ -73,7 +79,7 @@ class _ForgotpasswordscreenState extends State<Forgotpasswordscreen> {
                 Row(
                   children: [
                     Utils.text(
-                        text: "Client Code",
+                        text: widget.appName == "connect" ? "Client Code" : "Branch Code",
                         color: const Color(0xFF001533),
                         fontSize: 14
                     )
@@ -93,7 +99,7 @@ class _ForgotpasswordscreenState extends State<Forgotpasswordscreen> {
                   ),
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(),
-                    hintText: "Enter Your Client Code",
+                    hintText: widget.appName == "connect" ? "Enter Your Client Code" : "Enter Your Branch Code",
                     hintStyle: GoogleFonts.inter(
                         fontSize: 12,
                     ),
@@ -116,13 +122,50 @@ class _ForgotpasswordscreenState extends State<Forgotpasswordscreen> {
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your Client Code';
+                      return widget.appName == "connect" ? 'Please enter your Client Code' : "Please enter your Branch Code";
                     }
                     return null;
                   },
                 ),
                 const SizedBox(
                   height: 15,
+                ),
+                Visibility(
+                  visible: widget.appName == "backoffice",
+                  child: Row(
+                    children: [
+                      Radio(
+                        value: 0,
+                        groupValue: _radioVal,
+                        activeColor: const Color(0xFF0F3F62),
+                        onChanged: (int? value) {
+                          if (value != null) {
+                            setState(() {
+                              _radioVal = value;
+                            });
+                          }
+                        },
+                      ),
+                      Utils.text(text: "Self", color: Colors.black, fontSize: 15),
+                      Radio(
+                        value: 1,
+                        groupValue: _radioVal,
+                        activeColor: const Color(0xFF0F3F62),
+                        onChanged: (int? value) {
+                          if (value != null) {
+                            setState(() {
+                              _radioVal = value;
+                            });
+                          }
+                        },
+                      ),
+                      Utils.text(text: "Team", color: Colors.black, fontSize: 15),
+                    ],
+                  ),
+                ),
+                Visibility(
+                  visible: widget.appName == "backoffice",
+                  child: const SizedBox(height: 20),
                 ),
                 Row(
                   children: [
@@ -133,7 +176,7 @@ class _ForgotpasswordscreenState extends State<Forgotpasswordscreen> {
                     ),
                     InkWell(
                       onTap: () {
-                        Get.off(const LoginScreen());
+                        Get.off(LoginScreen(appName: widget.appName,));
                       },
                       child: Utils.text(
                         text: "Login here",
@@ -147,11 +190,22 @@ class _ForgotpasswordscreenState extends State<Forgotpasswordscreen> {
                   onTap: () async {
                     if(_formKey.currentState!.validate()){
                       Utils.showLoadingDialogue(context);
-                      var response = await ApiServices().forgotPassword(clientCode: forgotPasswordController.text,context: context);
-                      if(response != null){
-                        Get.to(const Resetpasswordscreen(),arguments: ({
-                          'clientId' : forgotPasswordController.text
-                        }));
+                      if(widget.appName == "connect"){
+                        var response = await ApiServices().forgotPassword(clientCode: forgotPasswordController.text,context: context);
+                        if(response != null){
+                          Get.to(Resetpasswordscreen(appName: widget.appName,),arguments: ({
+                            'clientId' : forgotPasswordController.text,
+                            'userType' : _radioVal == 0 ? "self" : "team"
+                          }));
+                        }
+                      }else{
+                        var response = await BackOfficeApiService().backOfficeForgotPassword(clientCode: forgotPasswordController.text,context: context,userType: _radioVal == 0 ? "self" : "team");
+                        if(response != null){
+                          Get.to(Resetpasswordscreen(appName: widget.appName,),arguments: ({
+                            'clientId' : forgotPasswordController.text,
+                            'userType' : _radioVal == 0 ? "self" : "team"
+                          }));
+                        }
                       }
                     }
                   },
