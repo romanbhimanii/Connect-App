@@ -63,14 +63,14 @@ class _IPOScreenState extends State<IPOScreen>  with SingleTickerProviderStateMi
   }
 
   Future<void> fetchIpoData() async {
-    upcomingIPO = _apiService.fetchUpcomingIpoDetails();
+    upcomingIPO = _apiService.fetchUpcomingIpoDetails(source: "mobile_app");
     upcomingIPO?.then((response) {
       setState(() {
         upcomingFilteredData = response.data;
         upcomingOriginalData = response.data;
       });
     });
-    openIPO = _apiService.fetchOpenIpoDetails();
+    openIPO = _apiService.fetchOpenIpoDetails(source: "mobile_app");
     openIPO?.then((response) {
       setState(() {
         openFilteredData = response.data;
@@ -760,7 +760,8 @@ class _IPOScreenState extends State<IPOScreen>  with SingleTickerProviderStateMi
               Utils.noDataFound(),
             ],
           );
-        } else if (snapshot.hasData) {
+        }
+        else if (snapshot.hasData) {
           final data = snapshot.data!.data;
           return upcomingFilteredData.isNotEmpty ?  Column(
             children: [
@@ -908,7 +909,8 @@ class _IPOScreenState extends State<IPOScreen>  with SingleTickerProviderStateMi
               Utils.noDataFound(),
             ],
           );
-        } else {
+        }
+        else {
           return Column(
             children: [
               const SizedBox(

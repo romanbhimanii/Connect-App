@@ -211,10 +211,10 @@ class ApiServices {
     }
   }
 
-  Future<IpoDetailsResponse> fetchUpcomingIpoDetails() async {
+  Future<IpoDetailsResponse> fetchUpcomingIpoDetails({required String source}) async {
     try {
       String baseUrl =
-          'http://192.168.102.146:3012/ipo/v1/get-ipo-details?source=mobile_app';
+          'http://192.168.102.146:3012/ipo/v1/get-ipo-details?source=$source';
       final response = await http.post(
         Uri.parse(baseUrl),
         headers: {
@@ -235,10 +235,10 @@ class ApiServices {
     }
   }
 
-  Future<IpoDetailsResponse> fetchOpenIpoDetails() async {
+  Future<IpoDetailsResponse> fetchOpenIpoDetails({required String source}) async {
     try {
       String baseUrl =
-          'http://192.168.102.146:3012/ipo/v1/get-ipo-details?source=mobile_app';
+          'http://192.168.102.146:3012/ipo/v1/get-ipo-details?source=$source';
       final response = await http.post(
         Uri.parse(baseUrl),
         headers: {

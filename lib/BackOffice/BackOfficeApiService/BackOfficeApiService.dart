@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:connect/BackOffice/BackOfficeModels/DashBoardDetailsModelBackOffice/DashBoardDetailsModelBackOffice.dart';
 import 'package:connect/BackOffice/BackOfficeModels/LoginModelBackOffice/LoginModelBackOffice.dart';
-import 'package:connect/BackOffice/BackOfficeScreens/DashBoardScreenBackOffice/DashBoardScreenBackOffice.dart';
 import 'package:connect/BackOffice/Utils/AppVariablesBackOffice.dart';
+import 'package:connect/BackOffice/Utils/BottomNavBar.dart';
 import 'package:connect/ConnectApp/Utils/Utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +70,7 @@ class BackOfficeApiService {
             'backOfficeToken', loginResponse.data?.token ?? "");
         loadToken();
         Get.back();
-        Get.offAll(const DashBoardScreenBackOffice());
+        Get.offAll(const BottomNavBar());
       } else {
         Get.back();
         Utils.toast(msg: "Login failed! Please try again.");

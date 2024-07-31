@@ -14,14 +14,14 @@ class IpoProvider with ChangeNotifier {
 
   Future<void> fetchUpcomingIpoDetails() async {
     if (_upcomingIpoDetails == null) {
-      _upcomingIpoDetails = await _apiService.fetchUpcomingIpoDetails();
+      _upcomingIpoDetails = await _apiService.fetchUpcomingIpoDetails(source: "mobile_app");
       notifyListeners();
     }
   }
 
   Future<void> fetchOpenIpoDetails() async {
     if (_openIpoDetails == null) {
-      _openIpoDetails = await _apiService.fetchOpenIpoDetails();
+      _openIpoDetails = await _apiService.fetchOpenIpoDetails(source: "mobile_app");
       notifyListeners();
     }
   }
