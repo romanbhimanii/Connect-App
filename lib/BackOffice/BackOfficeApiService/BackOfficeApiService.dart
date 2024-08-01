@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:connect/BackOffice/BackOfficeModels/CDSLClientDetailsDpDetailsModel/CDSLClientDetailsDpDetailsModel.dart';
+import 'package:connect/BackOffice/BackOfficeModels/CDSLClientDetailsTradingDetailsModel/CDSLClientDetailsTradingDetailsModel.dart';
 import 'package:connect/BackOffice/BackOfficeModels/DashBoardDetailsModelBackOffice/DashBoardDetailsModelBackOffice.dart';
 import 'package:connect/BackOffice/BackOfficeModels/LoginModelBackOffice/LoginModelBackOffice.dart';
 import 'package:connect/BackOffice/Utils/AppVariablesBackOffice.dart';
@@ -163,6 +165,51 @@ class BackOfficeApiService {
         return DashboardResponse.fromJson(json.decode(response.body));
       } else {
         throw Exception('Failed to load dashboard data');
+      }
+    }catch(e){
+      throw Exception('Internal Server Error!');
+    }
+  }
+
+  Future<List<DPDetails>> fetchDPDetails({required String? token}) async {
+    try{
+      final response = await http.get(
+        Uri.parse('$baseUrl/apb/v1/user/report/dp_details'),
+        headers: {
+          'accept': 'application/json',
+          'authToken': token ?? "",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        final data = body['data'] as List;
+        return data.map((json) => DPDetails.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to load DP details');
+      }
+    }catch(e){
+      throw Exception('Internal Server Error!');
+    }
+  }
+
+  Future<TradingDetailsResponse> fetchTradingDetails(
+      {required String? clientCode, required String? token}) async {
+    try{
+      final url = Uri.parse('$baseUrl/apb/v1/user/report/trading_details');
+      final headers = {
+        'accept': 'application/json',
+        'authToken': token ?? "",
+        'Content-Type': 'application/json',
+      };
+      final body = jsonEncode({'client_code': clientCode});
+
+      final response = await http.post(url, headers: headers, body: body);
+
+      if (response.statusCode == 200) {
+        return TradingDetailsResponse.fromJson(json.decode(response.body));
+      } else {
+        throw Exception('Failed to load trading details');
       }
     }catch(e){
       throw Exception('Internal Server Error!');

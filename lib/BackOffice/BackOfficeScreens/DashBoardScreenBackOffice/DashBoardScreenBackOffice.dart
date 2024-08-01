@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:connect/BackOffice/BackOfficeApiService/BackOfficeApiService.dart';
 import 'package:connect/BackOffice/BackOfficeModels/DashBoardDetailsModelBackOffice/DashBoardDetailsModelBackOffice.dart';
@@ -203,8 +205,7 @@ class _DashBoardScreenBackOfficeState extends State<DashBoardScreenBackOffice> {
                       value: selectedValue,
                       onChanged: (String? value) async {
                         selectedValue = value;
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
+                        SharedPreferences prefs = await SharedPreferences.getInstance();
                         if (selectedValue == "2024-2025") {
                           DateTime now = DateTime.now();
                           year = "${now.year}";
@@ -404,7 +405,7 @@ class _DashBoardScreenBackOfficeState extends State<DashBoardScreenBackOffice> {
                             sectionsSpace: 04,
                             sections: [
                               PieChartSectionData(
-                                value: 25,
+                                value: numberOfClients == "" ? 25 : double.parse(numberOfClients),
                                 gradient: LinearGradient(colors: [
                                   const Color(0xFFF3898B).withOpacity(0.0),
                                   const Color(0xFFF3898B).withOpacity(1.0),
@@ -418,7 +419,7 @@ class _DashBoardScreenBackOfficeState extends State<DashBoardScreenBackOffice> {
                                     color: Colors.white),
                               ),
                               PieChartSectionData(
-                                value: 25,
+                                value: tradedClient == "" ? 25 : double.parse(tradedClient),
                                 gradient: LinearGradient(colors: [
                                   const Color(0xFF00A9FF).withOpacity(1.0),
                                   const Color(0xFF89CFF3).withOpacity(1.0),
@@ -431,7 +432,7 @@ class _DashBoardScreenBackOfficeState extends State<DashBoardScreenBackOffice> {
                                     color: Colors.white),
                               ),
                               PieChartSectionData(
-                                value: 25,
+                                value: nonTradedClient == "" ? 25 : double.parse(nonTradedClient),
                                 title: '',
                                 gradient: LinearGradient(colors: [
                                   const Color(0xFFF3BA89).withOpacity(0.0),
@@ -481,7 +482,8 @@ class _DashBoardScreenBackOfficeState extends State<DashBoardScreenBackOffice> {
                         child: Utils.text(
                             text: "TRADED CLIENT",
                             color: Colors.white,
-                            fontSize: 11),
+                            fontSize: 11,
+                        ),
                       ),
                     ),
                     const SizedBox(
