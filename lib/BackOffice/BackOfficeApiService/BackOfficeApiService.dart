@@ -23,7 +23,7 @@ class BackOfficeApiService {
   Future<String> loadYear() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     DateTime time = DateTime.now();
-    String year = prefs.getString('year') ?? "${time.year}";
+    String year = prefs.getString('backOfficeYear') ?? "${time.year}";
     if (year == "") {
       Appvariablesbackoffice.year = "${time.year}-${time.year + 1}";
     } else if (year == "2024") {

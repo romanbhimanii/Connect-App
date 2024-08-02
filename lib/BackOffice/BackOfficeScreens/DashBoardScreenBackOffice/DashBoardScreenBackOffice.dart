@@ -209,19 +209,19 @@ class _DashBoardScreenBackOfficeState extends State<DashBoardScreenBackOffice> {
                         if (selectedValue == "2024-2025") {
                           DateTime now = DateTime.now();
                           year = "${now.year}";
-                          await prefs.setString('year', year);
+                          await prefs.setString('backOfficeYear', year);
                         } else if (selectedValue == "2023-2024") {
                           year = "2024";
-                          await prefs.setString('year', year);
+                          await prefs.setString('backOfficeYear', year);
                         } else if (selectedValue == "2022-2023") {
                           year = "2023";
-                          await prefs.setString('year', year);
+                          await prefs.setString('backOfficeYear', year);
                         } else if (selectedValue == "2021-2022") {
                           year = "2022";
-                          await prefs.setString('year', year);
+                          await prefs.setString('backOfficeYear', year);
                         } else if (selectedValue == "2020-2021") {
                           year = "2021";
-                          await prefs.setString('year', year);
+                          await prefs.setString('backOfficeYear', year);
                         }
                         BackOfficeApiService().loadYear();
                         setState(() {});

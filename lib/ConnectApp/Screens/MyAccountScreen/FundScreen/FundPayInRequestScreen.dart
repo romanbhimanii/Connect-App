@@ -164,7 +164,8 @@ class _FundpayinrequestscreenState extends State<Fundpayinrequestscreen> {
                     }
                   });
                 }
-              } else if (result == "Filters") {
+              }
+              else if (result == "Filters") {
                 Get.bottomSheet(
                   backgroundColor: Colors.white,
                   SizedBox(
