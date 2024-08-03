@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:connect/BackOffice/BackOfficeModels/CDSLClientDetailsDpDetailsModel/CDSLClientDetailsDpDetailsModel.dart';
 import 'package:connect/BackOffice/BackOfficeModels/CDSLClientDetailsTradingDetailsModel/CDSLClientDetailsTradingDetailsModel.dart';
 import 'package:connect/BackOffice/BackOfficeModels/DashBoardDetailsModelBackOffice/DashBoardDetailsModelBackOffice.dart';
+import 'package:connect/BackOffice/BackOfficeModels/KycDpLedgerModel/KycDpLedgerModel.dart';
 import 'package:connect/BackOffice/BackOfficeModels/LoginModelBackOffice/LoginModelBackOffice.dart';
 import 'package:connect/BackOffice/Utils/AppVariablesBackOffice.dart';
 import 'package:connect/BackOffice/Utils/BottomNavBar.dart';
@@ -210,6 +211,36 @@ class BackOfficeApiService {
         return TradingDetailsResponse.fromJson(json.decode(response.body));
       } else {
         throw Exception('Failed to load trading details');
+      }
+    }catch(e){
+      throw Exception('Internal Server Error!');
+    }
+  }
+
+  Future<DpLedgerReport> fetchDpLedgerReport(
+      {required String clientCode,
+      required String fromDate,
+      required String toDate,
+      required String token}) async {
+    try{
+      final response = await http.post(
+        Uri.parse('$baseUrl/apb/v1/user/report/dp_ledger'),
+        headers: <String, String>{
+          'accept': 'application/json',
+          'authToken': token,
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(<String, String>{
+          'client_code': clientCode,
+          'from_date': fromDate,
+          'to_date': toDate,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        return DpLedgerReport.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception('Failed to load DP Ledger Report');
       }
     }catch(e){
       throw Exception('Internal Server Error!');

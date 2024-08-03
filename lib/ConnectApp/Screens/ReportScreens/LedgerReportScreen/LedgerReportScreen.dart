@@ -765,9 +765,18 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                                       child:  Lottie.asset('assets/lottie/loading.json',height: 100,width: 100)),
                                 ],
                               );
-                            } else if (snapshot.hasError) {
-                              return Center(child: Text('Error: ${snapshot.error}'));
-                            } else if (snapshot.hasData) {
+                            }
+                            else if (snapshot.hasError) {
+                              return Column(
+                                children: [
+                                  const SizedBox(
+                                    height: 200,
+                                  ),
+                                  Utils.noDataFound(),
+                                ],
+                              );
+                            }
+                            else if (snapshot.hasData) {
                               if(totalData.isNull || totalData != snapshot.data!.data.last){
                                 WidgetsBinding.instance.addPostFrameCallback((_){
                                   setState(() {
@@ -975,12 +984,16 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                                                                   visible: ledgerReport.narration != "",
                                                                   child: Row(
                                                                     children: [
-                                                                      Utils.text(
-                                                                        text: ledgerReport.narration.length > 10 ? "${ledgerReport.narration.substring(0,10)}..." : ledgerReport.narration,
-                                                                        color: kBlackColor,
-                                                                        fontSize: 16,
-                                                                        fontWeight: FontWeight.w600,
-                                                                        textAlign: TextAlign.start,
+                                                                      SizedBox(
+                                                                        width: 160,
+                                                                        child: Utils.text(
+                                                                            text: ledgerReport.narration,
+                                                                            color: kBlackColor,
+                                                                            fontSize: 16,
+                                                                            fontWeight: FontWeight.w600,
+                                                                            textAlign: TextAlign.start,
+                                                                            textOverFlow: TextOverflow.ellipsis
+                                                                        ),
                                                                       ),
                                                                       const SizedBox(
                                                                         width: 05,
@@ -1221,7 +1234,8 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                                   Utils.noDataFound(),
                                 ],
                               );
-                            } else {
+                            }
+                            else {
                               return Column(
                                 children: [
                                   const SizedBox(

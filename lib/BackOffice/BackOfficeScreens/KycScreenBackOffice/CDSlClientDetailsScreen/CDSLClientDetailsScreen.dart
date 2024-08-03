@@ -1,7 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:io';
-import 'package:pdf/widgets.dart' as pw;
 import 'package:connect/BackOffice/BackOfficeApiService/BackOfficeApiService.dart';
 import 'package:connect/BackOffice/BackOfficeModels/CDSLClientDetailsDpDetailsModel/CDSLClientDetailsDpDetailsModel.dart';
 import 'package:connect/BackOffice/BackOfficeModels/CDSLClientDetailsTradingDetailsModel/CDSLClientDetailsTradingDetailsModel.dart';
@@ -22,7 +21,6 @@ import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 class CDSLClientDetailsScreen extends StatefulWidget {
   const CDSLClientDetailsScreen({super.key});
@@ -413,265 +411,6 @@ class _CDSLClientDetailsScreenState extends State<CDSLClientDetailsScreen>
     }
   }
 
-  Future<void> exportDpDetailsToPdf(List<DPDetails> data) async {
-    final pdf = pw.Document();
-
-    pdf.addPage(
-      pw.Page(
-        build: (context) {
-          return pw.Table.fromTextArray(
-            headers: [
-              'Sr No',
-              'Branch Code',
-              'Trading Client Id',
-              'Bo Id',
-              'First Holder Name',
-              'ITPA No',
-              'Account Status',
-              'BO Sub Status',
-              'Account Open Date',
-              'BO Date Of Birth',
-              'BO Address Line 1',
-              'BO Address Line 2',
-              'BO Address Line 3',
-              'BO Address City',
-              'BO Address State',
-              'Bo Address Country',
-              'BO Address Pin',
-              'Mobile Number',
-              'Email Id',
-              'Bank Name',
-              'Bank Account Number',
-              'MICR Code',
-              'Second Holder Name',
-              'Pan No(Second Holder)',
-              'Third Holder Name',
-              'Pan No(Third Holder)',
-              'POA Name',
-              'POA Enabled',
-              'Nominee Name',
-              'Risk Category',
-              'Guardian Pan No',
-            ],
-            data: List<List<dynamic>>.generate(
-              data.length,
-                  (index) => [
-                index + 1,
-                data[index].branchCode,
-                data[index].tradingClientId,
-                data[index].boId,
-                data[index].firstHoldName,
-                data[index].itpaNo,
-                data[index].accStat,
-                data[index].boSubStat,
-                data[index].accOpenDate,
-                data[index].boDob,
-                data[index].boAdd1,
-                data[index].boAdd2,
-                data[index].boAdd3,
-                data[index].boAddCity,
-                data[index].boAddState,
-                data[index].boAddCountry,
-                data[index].boAddPin,
-                data[index].mobileNum,
-                data[index].emailId,
-                data[index].bankName,
-                data[index].bankAccNo,
-                data[index].micrCode,
-                data[index].secondHoldName,
-                data[index].panNo2,
-                data[index].thirdHoldName,
-                data[index].panNo3,
-                data[index].poaName,
-                data[index].poaEnabled,
-                data[index].nominName,
-                data[index].riskCategory,
-                data[index].guardianPanNo,
-              ],
-            ),
-          );
-        },
-      ),
-    );
-
-    final deviceInfo = await DeviceInfoPlugin().androidInfo;
-    bool permissionStatus;
-
-    if (deviceInfo.version.sdkInt > 32) {
-      permissionStatus = await Permission.manageExternalStorage.request().isGranted;
-    } else {
-      permissionStatus = await Permission.storage.request().isGranted;
-    }
-
-    if (permissionStatus) {
-      Directory? directory;
-      if (Platform.isAndroid) {
-        directory = await getExternalStorageDirectory();
-      } else {
-        directory = await getApplicationDocumentsDirectory();
-      }
-
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      DateTime time = DateTime.now();
-      String year = prefs.getString('backOfficeYear') ?? "${time.year}";
-      String reportYear = '';
-      if(year == ""){
-        reportYear = "${time.year}";
-      }
-      else if(year == "2024"){
-        reportYear = "2024";
-      }else if(year == "2023"){
-        reportYear = "2023";
-      }else if(year == "2022"){
-        reportYear = "2022";
-      }else if(year == "2021"){
-        reportYear = "2021";
-      }
-
-      String path = "${directory?.path}/DpDetails_$reportYear.pdf";
-      final file = File(path);
-
-      await file.writeAsBytes(await pdf.save());
-      await OpenFile.open(path);
-      Utils.toast(msg: "Exported to $path");
-    } else {
-      Utils.toast(msg: "Permission denied");
-    }
-  }
-
-  Future<void> generateInvoice() async {
-    // Create a PDF document.
-    final PdfDocument document = PdfDocument();
-    // Add page to the PDF
-    final PdfPage page = document.pages.add();
-    // Get page client size
-    final Size pageSize = page.getClientSize();
-    // Generate PDF grid.
-    final PdfGrid grid = getGrid();
-    // Draw grid
-    drawGrid(page, grid, pageSize);
-    // Save the PDF document
-    final List<int> bytes = document.saveSync();
-    // Dispose the document.
-    document.dispose();
-    // Save and launch the file.
-    Directory? directory;
-    if (Platform.isAndroid) {
-      directory = await getExternalStorageDirectory();
-    } else {
-      directory = await getApplicationDocumentsDirectory();
-    }
-    String path = "${directory?.path}/dp_details.pdf";
-    final file = File(path);
-
-    await file.writeAsBytes(bytes);
-    await OpenFile.open(path);
-  }
-
-  // Draws the grid
-  void drawGrid(PdfPage page, PdfGrid grid, Size pageSize) {
-    // Apply the table built-in style
-    grid.applyBuiltInStyle(PdfGridBuiltInStyle.listTable4Accent5);
-    // Set grid columns width
-    for (int i = 0; i < grid.columns.count; i++) {
-      grid.columns[i].width = (pageSize.width - 40) / grid.columns.count;
-    }
-    // Draw the PDF grid and get the result.
-    grid.draw(
-      page: page,
-      bounds: Rect.fromLTWH(20, 20, pageSize.width - 40, pageSize.height - 40),
-    );
-  }
-
-  // Create PDF grid and return
-  PdfGrid getGrid() {
-    // Create a PDF grid
-    final PdfGrid grid = PdfGrid();
-    // Specify the columns count to the grid.
-    grid.columns.add(count: 30);
-    // Create the header row of the grid.
-    final PdfGridRow headerRow = grid.headers.add(1)[0];
-    // Set style
-    headerRow.style.backgroundBrush = PdfSolidBrush(PdfColor(68, 114, 196));
-    headerRow.style.textBrush = PdfBrushes.white;
-    headerRow.cells[0].value = 'Branch Code';
-    headerRow.cells[1].value = 'Trading Client ID';
-    headerRow.cells[2].value = 'BO ID';
-    headerRow.cells[3].value = 'First Holder Name';
-    headerRow.cells[4].value = 'ITPA No';
-    headerRow.cells[5].value = 'Account Status';
-    headerRow.cells[6].value = 'BO Sub Status';
-    headerRow.cells[7].value = 'Account Open Date';
-    headerRow.cells[8].value = 'BO DOB';
-    headerRow.cells[9].value = 'BO Address 1';
-    headerRow.cells[10].value = 'BO Address 2';
-    headerRow.cells[11].value = 'BO Address 3';
-    headerRow.cells[12].value = 'BO City';
-    headerRow.cells[13].value = 'BO State';
-    headerRow.cells[14].value = 'BO Country';
-    headerRow.cells[15].value = 'BO Pin';
-    headerRow.cells[16].value = 'Mobile Number';
-    headerRow.cells[17].value = 'Email ID';
-    headerRow.cells[18].value = 'Bank Name';
-    headerRow.cells[19].value = 'Bank Account No';
-    headerRow.cells[20].value = 'MICR Code';
-    headerRow.cells[21].value = 'Second Holder Name';
-    headerRow.cells[22].value = 'PAN No 2';
-    headerRow.cells[23].value = 'Third Holder Name';
-    headerRow.cells[24].value = 'PAN No 3';
-    headerRow.cells[25].value = 'POA Name';
-    headerRow.cells[26].value = 'POA Enabled';
-    headerRow.cells[27].value = 'Nominee Name';
-    headerRow.cells[28].value = 'Risk Category';
-    headerRow.cells[29].value = 'Guardian PAN No';
-
-    // Add rows
-    addRow(grid, '001', 'T123', 'B01234', 'John Doe', '123456', 'Active', 'Sub Active', '01-01-2020', '01-01-1980',
-        '123 Street', 'City', 'State', 'Country', '123456', '456789', '1234567890', 'john@example.com', 'Bank 1', '123456789', '123456', 'Jane Doe', 'PAN123', 'Jim Doe', 'PAN456', 'N/A', 'Yes', 'Nominee', 'Low', 'GuardianPAN', '123');
-
-    return grid;
-  }
-
-  // Add a row to the grid
-  void addRow(PdfGrid grid, String branchCode, String tradingClientId, String boId, String firstHolderName, String itpaNo,
-      String accountStatus, String boSubStatus, String accountOpenDate, String boDob, String boAdd1, String boAdd2,
-      String boAdd3, String boCity, String boState, String boCountry, String boPin, String mobileNum, String emailId,
-      String bankName, String bankAccNo, String micrCode, String secondHoldName, String panNo2, String thirdHoldName,
-      String panNo3, String poaName, String poaEnabled, String nomineeName, String riskCategory, String guardianPanNo) {
-    final PdfGridRow row = grid.rows.add();
-    row.cells[0].value = branchCode;
-    row.cells[1].value = tradingClientId;
-    row.cells[2].value = boId;
-    row.cells[3].value = firstHolderName;
-    row.cells[4].value = itpaNo;
-    row.cells[5].value = accountStatus;
-    row.cells[6].value = boSubStatus;
-    row.cells[7].value = accountOpenDate;
-    row.cells[8].value = boDob;
-    row.cells[9].value = boAdd1;
-    row.cells[10].value = boAdd2;
-    row.cells[11].value = boAdd3;
-    row.cells[12].value = boCity;
-    row.cells[13].value = boState;
-    row.cells[14].value = boCountry;
-    row.cells[15].value = boPin;
-    row.cells[16].value = mobileNum;
-    row.cells[17].value = emailId;
-    row.cells[18].value = bankName;
-    row.cells[19].value = bankAccNo;
-    row.cells[20].value = micrCode;
-    row.cells[21].value = secondHoldName;
-    row.cells[22].value = panNo2;
-    row.cells[23].value = thirdHoldName;
-    row.cells[24].value = panNo3;
-    row.cells[25].value = poaName;
-    row.cells[26].value = poaEnabled;
-    row.cells[27].value = nomineeName;
-    row.cells[28].value = riskCategory;
-    row.cells[29].value = guardianPanNo;
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -769,6 +508,8 @@ class _CDSLClientDetailsScreenState extends State<CDSLClientDetailsScreen>
                               children: [
                                 Expanded(
                                   child: DropdownButtonFormField<String>(
+                                    borderRadius: BorderRadius.circular(10),
+                                    dropdownColor: Colors.white,
                                     value: _tabController?.index == 0 ? selectedColumn : selectedColumn1,
                                     isExpanded: true,
                                     onChanged: (value) {
@@ -795,16 +536,20 @@ class _CDSLClientDetailsScreenState extends State<CDSLClientDetailsScreen>
                                         ),
                                       );
                                     }).toList(),
-                                    decoration: const InputDecoration(
+                                    decoration: InputDecoration(
                                       fillColor: Colors.transparent,
                                       labelText: 'Columns',
-                                      border: OutlineInputBorder(),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10)
+                                      ),
                                     ),
                                   ),
                                 ),
                                 const SizedBox(width: 10),
                                 Expanded(
                                   child: DropdownButtonFormField<String>(
+                                    borderRadius: BorderRadius.circular(10),
+                                    dropdownColor: Colors.white,
                                     value: selectedOperator,
                                     onChanged: (value) {
                                       setState(() {
@@ -820,10 +565,12 @@ class _CDSLClientDetailsScreenState extends State<CDSLClientDetailsScreen>
                                         ),
                                       );
                                     }).toList(),
-                                    decoration: const InputDecoration(
+                                    decoration: InputDecoration(
                                       fillColor: Colors.transparent,
                                       labelText: 'Operator',
-                                      border: OutlineInputBorder(),
+                                      border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(10)
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -836,10 +583,12 @@ class _CDSLClientDetailsScreenState extends State<CDSLClientDetailsScreen>
                                   filterValue = value;
                                 });
                               },
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 fillColor: Colors.transparent,
                                 labelText: 'Filter Value',
-                                border: OutlineInputBorder(),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10)
+                                ),
                               ),
                             ),
                             const SizedBox(height: 20),
@@ -866,25 +615,6 @@ class _CDSLClientDetailsScreenState extends State<CDSLClientDetailsScreen>
                   position: const RelativeRect.fromLTRB(100, 0, 0, 0),
                   items: <PopupMenuEntry<String>>[
                     PopupMenuItem<String>(
-                      value: 'PDF',
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.picture_as_pdf,
-                            color: Colors.black,
-                          ),
-                          const SizedBox(
-                            width: 8,
-                          ),
-                          Utils.text(
-                            text: "PDF",
-                            color: Colors.black,
-                            fontSize: 15,
-                          )
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem<String>(
                       value: 'CSV',
                       child: Row(
                         children: [
@@ -905,15 +635,7 @@ class _CDSLClientDetailsScreenState extends State<CDSLClientDetailsScreen>
                     ),
                   ],
                 ).then((value) async {
-                  if (value == 'PDF') {
-                    if (await futureDPDetails != null) {
-                      futureDPDetails?.then((response) {
-                        if (response.isNotEmpty) {
-                          generateInvoice();
-                        }
-                      });
-                    }
-                  } else if (value == 'CSV') {
+                  if (value == 'CSV') {
                     if (await futureDPDetails != null) {
                       futureDPDetails?.then((response) {
                         if (response.isNotEmpty) {
