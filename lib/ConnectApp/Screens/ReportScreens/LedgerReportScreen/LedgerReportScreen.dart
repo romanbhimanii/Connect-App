@@ -530,7 +530,8 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
                           type: "ledger",
                           downloadType: "PDF",
                           year: reportYear,
-                          context: context
+                          context: context,
+                        source: "connect"
                       );
                     } else if (result == "Excel") {
                       if (await Appvariables.ledgerReport != null) {

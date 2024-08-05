@@ -95,13 +95,14 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             const SizedBox(
               height: 10,
             ),
-            Container(
-              height: 180,
+            Padding(padding: EdgeInsets.symmetric(horizontal: 15),
+            child: Container(
               width: double.infinity,
-              decoration: const BoxDecoration(
-                  image: DecorationImage(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  image: const DecorationImage(
                       image: AssetImage("assets/images/DashBoardBanner.png"),
-                      fit: BoxFit.cover)),
+                      fit: BoxFit.fill)),
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
@@ -158,17 +159,17 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                         children: [
                           equity != ""
                               ? Utils.text(
-                                  text: "Rs. $equity",
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                )
+                            text: "Rs. $equity",
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          )
                               : Center(
-                                  child: Lottie.asset(
-                                      'assets/lottie/loading.json',
-                                      height: 35,
-                                      width: 35),
-                                ),
+                            child: Lottie.asset(
+                                'assets/lottie/loading.json',
+                                height: 35,
+                                width: 35),
+                          ),
                           fetchHoldingReport(),
                         ],
                       ),
@@ -221,7 +222,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                     .map((e) => Container(
                                   alignment: Alignment.center,
                                   child: Utils.text(
-                                    text: e,
+                                      text: e,
                                       color: Colors.white,
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold
@@ -233,7 +234,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                 return DropdownMenuItem<String>(
                                   value: value,
                                   child: Utils.text(
-                                    text: value,
+                                      text: value,
                                       color: const Color(0xFF4A5568),
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold
@@ -249,7 +250,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                               onChanged: (String? value) async {
                                 selectedValue = value;
                                 SharedPreferences prefs =
-                                    await SharedPreferences.getInstance();
+                                await SharedPreferences.getInstance();
                                 if (selectedValue == "2024-2025") {
                                   DateTime now = DateTime.now();
                                   year = "${now.year}";
@@ -283,7 +284,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                       color: const Color(0xFFEAF9FF))),
                               buttonStyleData: ButtonStyleData(
                                 padding:
-                                    const EdgeInsets.symmetric(horizontal: 08),
+                                const EdgeInsets.symmetric(horizontal: 08),
                                 height: 40,
                                 width: 140,
                                 decoration: BoxDecoration(
@@ -300,7 +301,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                   ],
                 ),
               ),
-            ),
+            ),),
             const SizedBox(
               height: 10,
             ),

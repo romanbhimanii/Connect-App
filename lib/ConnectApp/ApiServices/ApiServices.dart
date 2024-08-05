@@ -975,7 +975,7 @@ class ApiServices {
   }
 
   Future<void> downloadReportDocuments(
-      {String? token, String? type, String? downloadType, String? year, required BuildContext context}) async {
+      {String? token, String? type, String? downloadType, String? year, required BuildContext context, required String source}) async {
     final deviceInfo = await DeviceInfoPlugin().androidInfo;
     bool permissionStatus;
 
@@ -991,7 +991,7 @@ class ApiServices {
       Directory directory = Directory(downloadsFolderPath);
 
       String url =
-          '$baseUrl/v1/user/report/pnl?source=connect';
+          '$baseUrl/v1/user/report/pnl?source=$source';
       final headers = {
         'accept': 'application/json',
         'auth-token': token ?? "",

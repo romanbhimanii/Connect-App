@@ -1,5 +1,6 @@
 import 'package:connect/BackOffice/BackOfficeScreens/KycScreenBackOffice/CDSlClientDetailsScreen/CDSLClientDetailsScreen.dart';
 import 'package:connect/BackOffice/BackOfficeScreens/KycScreenBackOffice/KycDpLedgerScreen/KycDpLedgerScreen.dart';
+import 'package:connect/BackOffice/BackOfficeScreens/KycScreenBackOffice/NominationBackOfficeScreen/NominationBackOfficeScreen.dart';
 import 'package:connect/ConnectApp/SettingsScreen/SettingsScreen.dart';
 import 'package:connect/ConnectApp/Utils/Constant.dart';
 import 'package:connect/ConnectApp/Utils/Utils.dart';
@@ -92,13 +93,11 @@ class _KycScreenBackOfficeState extends State<KycScreenBackOffice> with SingleTi
                   } else if (index == 3) {
 
                   } else if (index == 4) {
-
-                  } else if (index == 5) {
-
-                  } else if (index == 6) {
-
-                  } else if (index == 7) {
-
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return const NominationBackOfficeScreen();
+                      },
+                    ));
                   }
                 },
                 child: Container(

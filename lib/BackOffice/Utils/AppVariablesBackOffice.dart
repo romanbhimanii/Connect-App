@@ -1,4 +1,5 @@
-import 'package:connect/BackOffice/BackOfficeModels/KycDpLedgerModel/KycDpLedgerModel.dart';
+
+import 'package:connect/BackOffice/BackOfficeModels/CDSLClientDetailsDpDetailsModel/CDSLClientDetailsDpDetailsModel.dart';
 
 class Appvariablesbackoffice{
 
@@ -6,5 +7,5 @@ class Appvariablesbackoffice{
   static String? branchCode;
   static String year = "";
 
-  static Future<DpLedgerReport>? futureDpLedgerReport;
+  static Future<List<DPDetails>>? futureDPDetails;
 }

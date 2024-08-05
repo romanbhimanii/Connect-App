@@ -89,6 +89,7 @@ class _ProfitandlossreportscreenState extends State<Profitandlossreportscreen> {
                             type: "all",
                             downloadType: "all",
                             year: "2024",
+                            source: "connect",
                             context: context
                         );
                       },
@@ -144,6 +145,7 @@ class _ProfitandlossreportscreenState extends State<Profitandlossreportscreen> {
                                             type: "equity",
                                             downloadType: "PDF",
                                             year: "2024",
+                                            source: "connect",
                                             context: context
                                         );
                                       }else if(index == 2){
@@ -152,6 +154,7 @@ class _ProfitandlossreportscreenState extends State<Profitandlossreportscreen> {
                                             token: Appvariables.token,
                                             type: "future_option",
                                             downloadType: "PDF",
+                                            source: "connect",
                                             year: "2024",
                                             context: context
                                         );
@@ -161,6 +164,7 @@ class _ProfitandlossreportscreenState extends State<Profitandlossreportscreen> {
                                             token: Appvariables.token,
                                             type: "currency_derivatives",
                                             downloadType: "PDF",
+                                            source: "connect",
                                             year: "2024",
                                             context: context
                                         );
@@ -184,6 +188,7 @@ class _ProfitandlossreportscreenState extends State<Profitandlossreportscreen> {
                                             type: "equity",
                                             downloadType: "Excel",
                                             year: "2024",
+                                            source: "connect",
                                             context: context
                                         );
                                       }else if(index == 2){
@@ -193,6 +198,7 @@ class _ProfitandlossreportscreenState extends State<Profitandlossreportscreen> {
                                             type: "future_option",
                                             downloadType: "Excel",
                                             year: "2024",
+                                            source: "connect",
                                             context: context
                                         );
                                       }else if(index == 3){
@@ -202,6 +208,7 @@ class _ProfitandlossreportscreenState extends State<Profitandlossreportscreen> {
                                             type: "currency_derivatives",
                                             downloadType: "Excel",
                                             year: "2024",
+                                            source: "connect",
                                             context: context
                                         );
                                       }
@@ -228,6 +235,7 @@ class _ProfitandlossreportscreenState extends State<Profitandlossreportscreen> {
                                           token: Appvariables.token,
                                         type: "ledger",
                                         downloadType: "PDF",
+                                        source: "connect",
                                         year: "2024",context: context
                                       );
                                     }else if(index == 4){
@@ -236,6 +244,7 @@ class _ProfitandlossreportscreenState extends State<Profitandlossreportscreen> {
                                           token: Appvariables.token,
                                           type: "pnl_summary",
                                           downloadType: "PDF",
+                                          source: "connect",
                                           year: "2024",context: context
                                       );
                                     }else if(index == 5){
@@ -244,6 +253,7 @@ class _ProfitandlossreportscreenState extends State<Profitandlossreportscreen> {
                                           token: Appvariables.token,
                                           type: "holding",
                                           downloadType: "PDF",
+                                          source: "connect",
                                           year: "2024",context: context
                                       );
                                     }

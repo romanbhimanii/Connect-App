@@ -15,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class BackOfficeApiService {
   String baseUrl = "http://192.168.130.8:2020";
+  String baseUrl1 = "http://192.168.130.43:1818";
 
   Future<void> loadToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -243,6 +244,38 @@ class BackOfficeApiService {
         throw Exception('Failed to load DP Ledger Report');
       }
     }catch(e){
+      throw Exception('Internal Server Error!');
+    }
+  }
+
+  Future<String> fetchNomineeDetails({String? clientCode, String? token}) async {
+
+    final String url = '$baseUrl1/v1/nominee_details?source=ap';
+
+    final Map<String, String> formData = {
+      'client_code': clientCode ?? "",
+    };
+
+    try {
+      final http.Response response = await http.post(
+        Uri.parse(url),
+        headers: <String, String>{
+          'accept': 'application/json',
+          'Authtoken': token ?? "",
+        },
+        body: formData,
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        Get.back();
+        return responseData['data'];
+      } else {
+        Get.back();
+        throw Exception('Failed to generate link!');
+      }
+    } catch (e) {
+      Get.back();
       throw Exception('Internal Server Error!');
     }
   }

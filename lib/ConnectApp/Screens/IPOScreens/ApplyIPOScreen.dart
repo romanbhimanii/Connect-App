@@ -61,6 +61,7 @@ class _ApplyiposcreenState extends State<Applyiposcreen> {
     categories = arguments["categories"];
     symbol = arguments["symbol"];
     totalAmount = lotSize * maxValue * number;
+    totalBidQuantity = number * lotSize;
     loadData();
   }
 

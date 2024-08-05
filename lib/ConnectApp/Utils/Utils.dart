@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 
 class Utils {
+
   static Widget text(
       {String? text,
       FontWeight? fontWeight,

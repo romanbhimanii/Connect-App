@@ -228,7 +228,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [Utils.text(
-                text: "Developed By ANVTech",
+                text: "Developed By ANV Tech",
               ), Utils.text(
                 text: "Version 1.0.0",
               ),],

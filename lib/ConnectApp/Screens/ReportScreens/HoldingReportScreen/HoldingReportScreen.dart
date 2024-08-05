@@ -238,7 +238,8 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                         type: "holding",
                         downloadType: "PDF",
                         year: year,
-                        context: context
+                        context: context,
+                      source: "connect"
                     );
                   },
                   child: Container(
