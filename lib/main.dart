@@ -1,3 +1,4 @@
+import 'package:connect/BackOffice/Providers/ClientDetailsProvider/ClientDetailsProvider.dart';
 import 'package:connect/ConnectApp/Screens/IPOScreen/IpoProvider.dart';
 import 'package:connect/ConnectApp/Screens/Welcome/WelcomeScreen.dart';
 import 'package:connect/ConnectApp/Utils/Constant.dart';
@@ -9,6 +10,7 @@ void main() {
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => IpoProvider()),
+      ChangeNotifierProvider(create: (_) => ClientDetailProvider()),
     ], child: const MyApp()),
   );
 }

@@ -1,3 +1,5 @@
+import 'package:connect/BackOffice/BackOfficeScreens/AccountScreenBackOffice/CommonReportAccountBackOfficeScreen/CommonReportAccountBackOfficeScreen.dart';
+import 'package:connect/BackOffice/BackOfficeScreens/AccountScreenBackOffice/ContractBillAccountBackOfficeScreen/ContractBillAccountBackOfficeScreen.dart';
 import 'package:connect/BackOffice/BackOfficeScreens/AccountScreenBackOffice/IncomeTaxAccountBackOfficeScreen/IncomeTaxAccountBackOfficeScreen.dart';
 import 'package:connect/ConnectApp/SettingsScreen/SettingsScreen.dart';
 import 'package:connect/ConnectApp/Utils/Constant.dart';
@@ -87,8 +89,17 @@ class _AccountScreenBackOfficeState extends State<AccountScreenBackOffice> {
                       },
                     ));
                   } else if (index == 1) {
-
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return const ContractBillAccountBackOfficeScreen();
+                      },
+                    ));
                   } else if (index == 2) {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return const CommonReportAccountBackOfficeScreen();
+                      },
+                    ));
                   } else if (index == 3) {
 
                   } else if (index == 4) {

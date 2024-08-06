@@ -74,6 +74,7 @@ class _ContractbillreportscreenState extends State<Contractbillreportscreen> {
         Appvariables.contractBill = ApiServices().fetchContractBills(
           fromDate: fromDate,
           toDate: toDate,
+          source: "connect",
           authToken: Appvariables.token,
           clientCode: Appvariables.clientCode,
         );

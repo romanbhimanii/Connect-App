@@ -29,6 +29,7 @@ class _DownloadscreenState extends State<Downloadscreen> {
     "Global Details",
     "Ledger",
   ];
+
   List<String> icons = [
     "assets/icons/ProfileIconAccount.svg",
     "assets/icons/BankDetailsIconAccount.svg",
