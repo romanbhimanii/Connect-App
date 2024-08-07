@@ -1,6 +1,8 @@
 import 'package:connect/BackOffice/BackOfficeScreens/AccountScreenBackOffice/CommonReportAccountBackOfficeScreen/CommonReportAccountBackOfficeScreen.dart';
 import 'package:connect/BackOffice/BackOfficeScreens/AccountScreenBackOffice/ContractBillAccountBackOfficeScreen/ContractBillAccountBackOfficeScreen.dart';
+import 'package:connect/BackOffice/BackOfficeScreens/AccountScreenBackOffice/GlobalBrokerageSummaryAccountBackOfficeScreen/GlobalBrokerageSummaryAccountBackOfficeScreen.dart';
 import 'package:connect/BackOffice/BackOfficeScreens/AccountScreenBackOffice/IncomeTaxAccountBackOfficeScreen/IncomeTaxAccountBackOfficeScreen.dart';
+import 'package:connect/BackOffice/BackOfficeScreens/AccountScreenBackOffice/LedgerReportAccountBackOfficeScreen/LedgerReportAccountBackOfficeScreen.dart';
 import 'package:connect/ConnectApp/SettingsScreen/SettingsScreen.dart';
 import 'package:connect/ConnectApp/Utils/Constant.dart';
 import 'package:connect/ConnectApp/Utils/Utils.dart';
@@ -101,8 +103,17 @@ class _AccountScreenBackOfficeState extends State<AccountScreenBackOffice> {
                       },
                     ));
                   } else if (index == 3) {
-
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return const GlobalBrokerageSummaryAccountBackOfficeScreen();
+                      },
+                    ));
                   } else if (index == 4) {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return const LedgerReportAccountBackOfficeScreen();
+                      },
+                    ));
                   }
                 },
                 child: Container(

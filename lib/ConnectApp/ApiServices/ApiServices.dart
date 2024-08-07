@@ -849,11 +849,10 @@ class ApiServices {
       String? clientCode,
       String? fromDate,
         String? margin,
+        String? source,
       String? toDate}) async {
-    print("Ledger Api Called");
     try {
       String Url = '$baseUrl/v1/user/report/ledger';
-      const String source = 'connect';
 
       final url = Uri.parse('$Url?source=$source');
       final headers = {

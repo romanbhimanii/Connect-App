@@ -530,39 +530,6 @@ class _HoldingReportScreenState extends State<HoldingReportScreen> {
                                                       ),
                                                     ],
                                                   ),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Utils.text(
-                                                  //       text: "ISIN",
-                                                  //       color: Color(0xFF4A5568),
-                                                  //       fontSize: 10,
-                                                  //     ),
-                                                  //     Utils.text(
-                                                  //       text: data.isin,
-                                                  //       color: Colors.black,
-                                                  //       fontSize: 10,
-                                                  //       fontWeight: FontWeight.w600
-                                                  //     ),
-                                                  //     const Spacer(),
-                                                  //     Utils.text(
-                                                  //       text: "Amount : ",
-                                                  //       color: Colors.black,
-                                                  //       fontSize: 12,
-                                                  //       fontWeight: FontWeight.bold,
-                                                  //     ),
-                                                  //     Utils.text(
-                                                  //       text: "${data.amount}" == ""
-                                                  //           ? "-"
-                                                  //           : "${data.amount}",
-                                                  //       color:
-                                                  //           "${data.amount}".startsWith("-")
-                                                  //               ? Colors.red
-                                                  //               : Colors.green,
-                                                  //       fontSize: 12,
-                                                  //       textOverFlow: TextOverflow.ellipsis,
-                                                  //     ),
-                                                  //   ],
-                                                  // ),
                                                   Visibility(
                                                     visible: (isShow?[index] ?? false),
                                                     child: Column(

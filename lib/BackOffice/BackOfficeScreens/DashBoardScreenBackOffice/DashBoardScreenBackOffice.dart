@@ -280,15 +280,14 @@ class _DashBoardScreenBackOfficeState extends State<DashBoardScreenBackOffice> {
 
   Widget _buildProcessCards() {
     return CarouselSlider(
+      disableGesture: true,
       options: CarouselOptions(
         height: 200,
         aspectRatio: 16 / 9,
         viewportFraction: 0.45,
         initialPage: 0,
-        enableInfiniteScroll: true,
-        disableCenter: true,
         reverse: false,
-        autoPlay: true,
+        autoPlay: false,
         autoPlayInterval: const Duration(seconds: 5),
         autoPlayAnimationDuration: const Duration(milliseconds: 800),
         autoPlayCurve: Curves.fastOutSlowIn,

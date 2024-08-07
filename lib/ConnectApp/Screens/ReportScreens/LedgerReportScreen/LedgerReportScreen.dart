@@ -150,6 +150,7 @@ class _LedgerReportScreenState extends State<LedgerReportScreen> {
         fromDate: fromDate,
         toDate: toDate,
         margin: selectedValueOfMargin ?? "Y",
+        source: "connect"
       );
     }
 
