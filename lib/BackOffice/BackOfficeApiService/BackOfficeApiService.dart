@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:connect/BackOffice/BackOfficeModels/CDSLClientDetailsDpDetailsModel/CDSLClientDetailsDpDetailsModel.dart';
 import 'package:connect/BackOffice/BackOfficeModels/CDSLClientDetailsTradingDetailsModel/CDSLClientDetailsTradingDetailsModel.dart';
+import 'package:connect/BackOffice/BackOfficeModels/ClientWiseCreditDebitReportModel/ClientWiseCreditDebitReportModel.dart';
 import 'package:connect/BackOffice/BackOfficeModels/CommonReportAccountModelBackOffice/CommonReportAccountModelBackOffice.dart';
 import 'package:connect/BackOffice/BackOfficeModels/DashBoardClientDetailsModel/DashBoardClientDetailsModel.dart';
 import 'package:connect/BackOffice/BackOfficeModels/DashBoardDetailsModelBackOffice/DashBoardDetailsModelBackOffice.dart';
@@ -428,6 +429,35 @@ class BackOfficeApiService {
       return RiskReport.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load risk report');
+    }
+  }
+
+  Future<ApiResponse1> fetchClientWiseDrCr(
+      {String? companyCode, String? clientCode, String? branchCode, String? authToken}) async {
+    try{
+      String apiUrl = '$baseUrl/apb/v1/user/report/client_wise_dr_cr';
+
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'accept': 'application/json',
+          'authToken': authToken ?? "",
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'company_code': companyCode,
+          'client_code': clientCode,
+          'branch_code': branchCode,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        return ApiResponse1.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception('Failed to load data');
+      }
+    }catch(e){
+      throw Exception('Internal Server Error!');
     }
   }
 }

@@ -1,7 +1,10 @@
+import 'package:connect/BackOffice/BackOfficeScreens/AccountScreenBackOffice/AgeingReportAccountScreen/AgeingReportAccountScreen.dart';
+import 'package:connect/BackOffice/BackOfficeScreens/AccountScreenBackOffice/ClientWiseDebitCreditAccountScreen/ClientWiseDebitCreditAccountScreen.dart';
 import 'package:connect/BackOffice/BackOfficeScreens/AccountScreenBackOffice/CommonReportAccountBackOfficeScreen/CommonReportAccountBackOfficeScreen.dart';
 import 'package:connect/BackOffice/BackOfficeScreens/AccountScreenBackOffice/ContractBillAccountBackOfficeScreen/ContractBillAccountBackOfficeScreen.dart';
 import 'package:connect/BackOffice/BackOfficeScreens/AccountScreenBackOffice/GlobalBrokerageSummaryAccountBackOfficeScreen/GlobalBrokerageSummaryAccountBackOfficeScreen.dart';
 import 'package:connect/BackOffice/BackOfficeScreens/AccountScreenBackOffice/IncomeTaxAccountBackOfficeScreen/IncomeTaxAccountBackOfficeScreen.dart';
+import 'package:connect/BackOffice/BackOfficeScreens/AccountScreenBackOffice/LatePaymentChargesScreen/LatePaymentChargeScreen.dart';
 import 'package:connect/BackOffice/BackOfficeScreens/AccountScreenBackOffice/LedgerReportAccountBackOfficeScreen/LedgerReportAccountBackOfficeScreen.dart';
 import 'package:connect/ConnectApp/SettingsScreen/SettingsScreen.dart';
 import 'package:connect/ConnectApp/Utils/Constant.dart';
@@ -112,6 +115,25 @@ class _AccountScreenBackOfficeState extends State<AccountScreenBackOffice> {
                     Navigator.push(context, MaterialPageRoute(
                       builder: (context) {
                         return const LedgerReportAccountBackOfficeScreen();
+                      },
+                    ));
+                  } else if (index == 5) {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return const ClientWiseDebitCreditReportScreen();
+                      },
+                    ));
+                  } else if (index == 6) {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return const LatePaymentChargeScreen();
+                      },
+                    ));
+                  }
+                  else if (index == 7) {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return const AgeingReportAccountScreen();
                       },
                     ));
                   }

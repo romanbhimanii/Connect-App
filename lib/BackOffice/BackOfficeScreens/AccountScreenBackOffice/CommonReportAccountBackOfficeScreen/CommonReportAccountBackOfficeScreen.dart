@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:connect/BackOffice/BackOfficeApiService/BackOfficeApiService.dart';
 import 'package:connect/BackOffice/BackOfficeModels/CommonReportAccountModelBackOffice/CommonReportAccountModelBackOffice.dart';
 import 'package:connect/BackOffice/Utils/AppVariablesBackOffice.dart';
@@ -8,7 +7,6 @@ import 'package:connect/ConnectApp/Utils/Utils.dart';
 import 'package:csv/csv.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:open_file/open_file.dart';
