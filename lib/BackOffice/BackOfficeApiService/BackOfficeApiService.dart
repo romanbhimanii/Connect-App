@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:connect/BackOffice/BackOfficeModels/AgeingReportAccountModel/AgeingReportAccountModel.dart';
 import 'package:connect/BackOffice/BackOfficeModels/CDSLClientDetailsDpDetailsModel/CDSLClientDetailsDpDetailsModel.dart';
 import 'package:connect/BackOffice/BackOfficeModels/CDSLClientDetailsTradingDetailsModel/CDSLClientDetailsTradingDetailsModel.dart';
 import 'package:connect/BackOffice/BackOfficeModels/ClientWiseCreditDebitReportModel/ClientWiseCreditDebitReportModel.dart';
 import 'package:connect/BackOffice/BackOfficeModels/CommonReportAccountModelBackOffice/CommonReportAccountModelBackOffice.dart';
 import 'package:connect/BackOffice/BackOfficeModels/DashBoardClientDetailsModel/DashBoardClientDetailsModel.dart';
 import 'package:connect/BackOffice/BackOfficeModels/DashBoardDetailsModelBackOffice/DashBoardDetailsModelBackOffice.dart';
+import 'package:connect/BackOffice/BackOfficeModels/GlobalSummaryBrokerageAccountModel/GlobalSummaryBrokerageAccountModel.dart';
 import 'package:connect/BackOffice/BackOfficeModels/KycDpLedgerModel/KycDpLedgerModel.dart';
+import 'package:connect/BackOffice/BackOfficeModels/LatePaymentChargesAccountModel/LatePaymentChargesAccountModel.dart';
 import 'package:connect/BackOffice/BackOfficeModels/LoginModelBackOffice/LoginModelBackOffice.dart';
 import 'package:connect/BackOffice/Utils/AppVariablesBackOffice.dart';
 import 'package:connect/BackOffice/Utils/BottomNavBar.dart';
@@ -371,14 +374,13 @@ class BackOfficeApiService {
 
   Future<ContractBillReportModel?> fetchContractBillsBackOffice(
       {String? authToken,
-        String? fromDate,
-        String? toDate,
-        String? source,
-        String? companyCode,
-        String? clientCode}) async {
+      String? fromDate,
+      String? toDate,
+      String? source,
+      String? companyCode,
+      String? clientCode}) async {
     try {
-      String Url =
-          '$baseUrl1/v1/user/report/contractbills';
+      String Url = '$baseUrl1/v1/user/report/contractbills';
 
       final Map<String, dynamic> requestData = {
         "company_code": [companyCode],
@@ -411,7 +413,6 @@ class BackOfficeApiService {
 
   Future<RiskReport?> fetchRiskReport(
       {String? companyCode, String? clientCode, String? authToken}) async {
-
     final url = '$baseUrl/apb/v1/user/report/risk_common_report';
 
     final body = jsonEncode({
@@ -419,11 +420,13 @@ class BackOfficeApiService {
       'client_code': clientCode,
     });
 
-    final response = await http.post(Uri.parse(url), headers: {
-      'accept': 'application/json',
-      'Content-Type': 'application/json',
-      'authToken': authToken ?? "",
-    }, body: body);
+    final response = await http.post(Uri.parse(url),
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+          'authToken': authToken ?? "",
+        },
+        body: body);
 
     if (response.statusCode == 200) {
       return RiskReport.fromJson(jsonDecode(response.body));
@@ -433,8 +436,11 @@ class BackOfficeApiService {
   }
 
   Future<ApiResponse1> fetchClientWiseDrCr(
-      {String? companyCode, String? clientCode, String? branchCode, String? authToken}) async {
-    try{
+      {String? companyCode,
+      String? clientCode,
+      String? branchCode,
+      String? authToken}) async {
+    try {
       String apiUrl = '$baseUrl/apb/v1/user/report/client_wise_dr_cr';
 
       final response = await http.post(
@@ -456,7 +462,120 @@ class BackOfficeApiService {
       } else {
         throw Exception('Failed to load data');
       }
+    } catch (e) {
+      throw Exception('Internal Server Error!');
+    }
+  }
+
+  Future<GlobalSummaryBrokerageResponse> fetchGlobalSummaryBrokerage({
+    String? token,
+    String? companyList,
+    String? fromDate,
+    String? toDate,
+    String? clientCode,
+    String? branchCode,
+  }) async {
+    try{
+      final response = await http.post(
+        Uri.parse('$baseUrl/apb/v1/user/report/global_summary_Brokerage'),
+        headers: <String, String>{
+          'accept': 'application/json',
+          'authToken': token ?? "",
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(<String, String>{
+          'company_list': companyList ?? "",
+          'from_date': fromDate ?? "",
+          'to_date': toDate ?? "",
+          'client_code': clientCode ?? "",
+          'branch_code': branchCode ?? "",
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        return GlobalSummaryBrokerageResponse.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception('Failed to fetch global summary brokerage');
+      }
     }catch(e){
+      throw Exception('Internal Server Error!');
+    }
+  }
+
+  Future<LatePaymentCharges> fetchLatePaymentCharges(
+      {String? clientCode,
+      String? fromDate,
+      String? toDate,
+        String? token,
+      int? clientFilter}) async {
+    try{
+      final response = await http.post(
+        Uri.parse(baseUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'accept': 'application/json',
+          'authToken': token ?? "",
+        },
+        body: jsonEncode({
+          'client_code': clientCode,
+          'from_date': fromDate,
+          'to_date': toDate,
+          'client_filter': clientFilter,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        return LatePaymentCharges.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception('Failed to load data');
+      }
+    }catch(e){
+      throw Exception('Internal Server Error!');
+    }
+  }
+
+  Future<AgeingReport?> fetchAgeingReport({
+    int? startYear,
+    String? companyCode,
+    String? clientCode,
+    String? voucherDate,
+    int? day1,
+    int? day2,
+    int? day3,
+    int? day4,
+    int? day5,
+    String? branchCode,
+    String? authToken,
+  }) async {
+    final url = Uri.parse('$baseUrl/apb/v1/user/report/ageing');
+    final headers = {
+      'accept': 'application/json',
+      'authToken': authToken ?? "",
+      'Content-Type': 'application/json',
+    };
+    final body = jsonEncode({
+      'start_year': startYear,
+      'company_code': companyCode,
+      'client_code': clientCode,
+      'voucher_date': voucherDate,
+      'day1': day1,
+      'day2': day2,
+      'day3': day3,
+      'day4': day4,
+      'day5': day5,
+      'branch_code': branchCode,
+    });
+
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+        return AgeingReport.fromJson(jsonResponse);
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
       throw Exception('Internal Server Error!');
     }
   }

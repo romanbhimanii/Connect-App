@@ -85,16 +85,14 @@ class _LedgerReportAccountBackOfficeScreenState extends State<LedgerReportAccoun
       toDate = "${time.year}-${time.month.toString().padLeft(2,'0')}-${time.day.toString().padLeft(2,'0')}";
     }
 
-    if(ledgerReport.isNull || ledgerReport == null){
-      ledgerReport = ApiServices().fetchLedgerReport(
+    ledgerReport = ApiServices().fetchLedgerReport(
         clientCode: clientCodeController.text,
         token: Appvariablesbackoffice.token,
         fromDate: fromDate,
         toDate: toDate,
         margin: selectedMargin == "Yes" ? "Y" : "N",
         source: "ap"
-      );
-    }
+    );
 
     ledgerReport?.then((data) {
       if(mounted){

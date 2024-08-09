@@ -9,9 +9,9 @@ import 'package:provider/provider.dart';
 void main() {
   runApp(
     MultiProvider(providers: [
-      ChangeNotifierProvider(create: (_) => IpoProvider()),
-      ChangeNotifierProvider(create: (_) => ClientDetailProvider()),
-    ], child: const MyApp()),
+      ChangeNotifierProvider(create: (_) => IpoProvider(),),
+      ChangeNotifierProvider(create: (_) => ClientDetailProvider(),),
+    ], child: const MyApp(),),
   );
 }
 
